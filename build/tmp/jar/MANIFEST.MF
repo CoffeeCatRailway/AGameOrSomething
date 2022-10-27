@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: io.github.coffeecatrailway.agameorsomething.AGameOrSomething
+Implementation-Title: A Game or Somthing
+Implementation-Version: 1.0.0
+

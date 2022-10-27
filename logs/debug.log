@@ -1,0 +1,30 @@
+[11:53:08] [main/INFO] (AGameOrSomething) LWJGL version: 3.3.1 build 7
+[11:53:08] [main/INFO] (Window) Set size & position
+[11:53:08] [main/INFO] (Window) Initialized
+[11:53:08] [main/DEBUG] (SomethingRegistry) Tile agos:air registered with id of 92857793
+[11:53:08] [main/DEBUG] (SomethingRegistry) Tile agos:grass registered with id of 191376941
+[11:53:08] [main/DEBUG] (SomethingRegistry) Tile agos:dirt registered with id of 95844862
+[11:53:08] [main/DEBUG] (SomethingRegistry) Tile agos:sand registered with id of 96283899
+[11:53:08] [main/INFO] (TileRegistry) Tiles registry loaded
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) [LWJGL] OpenGL debug message
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	ID: 0x20071
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Source: API
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Type: OTHER
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Severity: NOTIFICATION
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Message: Buffer detailed info: Buffer object 1 (bound to GL_ARRAY_BUFFER_ARB, usage hint is GL_STATIC_DRAW) will use VIDEO memory as the source for buffer object operations.
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) [LWJGL] OpenGL debug message
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	ID: 0x20071
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Source: API
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Type: OTHER
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Severity: NOTIFICATION
+[11:53:08] [Thread-0/DEBUG] (AGameOrSomething) 	Message: Buffer detailed info: Buffer object 2 (bound to GL_ELEMENT_ARRAY_BUFFER_ARB, usage hint is GL_STATIC_DRAW) will use VIDEO memory as the source for buffer object operations.
+[11:53:19] [main/DEBUG] (Texture) Deleted texture with id 1 at agos:textures/missing.png
+[11:53:19] [main/DEBUG] (Texture) Deleted texture with id 2 at agos:textures/tiles/grass
+[11:53:19] [main/DEBUG] (Texture) Deleted texture with id 3 at agos:textures/tiles/sand
+[11:53:19] [main/DEBUG] (Texture) Deleted texture with id 4 at agos:textures/tiles/dirt
+[11:53:19] [main/DEBUG] (VBOModel) Deleting vao...
+[11:53:19] [main/DEBUG] (VBOModel) Deleting vbo model...
+[11:53:19] [main/DEBUG] (Shader) Detached shader 1 Vertex: agos:shaders/tile_basic.vert Fragment: agos:shaders/tile_basic.frag
+[11:53:19] [main/DEBUG] (Shader) Deleted shader 1 Vertex: agos:shaders/tile_basic.vert Fragment: agos:shaders/tile_basic.frag
+[11:53:19] [main/DEBUG] (Window) Destroyed window 2085657006976
+[11:53:19] [main/WARN] (AGameOrSomething) Terminating program

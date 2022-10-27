@@ -1,0 +1,5 @@
+[11:53:08] [main/INFO] (AGameOrSomething) LWJGL version: 3.3.1 build 7
+[11:53:08] [main/INFO] (Window) Set size & position
+[11:53:08] [main/INFO] (Window) Initialized
+[11:53:08] [main/INFO] (TileRegistry) Tiles registry loaded
+[11:53:19] [main/WARN] (AGameOrSomething) Terminating program

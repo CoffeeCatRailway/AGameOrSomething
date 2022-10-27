@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+}
+
+compileJava*.options*.encoding = 'UTF-8'
+
+group = project.projGroup
+version = project.projVersion
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(platform("org.lwjgl:lwjgl-bom:${project.lwjglVersion}"))
+    implementation group: "org.joml", name: "joml", version: project.jomlVersion
+
+    implementation group: "org.lwjgl", name: "lwjgl"
+    implementation group: "org.lwjgl", name: "lwjgl-glfw"
+    implementation group: "org.lwjgl", name: "lwjgl-openal"
+    implementation group: "org.lwjgl", name: "lwjgl-opengl"
+    implementation group: "org.lwjgl", name: "lwjgl-stb"
+    runtimeOnly group: "org.lwjgl", name: "lwjgl", classifier: "natives-windows"
+    runtimeOnly group: "org.lwjgl", name: "lwjgl-glfw", classifier: "natives-windows"
+    runtimeOnly group: "org.lwjgl", name: "lwjgl-openal", classifier: "natives-windows"
+    runtimeOnly group: "org.lwjgl", name: "lwjgl-opengl", classifier: "natives-windows"
+    runtimeOnly group: "org.lwjgl", name: "lwjgl-stb", classifier: "natives-windows"
+
+    implementation "org.apache.logging.log4j:log4j-api:${project.log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-core:${project.log4jVersion}"
+
+    implementation "io.netty:netty-all:${project.nettyVersion}"
+    implementation "org.bouncycastle:bcpkix-jdk15on:1.65"
+}
+
+jar {
+    // the from line pulls in all dependency libraries directly into the jar
+    // so you can run simply as java -jar jarfile.jar
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'io.github.coffeecatrailway.agameorsomething.AGameOrSomething',
+                'Implementation-Title': 'A Game or Somthing',
+                'Implementation-Version': project.projVersion
+    }
+}
