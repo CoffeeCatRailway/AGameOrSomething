@@ -112,7 +112,7 @@ public class AGameOrSomething
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
 
-        float sped = 1f / 16f, zoom = -4f;
+        float sped = 1f / 16f;
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.shouldClose())
@@ -142,25 +142,19 @@ public class AGameOrSomething
                     glfwSetWindowShouldClose(this.window.getId(), true);
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_A))
-                    this.camera.addPosition(new Vector3f(-sped, 0f, 0f));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
                     this.camera.addPosition(new Vector3f(sped, 0f, 0f));
+                if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
+                    this.camera.addPosition(new Vector3f(-sped, 0f, 0f));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_W))
-                    this.camera.addPosition(new Vector3f(0f, sped, 0f));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
                     this.camera.addPosition(new Vector3f(0f, -sped, 0f));
+                if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
+                    this.camera.addPosition(new Vector3f(0f, sped, 0f));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
-                {
-                    zoom = Math.clamp(Camera.ZOOM_FAR, Camera.ZOOM_NEAR, zoom + sped);
-                    this.camera.setPosition(new Vector3f(this.camera.getPosition().x, this.camera.getPosition().y, zoom));
-                }
+                    this.camera.zoom(sped);
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
-                {
-                    zoom = Math.clamp(Camera.ZOOM_FAR, Camera.ZOOM_NEAR, zoom - sped);
-                    this.camera.setPosition(new Vector3f(this.camera.getPosition().x, this.camera.getPosition().y, zoom));
-                }
+                    this.camera.zoom(-sped);
 
                 this.world.tick();
 
