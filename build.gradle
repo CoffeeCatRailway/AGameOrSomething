@@ -31,6 +31,8 @@ dependencies {
 
     implementation "io.netty:netty-all:${project.nettyVersion}"
     implementation "org.bouncycastle:bcpkix-jdk15on:1.65"
+
+    implementation "org.agrona:agrona:${project.agronaVersion}"
 }
 
 jar {
