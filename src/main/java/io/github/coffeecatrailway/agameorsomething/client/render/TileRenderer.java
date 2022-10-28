@@ -1,14 +1,13 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
-import io.github.coffeecatrailway.agameorsomething.client.render.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
-import io.github.coffeecatrailway.agameorsomething.registry.ObjectLocation;
-import io.github.coffeecatrailway.agameorsomething.registry.TileRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joml.*;
+import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import org.joml.Matrix4f;
+import org.joml.Vector2fc;
+import org.joml.Vector2ic;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,12 +20,50 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class TileRenderer
 {
-    private static final Logger LOGGER = LogManager.getLogger();
-
     private final Map<ObjectLocation, Texture> textureMap = new HashMap<>();
     private final VBOModel model;
 
     public TileRenderer()
+    {
+        this.model = this.get2TriangleModel();
+
+        TileRegistry.TILES.foreach((id, tile) -> {
+            if (tile.hasTexture() && !this.textureMap.containsKey(tile.getObjectId()))
+                this.textureMap.put(tile.getObjectId(), new Texture(tile.getObjectId(), "tiles"));
+        });
+    }
+
+    /**
+     * @return A simple 2 triangle quad
+     */
+    private VBOModel get2TriangleModel()
+    {
+        float[] vertices = new float[]
+                {
+                        -1f, 1f, 0f,    // top left     0
+                        1f, 1f, 0f,     // top right    1
+                        1f, -1f, 0f,    // bottom right 2
+                        -1f, -1f, 0f,   // bottom left  3
+                };
+        float[] textureCoords = new float[]
+                {
+                        0f, 0f,
+                        1f, 0f,
+                        1f, 1f,
+                        0f, 1f
+                };
+        int[] indices = new int[]
+                {
+                        0, 1, 2,
+                        2, 3, 0
+                };
+        return new VBOModel(vertices, textureCoords, indices);
+    }
+
+    /**
+     * @return A quad made of two rectangles or 4 triangles
+     */
+    private VBOModel get2RectangleModel()
     {
         float[] vertices = new float[]
                 {
@@ -53,12 +90,7 @@ public class TileRenderer
                         1, 4, 5,
                         5, 2, 1
                 };
-        this.model = new VBOModel(vertices, textureCoords, indices);
-
-        TileRegistry.TILES.foreach((id, tile) -> {
-            if (tile.hasTexture() && !this.textureMap.containsKey(tile.getObjectId()))
-                this.textureMap.put(tile.getObjectId(), new Texture(tile.getObjectId(), "tiles"));
-        });
+        return new VBOModel(vertices, textureCoords, indices);
     }
 
     /**
@@ -73,7 +105,7 @@ public class TileRenderer
     {
         if (!tile.hasTexture())
             return;
-        Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x(), pos.y(), 0f));
+        Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x() * 2f, pos.y() * 2f, 0f));
         Matrix4f targetProjection = new Matrix4f();
         camera.getProjection().mul(scale, targetProjection);
         targetProjection.mul(targetPos);
