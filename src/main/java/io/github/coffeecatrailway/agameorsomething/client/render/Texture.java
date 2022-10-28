@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
-import io.github.coffeecatrailway.agameorsomething.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
@@ -13,7 +13,8 @@ import java.nio.ByteBuffer;
 import java.util.Locale;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
  * @author CoffeeCatRailway

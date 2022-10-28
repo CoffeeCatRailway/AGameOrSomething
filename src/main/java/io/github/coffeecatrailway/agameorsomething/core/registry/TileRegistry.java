@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.registry;
+package io.github.coffeecatrailway.agameorsomething.core.registry;
 
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import org.apache.logging.log4j.LogManager;

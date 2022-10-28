@@ -1,6 +1,6 @@
-package io.github.coffeecatrailway.agameorsomething.registry;
+package io.github.coffeecatrailway.agameorsomething.core.registry;
 
-import io.github.coffeecatrailway.agameorsomething.AGameOrSomething;
+import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 
 import java.util.Locale;
 import java.util.Objects;

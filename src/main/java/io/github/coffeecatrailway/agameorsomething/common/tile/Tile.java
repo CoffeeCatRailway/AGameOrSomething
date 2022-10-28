@@ -1,11 +1,8 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
-import io.github.coffeecatrailway.agameorsomething.AGameOrSomething;
-import io.github.coffeecatrailway.agameorsomething.registry.ObjectLocation;
-import io.github.coffeecatrailway.agameorsomething.registry.RegistrableSomething;
+import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
-import org.joml.Vector2fc;
-import org.joml.Vector3fc;
 
 /**
  * @author CoffeeCatRailway

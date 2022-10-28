@@ -1,24 +1,19 @@
-package io.github.coffeecatrailway.agameorsomething;
+package io.github.coffeecatrailway.agameorsomething.core;
 
-import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
-import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
-import io.github.coffeecatrailway.agameorsomething.client.render.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
+import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.io.Timer;
-import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
+import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
-import io.github.coffeecatrailway.agameorsomething.registry.SomethingRegistry;
-import io.github.coffeecatrailway.agameorsomething.registry.TileRegistry;
+import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.*;
-import org.joml.Math;
+import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GLUtil;
-import org.lwjgl.system.MathUtil;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -97,7 +92,6 @@ public class AGameOrSomething
         this.tileRenderer = new TileRenderer();
 
         this.world = new World();
-        this.world.init();
     }
 
     private void loop()
@@ -156,7 +150,7 @@ public class AGameOrSomething
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
                     this.camera.zoom(-sped);
 
-                this.world.tick();
+                this.world.tick(this);
 
                 this.window.tick();
 
@@ -194,6 +188,11 @@ public class AGameOrSomething
     public Window getWindow()
     {
         return this.window;
+    }
+
+    public Camera getCamera()
+    {
+        return this.camera;
     }
 
     public TileRenderer getTileRenderer()

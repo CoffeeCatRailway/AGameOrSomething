@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
-import io.github.coffeecatrailway.agameorsomething.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 
 import java.net.URL;
 

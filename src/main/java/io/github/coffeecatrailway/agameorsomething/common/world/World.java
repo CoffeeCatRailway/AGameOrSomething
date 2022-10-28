@@ -54,7 +54,7 @@ public class World
         this.basicTileShader = new Shader("tile_basic");
     }
 
-    public void tick()
+    public void tick(AGameOrSomething something)
     {
 
     }

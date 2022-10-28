@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.registry;
+package io.github.coffeecatrailway.agameorsomething.core.registry;
 
 import org.agrona.collections.Int2ObjectHashMap;
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.registry;
+package io.github.coffeecatrailway.agameorsomething.core.registry;
 
 /**
  * @author CoffeeCatRailway
