@@ -1,17 +1,15 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
-import io.github.coffeecatrailway.agameorsomething.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
-import io.github.coffeecatrailway.agameorsomething.registry.TileRegistry;
+import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
+import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import org.agrona.collections.Object2ObjectHashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.joml.Vector3f;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author CoffeeCatRailway
@@ -19,26 +17,24 @@ import java.util.Map;
  */
 public class World
 {
-    private final int startRadius = 4;
-    private final Map<Vector2ic, Tile> tilesBg;
-    private final Map<Vector2ic, Tile> tilesFg;
+    private final Object2ObjectHashMap<Vector2ic, Tile> tilesBg;
+    private final Object2ObjectHashMap<Vector2ic, Tile> tilesFg;
 
-    private int worldScale;
-    private Matrix4f worldScaleMatrix;
-
-    private Shader basicTileShader;
+    private float worldScale = 16f;
+    private Matrix4f worldScaleMatrix = new Matrix4f().setTranslation(new Vector3f(0f)).scale(this.worldScale);
 
     public World()
     {
-        this.tilesBg = new HashMap<>();
-        this.tilesFg = new HashMap<>();
-        for (int y = -this.startRadius; y < this.startRadius + 1; y++)
+        this.tilesBg = new Object2ObjectHashMap<>();
+        this.tilesFg = new Object2ObjectHashMap<>();
+        int startRadius = 4;
+        for (int y = -startRadius; y < startRadius + 1; y++)
         {
-            for (int x = -this.startRadius; x < this.startRadius + 1; x++)
+            for (int x = -startRadius; x < startRadius + 1; x++)
             {
                 Vector2i pos = new Vector2i(x, y);
                 Tile tile = TileRegistry.GRASS.get();
-                if (pos.distance(0, 0) < this.startRadius)
+                if (pos.distance(0, 0) < startRadius)
                     tile = TileRegistry.DIRT.get();
                 this.tilesBg.put(pos, tile);
                 this.tilesFg.put(pos, TileRegistry.AIR.get());
@@ -46,28 +42,17 @@ public class World
         }
     }
 
-    public void init()
-    {
-        this.worldScale = 16;
-        this.worldScaleMatrix = new Matrix4f().setTranslation(new Vector3f(0f)).scale(this.worldScale);
-
-        this.basicTileShader = new Shader("tile_basic");
-    }
-
     public void tick(AGameOrSomething something)
     {
-
     }
 
     public void render(AGameOrSomething something, Camera camera)
     {
-    }
-
-    public void destroy()
-    {
-        this.basicTileShader.delete();
+//        Instant start = Instant.now();
         this.tilesBg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, Shader.TILE_BASIC, this.worldScaleMatrix, camera));
         this.tilesFg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, Shader.TILE_BASIC, this.worldScaleMatrix, camera));
+//        Instant end = Instant.now();
+//        LOGGER.debug("Time elapsed rendering tiles: {}", Duration.between(start, end).toMillis());
     }
 
     public Tile getTile(int x, int y, boolean foreground)
@@ -80,7 +65,7 @@ public class World
         return foreground ? this.tilesFg.get(pos) : this.tilesBg.get(pos);
     }
 
-    public Tile setTile(int x, int y, Tile tile,  boolean foreground)
+    public Tile setTile(int x, int y, Tile tile, boolean foreground)
     {
         return this.setTile(new Vector2i(x, y), tile, foreground);
     }
@@ -90,5 +75,9 @@ public class World
         if (foreground)
             return this.tilesFg.put(pos, tile);
         return this.tilesBg.put(pos, tile);
+    }
+
+    public void destroy()
+    {
     }
 }
