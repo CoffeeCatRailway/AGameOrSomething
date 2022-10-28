@@ -22,6 +22,8 @@ public class Shader
 {
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public static final Shader TILE_BASIC = new Shader("tile_basic");
+
     public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
 
     private final int program;
@@ -148,5 +150,11 @@ public class Shader
             e.printStackTrace();
         }
         return string.toString();
+    }
+
+    public static void deleteStaticShaders()
+    {
+        Shader.TILE_BASIC.delete();
+        LOGGER.warn("Public static shaders deleted!");
     }
 }

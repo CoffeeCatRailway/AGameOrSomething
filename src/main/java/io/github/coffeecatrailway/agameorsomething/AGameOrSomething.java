@@ -182,10 +182,11 @@ public class AGameOrSomething
 
     private void destroy()
     {
-        Texture.MISSING.delete();
-
         this.tileRenderer.delete();
         this.world.destroy();
+
+        Texture.MISSING.delete();
+        Shader.deleteStaticShaders();
 
         this.window.destroy();
     }

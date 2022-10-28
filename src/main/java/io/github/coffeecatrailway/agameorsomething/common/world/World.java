@@ -61,13 +61,13 @@ public class World
 
     public void render(AGameOrSomething something, Camera camera)
     {
-        this.tilesBg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, this.basicTileShader, this.worldScaleMatrix, camera));
-        this.tilesFg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, this.basicTileShader, this.worldScaleMatrix, camera));
     }
 
     public void destroy()
     {
         this.basicTileShader.delete();
+        this.tilesBg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, Shader.TILE_BASIC, this.worldScaleMatrix, camera));
+        this.tilesFg.forEach((pos, tile) -> something.getTileRenderer().render(tile, pos, Shader.TILE_BASIC, this.worldScaleMatrix, camera));
     }
 
     public Tile getTile(int x, int y, boolean foreground)
