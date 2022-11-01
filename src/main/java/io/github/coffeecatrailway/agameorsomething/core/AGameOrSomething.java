@@ -4,12 +4,13 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
-import io.github.coffeecatrailway.agameorsomething.common.io.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
+import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -86,7 +87,6 @@ public class AGameOrSomething
         }));
 
         this.camera = new Camera(this.window.getWidth(), this.window.getHeight());
-        this.camera.setPosition(new Vector3f(0f, 0f, -4f));
 
         TileRegistry.load();
         this.tileRenderer = new TileRenderer();
@@ -149,6 +149,9 @@ public class AGameOrSomething
                     this.camera.zoom(sped);
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
                     this.camera.zoom(-sped);
+
+                if (Window.getInputHandler().isKeyDown(GLFW_KEY_C))
+                    this.camera.setPosition(new Vector2f(0f, 0f));
 
                 this.world.tick(this);
 
