@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
-import org.joml.Vector2f;
+import org.joml.Vector2d;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -14,9 +15,7 @@ public class InputHandler
     private final boolean[] keys;
     private final boolean[] mouseButtons;
 
-    private static final Vector2f MOUSE_POS = new Vector2f();
-    private static final double[] MX = new double[1], MY = new double[1];
-    private static final int[] WIDTH = new int[1], HEIGHT = new int[1];
+    private static final Vector2d MOUSE_POSITION = new Vector2d();
 
     public InputHandler(Window window)
     {
@@ -60,13 +59,24 @@ public class InputHandler
         return (!this.isMouseButtonDown(button) && this.mouseButtons[button]);
     }
 
-    public Vector2f getMousePosition()
+    public void setMousePosCallback()
     {
-        glfwGetCursorPos(this.window.getId(), MX, MY);
-        glfwGetWindowSize(this.window.getId(), WIDTH, HEIGHT);
+        GLFWCursorPosCallback callback = new GLFWCursorPosCallback()
+        {
+            @Override
+            public void invoke(long window, double xPos, double yPos)
+            {
+                if (window != InputHandler.this.window.getId())
+                    return;
+                MOUSE_POSITION.set(xPos - InputHandler.this.window.getWidth() / 2d, -(yPos - InputHandler.this.window.getHeight() / 2d));
+            }
+        };
+        glfwSetCursorPosCallback(this.window.getId(), callback);
+    }
 
-        MOUSE_POS.set((float) MX[0] - (WIDTH[0] / 2d), -((float) MY[0] - (HEIGHT[0] / 2d)));
-        return MOUSE_POS;
+    public static Vector2d getMousePosition()
+    {
+        return MOUSE_POSITION;
     }
 
     public void tick()
