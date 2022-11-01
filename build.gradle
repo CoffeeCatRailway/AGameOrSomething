@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id "java"
 }
 
 compileJava*.options*.encoding = 'UTF-8'
@@ -36,12 +36,11 @@ dependencies {
 }
 
 jar {
-    // the from line pulls in all dependency libraries directly into the jar
-    // so you can run simply as java -jar jarfile.jar
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest {
-        attributes 'Main-Class': 'io.github.coffeecatrailway.agameorsomething.AGameOrSomething',
-                'Implementation-Title': 'A Game or Somthing',
-                'Implementation-Version': project.projVersion
-    }
+    manifest.attributes["Main-Class"] = "io.github.coffeecatrailway.agameorsomething.AGameOrSomething"
+    manifest.attributes["Implementation-Title"] = "A Game or Somthing"
+    manifest.attributes["Implementation-Version"] = project.projVersion
+
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 }
