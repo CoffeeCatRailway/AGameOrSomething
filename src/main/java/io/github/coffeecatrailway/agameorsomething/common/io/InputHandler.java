@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
-import org.joml.Vector2d;
+import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -9,13 +10,13 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author CoffeeCatRailway
  * Created: 19/07/2022
  */
-public class InputHandler
+public class InputHandler // TODO: Clean up & make all references static
 {
     private final Window window;
     private final boolean[] keys;
     private final boolean[] mouseButtons;
 
-    private static final Vector2d MOUSE_POSITION = new Vector2d();
+    private static final Vector2f MOUSE_POSITION = new Vector2f();
 
     public InputHandler(Window window)
     {
@@ -68,15 +69,20 @@ public class InputHandler
             {
                 if (window != InputHandler.this.window.getId())
                     return;
-                MOUSE_POSITION.set(xPos - InputHandler.this.window.getWidth() / 2d, -(yPos - InputHandler.this.window.getHeight() / 2d));
+                MOUSE_POSITION.set(xPos - InputHandler.this.window.getWidth() / 2f, -(yPos - InputHandler.this.window.getHeight() / 2f));
             }
         };
         glfwSetCursorPosCallback(this.window.getId(), callback);
     }
 
-    public static Vector2d getMousePosition()
+    public static Vector2f getMousePosition()
     {
-        return MOUSE_POSITION;
+        return MOUSE_POSITION.get(new Vector2f());
+    }
+
+    public static Vector2f getScreenPosition(Camera camera) // TODO: Fix Camera offset
+    {
+        return MOUSE_POSITION.get(new Vector2f()).add(camera.getPosition().x, camera.getPosition().y).div(camera.getScale());
     }
 
     public void tick()

@@ -11,7 +11,6 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GLUtil;
@@ -86,7 +85,7 @@ public class AGameOrSomething
             }
         }));
 
-        this.camera = new Camera(this.window.getWidth(), this.window.getHeight());
+        this.camera = new Camera(this.window);
 
         TileRegistry.load();
         this.tileRenderer = new TileRenderer();
@@ -106,7 +105,7 @@ public class AGameOrSomething
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
 
-        float sped = 1f / 16f;
+        float sped = 1f / 8f;
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.shouldClose())
@@ -123,11 +122,7 @@ public class AGameOrSomething
             while (unprocessedTime >= fpsCap) // Update logic (tick)
             {
                 if (this.window.hasResized())
-                {
-                    this.camera.setProjection(this.window.getWidth(), this.window.getHeight());
-                    //gui & world stuffs
-                    glViewport(0, 0, this.window.getWidth(), this.window.getHeight());
-                }
+                    this.camera.adjustProjection(this.window);
 
                 unprocessedTime -= fpsCap;
                 shouldRender = true;
@@ -136,14 +131,14 @@ public class AGameOrSomething
                     glfwSetWindowShouldClose(this.window.getId(), true);
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_A))
-                    this.camera.addPosition(new Vector3f(sped, 0f, 0f));
+                    this.camera.addPosition(new Vector2f(sped, 0f));
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
-                    this.camera.addPosition(new Vector3f(-sped, 0f, 0f));
+                    this.camera.addPosition(new Vector2f(-sped, 0f));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_W))
-                    this.camera.addPosition(new Vector3f(0f, -sped, 0f));
+                    this.camera.addPosition(new Vector2f(0f, -sped));
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
-                    this.camera.addPosition(new Vector3f(0f, sped, 0f));
+                    this.camera.addPosition(new Vector2f(0f, sped));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
                     this.camera.zoom(sped);

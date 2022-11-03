@@ -1,7 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.client;
 
+import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import org.joml.Math;
-import org.joml.*;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author CoffeeCatRailway
@@ -9,74 +14,77 @@ import org.joml.*;
  */
 public class Camera
 {
-    public static final float CLIP_NEAR = .3f, CLIP_FAR = 1000f;
+    public static final float Z_NEAR = 0f, Z_FAR = 1000f;
 
-    public static final float ZOOM_NEAR = -1f, ZOOM_FAR = -20f;
+    public static final float SCALE_MIN = 8f, SCALE_MAX = 16f;
 
-    private final Vector3f position;
-    private final Matrix4f projection;
-    private final Matrix4f view;
+    private final Vector2f position;
+    private final Matrix4f projectionMatrix;
+    private final Matrix4f viewMatrix;
 
-    private float zoom = ZOOM_FAR;
+    private float scale = SCALE_MAX;
+    private final Matrix4f scaleMatrix;
 
-    public Camera(int width, int height)
+    public Camera(Window window)
     {
-        this.position = new Vector3f(0f);
-        this.projection = new Matrix4f().perspective((float) (Math.PI / 2f), (float) width / (float) height, CLIP_NEAR, CLIP_FAR);
-        this.view = new Matrix4f();
-        this.setPosition(new Vector3f(0f, 0f, this.zoom));
+        this(window, new Vector2f());
     }
 
-    public void zoom(float zoomInc)
+    public Camera(Window window, Vector2f position)
     {
-        this.zoom = Math.clamp(Camera.ZOOM_FAR, Camera.ZOOM_NEAR, this.zoom + zoomInc);
-        this.setPosition(new Vector3f(this.getPosition().x, this.getPosition().y, this.zoom));
-    }
-
-    public float getZoom()
-    {
-        return this.zoom;
+        this.position = position;
+        this.projectionMatrix = new Matrix4f();
+        this.viewMatrix = new Matrix4f();
+        this.scaleMatrix = new Matrix4f().setTranslation(new Vector3f(0f)).scale(this.scale);
+        this.adjustProjection(window);
     }
 
     public void setPosition(Vector2fc position)
     {
-        this.setPosition(new Vector3f(position.x(), position.y(), this.position.z()));
-    }
-
-    public void setPosition(Vector3fc position)
-    {
         this.position.set(position);
-        this.view.identity().translate(this.position);
     }
-
     public void addPosition(Vector2fc position)
     {
-        this.addPosition(new Vector3f(position.x(), position.y(), 0f));
-    }
-
-    public void addPosition(Vector3fc position)
-    {
         this.position.add(position);
-        this.view.identity().translate(this.position);
     }
 
-    public Vector3f getPosition()
+    public Vector2f getPosition()
     {
         return this.position;
     }
 
-    public void setProjection(int width, int height)
+    public void adjustProjection(Window window)
     {
-        this.projection.identity().perspective((float) (Math.PI / 2f), (float) width / (float) height, CLIP_NEAR, CLIP_FAR);
+        GL11.glViewport(0, 0, window.getWidth(), window.getHeight());
+        this.projectionMatrix.identity().ortho(-window.getWidth() / 2f, window.getWidth() / 2f, -window.getHeight() / 2f, window.getHeight() / 2f, Z_NEAR, Z_FAR);
     }
 
-    public Matrix4f getProjection()
+    public Matrix4f getProjectionMatrix()
     {
-        return this.projection;
+        return this.projectionMatrix;
     }
 
-    public Matrix4f getView()
+    public Matrix4f getViewMatrix()
     {
-        return this.view;
+        Vector3f front = new Vector3f(0f, 0f, -1f);
+        Vector3f up = new Vector3f(0f, 1f, 0f);
+        this.viewMatrix.identity().lookAt(new Vector3f(this.position.x, this.position.y, -20f), front.add(this.position.x, this.position.y, 0f), up);
+        return this.viewMatrix;
+    }
+
+    public void zoom(float zoomInc)
+    {
+        this.scale = Math.clamp(SCALE_MIN, SCALE_MAX, this.scale + zoomInc);
+        this.scaleMatrix.identity().setTranslation(new Vector3f(0f)).scale(this.scale);
+    }
+
+    public float getScale()
+    {
+        return this.scale;
+    }
+
+    public Matrix4f getScaleMatrix()
+    {
+        return this.scaleMatrix;
     }
 }

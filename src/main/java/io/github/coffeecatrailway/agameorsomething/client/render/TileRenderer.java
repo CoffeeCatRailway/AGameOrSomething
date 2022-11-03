@@ -94,28 +94,61 @@ public class TileRenderer
     }
 
     /**
-     * Render a tile to the world
+     * Renders a tile to specified position on a set grid
      *
      * @param tile   {@link Tile} - Tile to be rendered
-     * @param pos    {@link Vector2fc} - Position of the tile
-     * @param shader {@link Vector2ic}
+     * @param pos    {@link Vector2ic} - Position of the tile
+     * @param shader {@link Shader}
      * @param camera {@link Camera} - Main camera of the world/game
      */
-    public void render(Tile tile, Vector2ic pos, Shader shader, Matrix4f scale, Camera camera)
+    public void renderOnGrid(Tile tile, Vector2ic pos, Shader shader, Camera camera)
     {
         if (!tile.hasTexture())
             return;
         Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x() * 2f, pos.y() * 2f, 0f));
         Matrix4f targetProjection = new Matrix4f();
-        camera.getProjection().mul(scale, targetProjection);
+        camera.getProjectionMatrix().mul(camera.getScaleMatrix(), targetProjection);
         targetProjection.mul(targetPos);
 
+        this.render(tile, shader, targetProjection, camera.getViewMatrix());
+    }
+
+    /**
+     * Renders a tile to specified position
+     *
+     * @param tile   {@link Tile} - Tile to be rendered
+     * @param pos    {@link Vector2fc} - Position of the tile
+     * @param shader {@link Shader}
+     * @param camera {@link Camera} - Main camera of the world/game
+     */
+    public void renderOffGrid(Tile tile, Vector2fc pos, Shader shader, Camera camera)
+    {
+        if (!tile.hasTexture())
+            return;
+        Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x(), pos.y(), 0f));
+        Matrix4f targetProjection = new Matrix4f();
+        camera.getProjectionMatrix().mul(camera.getScaleMatrix(), targetProjection);
+        targetProjection.mul(targetPos);
+
+        this.render(tile, shader, targetProjection, camera.getViewMatrix());
+    }
+
+    /**
+     * Renders a tile
+     *
+     * @param tile       {@link Tile} - Tile to be rendered
+     * @param shader     {@link Shader}
+     * @param projection {@link Matrix4f}
+     * @param view       {@link Matrix4f}
+     */
+    public void render(Tile tile, Shader shader, Matrix4f projection, Matrix4f view)
+    {
         shader.bind();
         this.textureMap.getOrDefault(tile.getObjectId(), Texture.MISSING).bind(0);
         shader.setUniform("tex", 0);
         shader.setUniform("time", (float) glfwGetTime());
-        shader.setUniform("projection", targetProjection);
-        shader.setUniform("view", camera.getView());
+        shader.setUniform("projection", projection);
+        shader.setUniform("view", view);
         this.model.render();
         shader.unbind();
     }
