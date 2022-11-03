@@ -2,8 +2,10 @@ package io.github.coffeecatrailway.agameorsomething.common.io;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -24,6 +26,7 @@ public class Window
 
     private int width, height;
     private String baseTitle = "";
+    private Vector2i position;
 
     private boolean fullscreen;
     private boolean hasResized;
@@ -71,11 +74,11 @@ public class Window
         glfwShowWindow(this.id); // Make visible
 
         inputHandler = new InputHandler(this);
-        this.setSizeCallback();
+        this.setCallbacks();
         LOGGER.info("Initialized");
     }
 
-    private void setSizeCallback()
+    private void setCallbacks()
     {
         GLFWWindowSizeCallback sizeCallback = new GLFWWindowSizeCallback()
         {
@@ -91,6 +94,19 @@ public class Window
             }
         };
         glfwSetWindowSizeCallback(this.id, sizeCallback);
+        GLFWWindowPosCallback posCallback = new GLFWWindowPosCallback()
+        {
+            @Override
+            public void invoke(long window, int xPos, int yPos)
+            {
+                if (window != Window.this.id)
+                    return;
+                Window.this.position = new Vector2i(xPos, yPos);
+                LOGGER.debug("Window moved to {}x{}", xPos, yPos);
+            }
+        };
+        glfwSetWindowPosCallback(this.id, posCallback);
+        inputHandler.setMousePosCallback();;
     }
 
     public void destroy()
@@ -128,6 +144,11 @@ public class Window
     public int getHeight()
     {
         return this.height;
+    }
+
+    public Vector2i getPosition()
+    {
+        return this.position;
     }
 
     public boolean isFullscreen()
