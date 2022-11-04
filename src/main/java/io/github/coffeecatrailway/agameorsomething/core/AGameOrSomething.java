@@ -136,9 +136,9 @@ public class AGameOrSomething
                     this.camera.addPosition(new Vector2f(-sped, 0f));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_W))
-                    this.camera.addPosition(new Vector2f(0f, -sped));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
                     this.camera.addPosition(new Vector2f(0f, sped));
+                if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
+                    this.camera.addPosition(new Vector2f(0f, -sped));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
                     this.camera.zoom(sped);

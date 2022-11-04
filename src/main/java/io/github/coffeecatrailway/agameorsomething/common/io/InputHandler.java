@@ -80,9 +80,9 @@ public class InputHandler // TODO: Clean up & make all references static
         return MOUSE_POSITION.get(new Vector2f());
     }
 
-    public static Vector2f getScreenPosition(Camera camera) // TODO: Fix Camera offset
+    public static Vector2f getScreenPosition(Camera camera)
     {
-        return MOUSE_POSITION.get(new Vector2f()).add(camera.getPosition().x, camera.getPosition().y).div(camera.getScale());
+        return MOUSE_POSITION.get(new Vector2f()).div(camera.getScale()).add(-camera.getPosition().x, camera.getPosition().y);
     }
 
     public void tick()

@@ -1,8 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
+import io.github.coffeecatrailway.agameorsomething.common.world.Direction;
+import io.github.coffeecatrailway.agameorsomething.common.world.World;
+import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
+import org.joml.Vector2fc;
 
 /**
  * @author CoffeeCatRailway
@@ -22,23 +26,24 @@ public class Tile implements RegistrableSomething
 
 //    /**
 //     * Main update method
+//     * @param world {@link World} - World of the block
 //     * @param pos {@link Vector2fc} - World position
 //     * @param something {@link AGameOrSomething} - Game instance
 //     */
-//    public void tick(Vector2fc pos, AGameOrSomething something) // TODO: world
-//    {
-//    }
-//
-//    /**
-//     * Called when player or other object/entity 'uses' the tile
-//     * @param pos {@link Vector2fc} - World position
-//     * @param direction {@link Direction} - Direction this tile was used from
-//     * @param something {@link AGameOrSomething} - Game instance
-//     */
-//    public void use(Vector2fc pos, Direction direction, AGameOrSomething something) // TODO: world, what used it
+//    public void tick(World world, Vector2fc pos, AGameOrSomething something) // TODO: Tile entity of some sort
 //    {
 //    }
 
+    /**
+     * Called when player or other object/entity 'uses' the tile
+     * @param world {@link World} - World of the block
+     * @param pos {@link Vector2fc} - World position
+     * @param direction {@link Direction} - Direction this tile was used from
+     * @param something {@link AGameOrSomething} - Game instance
+     */
+    public void onUse(World world, Vector2fc pos, Direction direction, AGameOrSomething something) // TODO: what used it
+    {
+    }
 
     public boolean isUnbreakable()
     {
