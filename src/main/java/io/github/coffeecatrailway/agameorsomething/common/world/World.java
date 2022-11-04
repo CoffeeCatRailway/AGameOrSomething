@@ -63,12 +63,8 @@ public class World
             for (int j = 0; j < this.renderDistance; j++)
             {
                 Vector2i pos = new Vector2i(i - posX - (this.renderDistance / 2) + 1, j + posY - (this.renderDistance / 2) + 1);
-                Tile tileBg = this.getTile(pos, false);
-                if (tileBg != null)
-                    something.getTileRenderer().renderOnGrid(tileBg, pos, Shader.TILE_BASIC, camera);
-                Tile tileFg = this.getTile(pos, true);
-                if (tileFg != null)
-                    something.getTileRenderer().renderOnGrid(tileFg, pos, Shader.TILE_BASIC, camera);
+                something.getTileRenderer().renderOnGrid(this.getTile(pos, false), pos, Shader.TILE_BASIC, camera);
+                something.getTileRenderer().renderOnGrid(this.getTile(pos, true), pos, Shader.TILE_BASIC, camera); // TODO: Add check is background tile is visible
             }
         }
 //        Timer.end("tileRendering", LOGGER);
@@ -81,7 +77,8 @@ public class World
 
     public Tile getTile(Vector2ic pos, boolean foreground)
     {
-        return foreground ? this.tilesFg.get(pos) : this.tilesBg.get(pos);
+        Tile tile = foreground ? this.tilesFg.get(pos) : this.tilesBg.get(pos);
+        return tile == null ? TileRegistry.AIR.get() : tile;
     }
 
     public Tile setTile(int x, int y, Tile tile, boolean foreground)
