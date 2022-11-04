@@ -175,7 +175,6 @@ public class AGameOrSomething
     private void destroy()
     {
         this.tileRenderer.delete();
-        this.world.destroy();
 
         Texture.MISSING.delete();
         Shader.deleteStaticShaders();

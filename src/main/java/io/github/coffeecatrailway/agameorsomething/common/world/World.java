@@ -95,8 +95,4 @@ public class World
             return this.tilesFg.put(pos, tile);
         return this.tilesBg.put(pos, tile);
     }
-
-    public void destroy()
-    {
-    }
 }
