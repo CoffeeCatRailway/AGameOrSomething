@@ -51,6 +51,8 @@ public class World
 
     public void tick(AGameOrSomething something)
     {
+        if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+            this.setTile(InputHandler.getScreenPosition(something.getCamera()).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i()), TileRegistry.SAND.get(), true);
     }
 
     public void render(AGameOrSomething something, Camera camera)
@@ -68,6 +70,10 @@ public class World
             }
         }
 //        Timer.end("tileRendering", LOGGER);
+
+//        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getScreenPosition(camera), Shader.TILE_BASIC, camera);
+//        Vector2i screenPosGrid = InputHandler.getScreenPosition(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
+//        something.getTileRenderer().renderOnGrid(TileRegistry.SAND.get(), screenPosGrid, Shader.TILE_BASIC, camera);
     }
 
     public Tile getTile(int x, int y, boolean foreground)
