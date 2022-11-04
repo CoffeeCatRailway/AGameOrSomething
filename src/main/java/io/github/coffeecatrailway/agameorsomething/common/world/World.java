@@ -57,7 +57,7 @@ public class World
 
     public void render(AGameOrSomething something, Camera camera)
     {
-//        Timer.start("tileRendering"); //TODO: Fix lag spike
+//        Timer.start("tileRendering"); //TODO: Fix lag spike & render distance
         int posX = (int) (camera.getPosition().x / (camera.getScale() / 2f));
         int posY = (int) (camera.getPosition().y / (camera.getScale() / 2f));
         for (int i = 0; i < this.renderDistance; i++)
