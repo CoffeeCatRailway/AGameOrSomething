@@ -80,9 +80,9 @@ public class InputHandler // TODO: Clean up & make all references static
         return MOUSE_POSITION.get(new Vector2f());
     }
 
-    public static Vector2f getScreenPosition(Camera camera)
+    public static Vector2f getMousePosInWorldSpace(Camera camera)
     {
-        return MOUSE_POSITION.get(new Vector2f()).div(camera.getScale()).add(-camera.getPosition().x, camera.getPosition().y);
+        return getMousePosition().div(camera.getScale()).add(-camera.getPosition().x, camera.getPosition().y);
     }
 
     public void tick()
