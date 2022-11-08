@@ -21,76 +21,16 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 public class TileRenderer
 {
     private final Map<ObjectLocation, Texture> textureMap = new HashMap<>();
-    private final VBOModel model;
+//    private final VBOModel model;
 
     public TileRenderer()
     {
-        this.model = this.get2TriangleModel();
+//        this.model = VBOModel.simple1x1Model();
 
         TileRegistry.TILES.foreach((id, tile) -> {
             if (tile.hasTexture() && !this.textureMap.containsKey(tile.getObjectId()))
-                this.textureMap.put(tile.getObjectId(), new Texture(tile.getObjectId(), "tiles"));
+                this.textureMap.put(tile.getObjectId(), tile.getCustomTexture() != null ? tile.getCustomTexture() : new Texture(tile.getObjectId(), "tiles"));
         });
-    }
-
-    /**
-     * @return A simple 2 triangle quad
-     */
-    private VBOModel get2TriangleModel()
-    {
-        float[] vertices = new float[]
-                {
-                        -1f, 1f, 0f,    // top left     0
-                        1f, 1f, 0f,     // top right    1
-                        1f, -1f, 0f,    // bottom right 2
-                        -1f, -1f, 0f,   // bottom left  3
-                };
-        float[] textureCoords = new float[]
-                {
-                        0f, 0f,
-                        1f, 0f,
-                        1f, 1f,
-                        0f, 1f
-                };
-        int[] indices = new int[]
-                {
-                        0, 1, 2,
-                        2, 3, 0
-                };
-        return new VBOModel(vertices, textureCoords, indices);
-    }
-
-    /**
-     * @return A quad made of two rectangles or 4 triangles
-     */
-    private VBOModel get2RectangleModel()
-    {
-        float[] vertices = new float[]
-                {
-                        -.5f, .5f, 0f,  // top left         0
-                        0f, .5f, 0f,    // top middle       1
-                        0f, -.5f, 0f,   // bottom middle    2
-                        -.5f, -.5f, 0f, // bottom left      3
-                        .5f, .5f, 0f,   // top right        4
-                        .5f, -.5f, 0f   // bottom right     5
-                };
-        float[] textureCoords = new float[]
-                {
-                        0f, 0f,
-                        .5f, 0f,
-                        .5f, 1f,
-                        0f, 1f,
-                        1f, 0f,
-                        1f, 1f
-                };
-        int[] indices = new int[]
-                {
-                        0, 1, 2,
-                        2, 3, 0,
-                        1, 4, 5,
-                        5, 2, 1
-                };
-        return new VBOModel(vertices, textureCoords, indices);
     }
 
     /**
@@ -149,13 +89,14 @@ public class TileRenderer
         shader.setUniform("time", (float) glfwGetTime());
         shader.setUniform("projection", projection);
         shader.setUniform("view", view);
-        this.model.render();
+//        this.model.render();
+        tile.getModel().render();
         shader.unbind();
     }
 
     public void delete()
     {
         this.textureMap.values().forEach(Texture::delete);
-        this.model.delete();
+//        this.model.delete();
     }
 }

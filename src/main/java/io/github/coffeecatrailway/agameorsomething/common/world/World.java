@@ -5,15 +5,19 @@ import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.io.InputHandler;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
+import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.agrona.collections.Object2ObjectHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.RoundingMode;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Comparator;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author CoffeeCatRailway
@@ -23,15 +27,19 @@ public class World
 {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private final Object2ObjectHashMap<Vector2ic, Tile> tilesBg;
-    private final Object2ObjectHashMap<Vector2ic, Tile> tilesFg;
-
-    private int renderDistance = 64;
+    private static final Comparator<Vector2ic> POS_COMPARATOR = (pos1, pos2) -> {
+        int r = Integer.compare(pos1.y(), pos2.y()) * -1;
+        if (r == 0 && !pos1.equals(pos2))
+            r = Integer.compare(pos1.x(), pos2.x());
+        return r;
+    };
+    private final SortedMap<Vector2ic, Tile> tilesBg;
+    private final SortedMap<Vector2ic, Tile> tilesFg;
 
     public World()
     {
-        this.tilesBg = new Object2ObjectHashMap<>();
-        this.tilesFg = new Object2ObjectHashMap<>();
+        this.tilesBg = new TreeMap<>(POS_COMPARATOR);
+        this.tilesFg = new TreeMap<>(POS_COMPARATOR);
         int startRadius = 30;
         for (int y = -startRadius; y < startRadius + 1; y++)
         {
@@ -71,8 +79,8 @@ public class World
         }
 //        Timer.end("tileRendering", LOGGER);
 
-//        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getScreenPosition(camera), Shader.TILE_BASIC, camera);
-//        Vector2i screenPosGrid = InputHandler.getScreenPosition(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
+//        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getMousePosInWorldSpace(camera), Shader.TILE_BASIC, camera);
+//        Vector2i screenPosGrid = InputHandler.getMousePosInWorldSpace(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
 //        something.getTileRenderer().renderOnGrid(TileRegistry.SAND.get(), screenPosGrid, Shader.TILE_BASIC, camera);
     }
 

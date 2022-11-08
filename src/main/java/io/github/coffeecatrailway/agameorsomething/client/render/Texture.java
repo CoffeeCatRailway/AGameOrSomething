@@ -113,4 +113,10 @@ public class Texture
         }
         return pixels.flip();
     }
+
+    public static void deleteStaticTextures()
+    {
+        MISSING.delete();
+        LOGGER.warn("Public static textures deleted!");
+    }
 }

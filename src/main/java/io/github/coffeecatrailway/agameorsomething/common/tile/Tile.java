@@ -1,5 +1,8 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
+import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
+import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
+import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.world.Direction;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -65,6 +68,16 @@ public class Tile implements RegistrableSomething
         return this.tileData.hasTexture;
     }
 
+    public Texture getCustomTexture()
+    {
+        return this.tileData.customTexture;
+    }
+
+    public VBOModel getModel()
+    {
+        return this.tileData.model;
+    }
+
     @Override
     public int getId()
     {
@@ -95,16 +108,20 @@ public class Tile implements RegistrableSomething
         private int harvestLevel = 0;
         private RegistrableSomething drop = null;
         private boolean hasTexture = true;
+        private Texture customTexture = null;
+        private VBOModel model = VBOModels.SIMPLE_1X1;
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, Texture customTexture, VBOModel model)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
             this.hasTexture = hasTexture;
+            this.customTexture = customTexture;
+            this.model = model;
         }
 
         public boolean isUnbreakable()
@@ -141,9 +158,26 @@ public class Tile implements RegistrableSomething
             return this;
         }
 
+        public TileData setCustomTexture(ObjectLocation customTexture)
+        {
+            return this.setCustomTexture(new Texture(customTexture, "tiles"));
+        }
+
+        public TileData setCustomTexture(Texture customTexture)
+        {
+            this.customTexture = customTexture;
+            return this;
+        }
+
+        public TileData setModel(VBOModel model)
+        {
+            this.model = model;
+            return this;
+        }
+
         public TileData build()
         {
-            return new TileData(this.harvestLevel, this.drop, this.hasTexture);
+            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.model);
         }
     }
 }

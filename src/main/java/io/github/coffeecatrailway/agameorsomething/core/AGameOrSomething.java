@@ -4,6 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
@@ -176,8 +177,9 @@ public class AGameOrSomething
     {
         this.tileRenderer.delete();
 
-        Texture.MISSING.delete();
+        Texture.deleteStaticTextures();
         Shader.deleteStaticShaders();
+        VBOModels.deleteStaticModels();
 
         this.window.destroy();
     }
