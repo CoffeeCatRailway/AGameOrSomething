@@ -56,7 +56,7 @@ public class ObjectLocation
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ObjectLocation that = (ObjectLocation) o;
-        return Objects.equals(namespace, that.namespace) && Objects.equals(path, that.path);
+        return namespace.equals(that.namespace) && path.equals(that.path);
     }
 
     @Override

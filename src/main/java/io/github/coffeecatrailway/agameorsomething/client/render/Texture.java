@@ -10,7 +10,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -23,6 +26,8 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 public class Texture
 {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final Set<Integer> DELETED = new HashSet<>();
+
     public static final Texture MISSING = new Texture("missing.png");
 
     private int id;
@@ -80,8 +85,12 @@ public class Texture
 
     public void delete()
     {
-        glDeleteTextures(this.id);
-        LOGGER.debug("Deleted texture with id {} at {}", this.id, this.location);
+        if (!DELETED.contains(this.id))
+        {
+            glDeleteTextures(this.id);
+            LOGGER.debug("Deleted texture with id {} at {}", this.id, this.location);
+            DELETED.add(this.id);
+        }
     }
 
     public void bind(int sampler)
@@ -91,6 +100,21 @@ public class Texture
             glActiveTexture(GL_TEXTURE0 + sampler);
             glBindTexture(GL_TEXTURE_2D, this.id);
         }
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Texture texture = (Texture) o;
+        return id == texture.id && width == texture.width && height == texture.height && location.equals(texture.location);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, width, height, location);
     }
 
     public static ByteBuffer loadImageToBuffer(final BufferedImage image)

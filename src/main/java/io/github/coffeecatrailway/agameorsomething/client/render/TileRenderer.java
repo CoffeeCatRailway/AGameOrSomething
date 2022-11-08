@@ -96,7 +96,7 @@ public class TileRenderer
 
     public void delete()
     {
-        this.textureMap.values().forEach(Texture::delete);
+        this.textureMap.values().stream().filter(tex -> !tex.equals(Texture.MISSING)).forEach(Texture::delete);
 //        this.model.delete();
     }
 }
