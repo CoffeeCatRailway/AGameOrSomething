@@ -30,6 +30,7 @@ public class Window
 
     private boolean fullscreen;
     private boolean hasResized;
+    private boolean moving;
 
     private static InputHandler inputHandler;
 
@@ -40,6 +41,7 @@ public class Window
 
         this.fullscreen = false;
         this.hasResized = false;
+        this.moving = false;
     }
 
     public void initialize(String baseTitle)
@@ -90,7 +92,7 @@ public class Window
                 Window.this.width = width;
                 Window.this.height = height;
                 Window.this.hasResized = true;
-                LOGGER.debug("Window resized to {}x{}", width, height);
+//                LOGGER.debug("Window resized to {}x{}", width, height);
             }
         };
         glfwSetWindowSizeCallback(this.id, sizeCallback);
@@ -102,11 +104,13 @@ public class Window
                 if (window != Window.this.id)
                     return;
                 Window.this.position = new Vector2i(xPos, yPos);
-                LOGGER.debug("Window moved to {}x{}", xPos, yPos);
+                Window.this.moving = true;
+//                LOGGER.debug("Window moved to {}x{}", xPos, yPos);
             }
         };
         glfwSetWindowPosCallback(this.id, posCallback);
-        inputHandler.setMousePosCallback();;
+        inputHandler.setMousePosCallback();
+        ;
     }
 
     public void destroy()
@@ -123,7 +127,10 @@ public class Window
 
     public void tick()
     {
-        this.hasResized = false;
+        if (this.hasResized)
+            this.hasResized = false;
+        if (this.moving)
+            this.moving = false;
         inputHandler.tick();
         glfwPollEvents();
     }
@@ -165,6 +172,11 @@ public class Window
     public boolean hasResized()
     {
         return this.hasResized;
+    }
+
+    public boolean isMoving()
+    {
+        return this.moving;
     }
 
     public long getId()
