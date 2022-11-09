@@ -40,7 +40,13 @@ public class World
     {
         this.tilesBg = new TreeMap<>(POS_COMPARATOR);
         this.tilesFg = new TreeMap<>(POS_COMPARATOR);
-        int startRadius = 30;
+        this.generate();
+    }
+
+    public void generate()
+    {
+        Timer.start("generateWorld");
+        int startRadius = 40;
         for (int y = -startRadius; y < startRadius + 1; y++)
         {
             for (int x = -startRadius; x < startRadius + 1; x++)
@@ -55,6 +61,7 @@ public class World
         }
 
         this.tilesBg.put(new Vector2i(3, 2), TileRegistry.SAND.get());
+        LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 
     public void tick(AGameOrSomething something)
@@ -65,10 +72,12 @@ public class World
 
     public void render(AGameOrSomething something, Camera camera)
     {
-        Timer.start("tileRendering"); //TODO: Fix lag spike, check is background tile is visible
-        this.tilesBg.entrySet().stream().filter(entry -> this.isPosInView(entry.getKey(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
-        this.tilesFg.entrySet().stream().filter(entry -> this.isPosInView(entry.getKey(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
-        Timer.end("tileRendering", LOGGER);
+        Timer.start("tileRendering"); //TODO: Fix lag spike, check if background tile is visible
+        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
+        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
+        long millis = Timer.end("tileRendering");
+        if (millis >= 30L)
+            LOGGER.warn("Tile rendering took {}ms", millis);
 
 //        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getMousePosInWorldSpace(camera), Shader.TILE_BASIC, camera);
 //        Vector2i screenPosGrid = InputHandler.getMousePosInWorldSpace(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
@@ -76,7 +85,7 @@ public class World
     }
 
     /**
-     * @param pos {@link Vector2ic} - Tile based position
+     * @param pos    {@link Vector2ic} - Tile based position
      * @param camera {@link Camera} - Main world camera
      * @return True if pos is within view on screen
      */

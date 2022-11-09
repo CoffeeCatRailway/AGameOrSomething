@@ -3,13 +3,9 @@ package io.github.coffeecatrailway.agameorsomething.common.tile;
 import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
-import io.github.coffeecatrailway.agameorsomething.common.world.Direction;
-import io.github.coffeecatrailway.agameorsomething.common.world.World;
-import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
-import org.joml.Vector2fc;
 
 /**
  * @author CoffeeCatRailway
@@ -37,16 +33,16 @@ public class Tile implements RegistrableSomething
 //    {
 //    }
 
-    /**
-     * Called when player or other object/entity 'uses' the tile
-     * @param world {@link World} - World of the block
-     * @param pos {@link Vector2fc} - World position
-     * @param direction {@link Direction} - Direction this tile was used from
-     * @param something {@link AGameOrSomething} - Game instance
-     */
-    public void onUse(World world, Vector2fc pos, Direction direction, AGameOrSomething something) // TODO: what used it
-    {
-    }
+//    /**
+//     * Called when player or other object/entity 'uses' the tile
+//     * @param world {@link World} - World of the block
+//     * @param pos {@link Vector2fc} - World position
+//     * @param direction {@link Direction} - Direction this tile was used from
+//     * @param something {@link AGameOrSomething} - Game instance
+//     */
+//    public void onUse(World world, Vector2fc pos, Direction direction, AGameOrSomething something) // TODO: what used it
+//    {
+//    }
 
     public boolean isUnbreakable()
     {
@@ -66,6 +62,11 @@ public class Tile implements RegistrableSomething
     public boolean hasTexture()
     {
         return this.tileData.hasTexture;
+    }
+
+    public boolean isVisible()
+    {
+        return this.hasTexture();
     }
 
     public Texture getCustomTexture()
@@ -166,7 +167,7 @@ public class Tile implements RegistrableSomething
         public TileData setCustomTexture(Texture customTexture)
         {
             this.customTexture = customTexture;
-            return this;
+            return this.setHasTexture(this.customTexture != null);
         }
 
         public TileData setModel(VBOModel model)

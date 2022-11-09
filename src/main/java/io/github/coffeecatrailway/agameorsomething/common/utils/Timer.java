@@ -1,10 +1,9 @@
 package io.github.coffeecatrailway.agameorsomething.common.utils;
 
-import org.apache.logging.log4j.Logger;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -17,16 +16,28 @@ public final class Timer
 
     private Timer() {}
 
+    /**
+     * Starts a timer
+     * @param name Name of the timer
+     */
     public static void start(String name)
     {
-        TIMERS.put(name, Instant.now());
+        TIMERS.put(timerName(name), Instant.now());
     }
 
-    public static void end(String name, Logger logger)
+    /**
+     * @param name   Name of the timer
+     * @return Milliseconds elapsed
+     */
+    public static long end(String name)
     {
         Instant end = Instant.now();
-        logger.debug("Time elapsed for `{}`: {}", name, Duration.between(TIMERS.get(name), end).toMillis());
-        TIMERS.remove(name);
+        return Duration.between(TIMERS.remove(timerName(name)), end).toMillis();
+    }
+
+    private static String timerName(String name)
+    {
+        return name.toLowerCase(Locale.ROOT).replaceAll("\\s+", "_");
     }
 
     public static double getTimeInSeconds()

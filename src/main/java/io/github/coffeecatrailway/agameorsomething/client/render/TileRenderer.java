@@ -43,7 +43,7 @@ public class TileRenderer
      */
     public void renderOnGrid(Tile tile, Vector2ic pos, Shader shader, Camera camera)
     {
-        if (!tile.hasTexture())
+        if (!tile.hasTexture() || !tile.isVisible())
             return;
         Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x() * 2f, pos.y() * 2f, 0f));
         Matrix4f targetProjection = new Matrix4f();
@@ -63,7 +63,7 @@ public class TileRenderer
      */
     public void renderOffGrid(Tile tile, Vector2fc pos, Shader shader, Camera camera)
     {
-        if (!tile.hasTexture())
+        if (!tile.hasTexture() || !tile.isVisible())
             return;
         Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x(), pos.y(), 0f));
         Matrix4f targetProjection = new Matrix4f();
