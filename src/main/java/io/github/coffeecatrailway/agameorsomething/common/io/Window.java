@@ -110,7 +110,6 @@ public class Window
         };
         glfwSetWindowPosCallback(this.id, posCallback);
         inputHandler.setMousePosCallback();
-        ;
     }
 
     public void destroy()
