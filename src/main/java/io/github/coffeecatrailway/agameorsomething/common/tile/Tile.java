@@ -161,7 +161,7 @@ public class Tile implements RegistrableSomething
 
         public TileData setCustomTexture(ObjectLocation customTexture)
         {
-            return this.setCustomTexture(new Texture(customTexture, "tiles"));
+            return this.setCustomTexture(new Texture(customTexture, "tile"));
         }
 
         public TileData setCustomTexture(Texture customTexture)

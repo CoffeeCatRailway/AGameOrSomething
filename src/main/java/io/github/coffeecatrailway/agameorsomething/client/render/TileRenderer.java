@@ -29,7 +29,7 @@ public class TileRenderer
 
         TileRegistry.TILES.foreach((id, tile) -> {
             if (tile.hasTexture() && !this.textureMap.containsKey(tile.getObjectId()))
-                this.textureMap.put(tile.getObjectId(), tile.getCustomTexture() != null ? tile.getCustomTexture() : new Texture(tile.getObjectId(), "tiles"));
+                this.textureMap.put(tile.getObjectId(), tile.getCustomTexture() != null ? tile.getCustomTexture() : new Texture(tile.getObjectId(), "tile"));
         });
     }
 

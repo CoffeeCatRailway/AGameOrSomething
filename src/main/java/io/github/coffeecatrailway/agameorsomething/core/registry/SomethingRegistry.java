@@ -51,7 +51,7 @@ public final class SomethingRegistry<T extends RegistrableSomething>
         T object = factory.get();
         object.setId(id, objectId);
         this.registry.put(id, object);
-        LOGGER.debug("Tile {} registered with id of {}", objectId, id);
+        LOGGER.debug("Object {} registered with id of {}", objectId, id);
         return () -> this.registry.get(object.getId());
     }
 
