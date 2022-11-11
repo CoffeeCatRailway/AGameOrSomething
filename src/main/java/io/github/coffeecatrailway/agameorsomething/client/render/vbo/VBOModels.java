@@ -35,27 +35,21 @@ public class VBOModels
                         2, 3, 0
                 };
         SIMPLE_1X1 = new VBOModel(vertices, textureCoords, indices);
+        SIMPLE_1X2 =  new VBOModel(inflateVertices(vertices, 2f, 0f, 0f, 0f), textureCoords, indices);
 
-        vertices = new float[]
-                {
-                        -1f, 3f, 0f,    // top left     0
-                        1f, 3f, 0f,     // top right    1
-                        1f, -1f, 0f,    // bottom right 2
-                        -1f, -1f, 0f,   // bottom left  3
-                };
-        textureCoords = new float[]
-                {
-                        0f, 0f,
-                        1f, 0f,
-                        1f, 1f,
-                        0f, 1f
-                };
-        indices = new int[]
-                {
-                        0, 1, 2,
-                        2, 3, 0
-                };
-        SIMPLE_1X2 =  new VBOModel(vertices, textureCoords, indices);
+        vertices = null;
+        textureCoords = null;
+        indices = null;
+    }
+
+    private static float[] inflateVertices(final float[] vertices, float top, float bottom, float right, float left)
+    {
+        return new float[] {
+                vertices[0] + left, vertices[1] + top, 0f,
+                vertices[3] + right, vertices[4] + top, 0f,
+                vertices[6] + right, vertices[7] + bottom, 0f,
+                vertices[9] + left, vertices[10] + bottom, 0f
+        };
     }
 
     public static void deleteStaticModels()

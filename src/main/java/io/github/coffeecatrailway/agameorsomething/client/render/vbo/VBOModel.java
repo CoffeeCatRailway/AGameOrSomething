@@ -4,7 +4,6 @@ import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -42,7 +41,7 @@ public class VBOModel
         glBufferSubData(GL_ARRAY_BUFFER, 0, createFloatBuffer(vertices));
         glBufferSubData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, createFloatBuffer(textureCoords));
 
-        GL20.glVertexAttribPointer(Shader.ATTRIB_POSITION, 3, GL_FLOAT, false, 0, 0L);
+        glVertexAttribPointer(Shader.ATTRIB_POSITION, 3, GL_FLOAT, false, 0, 0L);
         glVertexAttribPointer(Shader.ATTRIB_TEX_COORDS, 2, GL_FLOAT, false, 0, (long) vertices.length * Float.BYTES);
 
         this.indicesId = glGenBuffers();
