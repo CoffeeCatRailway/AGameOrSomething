@@ -105,8 +105,17 @@ public class World
 
     public Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
     {
-        if (foreground)
-            return this.tilesFg.put(pos, tile);
-        return this.tilesBg.put(pos, tile);
+        return this.setTile(pos, tile, foreground, false);
+    }
+
+    public Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force)
+    {
+        if (force || !this.getTile(pos, foreground).equals(tile))
+        {
+            if (foreground)
+                return this.tilesFg.put(pos, tile);
+            return this.tilesBg.put(pos, tile);
+        }
+        return TileRegistry.AIR.get();
     }
 }

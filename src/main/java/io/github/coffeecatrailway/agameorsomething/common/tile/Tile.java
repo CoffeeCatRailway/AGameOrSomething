@@ -7,6 +7,8 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
 
+import java.util.Objects;
+
 /**
  * @author CoffeeCatRailway
  * Created: 25/10/2022
@@ -102,6 +104,21 @@ public class Tile implements RegistrableSomething
     public RegistrableSomething getInstance()
     {
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return id == tile.id && objectId.equals(tile.objectId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, objectId);
     }
 
     public static class TileData
