@@ -3,3 +3,4 @@ build/
 .idea/
 logs/
 old/
+hs_err_pid15116.log
