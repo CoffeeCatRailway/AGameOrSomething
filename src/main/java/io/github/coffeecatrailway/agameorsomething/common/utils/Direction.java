@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.common.world;
+package io.github.coffeecatrailway.agameorsomething.common.utils;
 
 /**
  * @author CoffeeCatRailway
