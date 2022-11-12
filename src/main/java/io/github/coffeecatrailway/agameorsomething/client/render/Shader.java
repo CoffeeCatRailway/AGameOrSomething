@@ -22,7 +22,7 @@ public class Shader
 {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final Shader TILE_BASIC = new Shader("tile_basic");
+    public static final Shader SIMPLE = new Shader("simple");
 
     public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
 
@@ -154,7 +154,7 @@ public class Shader
 
     public static void deleteStaticShaders()
     {
-        TILE_BASIC.delete();
+        SIMPLE.delete();
         LOGGER.warn("Public static shaders deleted!");
     }
 }

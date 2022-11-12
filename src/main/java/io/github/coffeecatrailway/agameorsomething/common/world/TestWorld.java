@@ -60,8 +60,8 @@ public class TestWorld extends AbstractWorld
     public void render(AGameOrSomething something, Camera camera)
     {
         Timer.start("tileRendering"); //TODO: Fix lag spike, check if background tile is visible
-        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
-        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.TILE_BASIC, camera));
+        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SIMPLE, camera));
+        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SIMPLE, camera));
         long millis = Timer.end("tileRendering");
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
