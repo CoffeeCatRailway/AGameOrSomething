@@ -1,4 +1,4 @@
-# AGame^OrSomething^
+# AGameOrSomething
 A game or something, idk
 
 ---
