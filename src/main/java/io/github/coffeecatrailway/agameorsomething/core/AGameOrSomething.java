@@ -7,7 +7,8 @@ import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
-import io.github.coffeecatrailway.agameorsomething.common.world.World;
+import io.github.coffeecatrailway.agameorsomething.common.world.AbstractWorld;
+import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ public class AGameOrSomething
     private final Window window;
     private Camera camera;
     private TileRenderer tileRenderer;
-    private World world;
+    private AbstractWorld world;
 
     private AGameOrSomething(int width, int height, boolean fullscreen)
     {
@@ -91,7 +92,7 @@ public class AGameOrSomething
         TileRegistry.load();
         this.tileRenderer = new TileRenderer();
 
-        this.world = new World();
+        this.world = new TestWorld();
     }
 
     private void loop()
@@ -197,6 +198,11 @@ public class AGameOrSomething
     public TileRenderer getTileRenderer()
     {
         return this.tileRenderer;
+    }
+
+    public AbstractWorld getWorld()
+    {
+        return this.world;
     }
 
     public static AGameOrSomething getInstance()
