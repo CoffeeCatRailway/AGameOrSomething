@@ -18,7 +18,7 @@ public class Camera
 
     public static final float SCALE_MIN = 8f, SCALE_MAX = 16f;
 
-    private final Vector2f position;
+    private final Vector2f position; // Camera position is double that of tile positions
     private final Matrix4f projectionMatrix;
     private final Matrix4f viewMatrix;
 
@@ -81,6 +81,11 @@ public class Camera
     public float getScale()
     {
         return this.scale;
+    }
+
+    public float getScaleInverted()
+    {
+        return (this.scale - SCALE_MIN) * -1f + SCALE_MAX;
     }
 
     public Matrix4f getScaleMatrix()
