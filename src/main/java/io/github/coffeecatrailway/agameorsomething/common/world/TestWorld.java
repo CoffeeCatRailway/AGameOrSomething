@@ -50,10 +50,11 @@ public class TestWorld extends AbstractWorld
     }
 
     @Override
-    public void tick(AGameOrSomething something)
+    public void tick(AGameOrSomething something, Camera camera)
     {
+        super.tick(something, camera);
         if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))
-            this.setTile(InputHandler.getMousePosInWorldSpace(something.getCamera()).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i()), TileRegistry.TEST.get(), true);
+            this.setTile(InputHandler.getMousePosInWorldSpace(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i()), TileRegistry.TEST.get(), true);
     }
 
     @Override

@@ -5,6 +5,8 @@ import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -16,8 +18,9 @@ import java.util.TreeMap;
  * @author CoffeeCatRailway
  * Created: 11/11/2022
  */
-public abstract class AbstractWorld
+public abstract class AbstractWorld implements World
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final Comparator<Vector2ic> POS_COMPARATOR = (pos1, pos2) -> {
         int r = Integer.compare(pos1.y(), pos2.y()) * -1;
         if (r == 0 && !pos1.equals(pos2))
@@ -29,8 +32,8 @@ public abstract class AbstractWorld
     protected final TreeMap<Vector2ic, Tile> tilesFg;
 
     public static final int MIN_WORLD_RADIUS = 10;
-    protected final int worldRadius; // Radius of the square world
-    protected final int worldSize;
+    protected final int worldRadius; // Distance from 0,0 to each edge
+    protected final int worldSize; // Width & height of the world
 
     public AbstractWorld(int worldRadius)
     {
@@ -43,9 +46,10 @@ public abstract class AbstractWorld
         this.tilesFg = new TreeMap<>(POS_COMPARATOR);
     }
 
-    public abstract void generate();
-
-    public abstract void tick(AGameOrSomething something);
+    @Override
+    public void tick(AGameOrSomething something, Camera camera)
+    {
+    }
 
     public abstract void render(AGameOrSomething something, Camera camera);
 

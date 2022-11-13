@@ -7,8 +7,8 @@ import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
-import io.github.coffeecatrailway.agameorsomething.common.world.AbstractWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
+import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +37,7 @@ public class AGameOrSomething
     private final Window window;
     private Camera camera;
     private TileRenderer tileRenderer;
-    private AbstractWorld world;
+    private World world;
 
     private AGameOrSomething(int width, int height, boolean fullscreen)
     {
@@ -107,7 +107,7 @@ public class AGameOrSomething
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
 
-        float sped = 1f / 8f;
+        float sped = 1f / 6f;
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.shouldClose())
@@ -150,7 +150,7 @@ public class AGameOrSomething
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_C))
                     this.camera.setPosition(new Vector2f(0f, 0f));
 
-                this.world.tick(this);
+                this.world.tick(this, this.camera);
 
                 this.window.tick();
 
@@ -200,7 +200,7 @@ public class AGameOrSomething
         return this.tileRenderer;
     }
 
-    public AbstractWorld getWorld()
+    public World getWorld()
     {
         return this.world;
     }
@@ -214,7 +214,7 @@ public class AGameOrSomething
     {
         LOGGER.info("LWJGL version: " + Version.getVersion());
 
-        INSTANCE = new AGameOrSomething(600, 600, false);
+        INSTANCE = new AGameOrSomething(800, 600, false);
 
         INSTANCE.init();
         INSTANCE.loop();
