@@ -32,16 +32,18 @@ public class TestWorld extends AbstractWorld
     public void generate()
     {
         Timer.start("generateWorld");
+        boolean borderFlag = false;
         for (int y = -this.worldRadius; y < this.worldRadius + 1; y++)
         {
             for (int x = -this.worldRadius; x < this.worldRadius + 1; x++)
             {
                 Vector2i pos = new Vector2i(x, y);
                 Tile tile = TileRegistry.GRASS.get();
-                if (pos.distance(0, 0) < 4 || pos.x % 2 == 0)
+                borderFlag = pos.x == this.worldRadius || pos.x == -this.worldRadius || pos.y == this.worldRadius || pos.y == -this.worldRadius;
+                if (pos.distance(0, 0) < 4 || borderFlag)
                     tile = TileRegistry.DIRT.get();
                 this.tilesBg.put(pos, tile);
-                this.tilesFg.put(pos, TileRegistry.AIR.get());
+                this.tilesFg.put(pos, borderFlag ? tile : TileRegistry.AIR.get());
             }
         }
 
