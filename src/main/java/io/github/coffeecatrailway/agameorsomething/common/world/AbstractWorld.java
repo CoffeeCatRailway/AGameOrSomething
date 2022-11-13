@@ -80,6 +80,11 @@ public abstract class AbstractWorld implements World
 
     public Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force)
     {
+        if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
+        {
+            LOGGER.warn("Tile {} was placed outside of world at position {}", tile.getObjectId(), pos);
+            return TileRegistry.AIR.get();
+        }
         if (force || !this.getTile(pos, foreground).equals(tile))
         {
             if (foreground)
