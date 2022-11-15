@@ -2,8 +2,8 @@ package io.github.coffeecatrailway.agameorsomething.core;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
-import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;

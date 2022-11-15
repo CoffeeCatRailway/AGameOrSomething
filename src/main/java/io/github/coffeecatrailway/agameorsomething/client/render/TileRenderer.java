@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;

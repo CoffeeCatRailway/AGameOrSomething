@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client.render;
+package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;

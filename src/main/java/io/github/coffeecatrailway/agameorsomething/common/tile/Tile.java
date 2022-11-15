@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
-import io.github.coffeecatrailway.agameorsomething.client.render.Texture;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
