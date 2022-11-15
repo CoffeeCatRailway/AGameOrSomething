@@ -5,9 +5,9 @@ import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,12 +45,7 @@ public class TileRenderer
     {
         if (!tile.hasTexture() || !tile.isVisible())
             return;
-        Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x() * 2f, pos.y() * 2f, 0f));
-        Matrix4f targetProjection = new Matrix4f();
-        camera.getProjectionMatrix().mul(camera.getScaleMatrix(), targetProjection);
-        targetProjection.mul(targetPos);
-
-        this.render(tile, shader, targetProjection, camera.getViewMatrix());
+        this.render(tile, shader, camera.getProjectionMatrix(), camera.getViewMatrix().translate(pos.x(), pos.y(), 0f));
     }
 
     /**
@@ -65,9 +60,8 @@ public class TileRenderer
     {
         if (!tile.hasTexture() || !tile.isVisible())
             return;
-        Matrix4f targetPos = new Matrix4f().translate(new Vector3f(pos.x(), pos.y(), 0f));
-        Matrix4f targetProjection = new Matrix4f();
-        camera.getProjectionMatrix().mul(camera.getScaleMatrix(), targetProjection);
+        Matrix4f targetPos = new Matrix4f().translate(pos.x(), pos.y(), 0f);
+        Matrix4f targetProjection = new Matrix4f(camera.getProjectionMatrix());
         targetProjection.mul(targetPos);
 
         this.render(tile, shader, targetProjection, camera.getViewMatrix());
@@ -81,7 +75,7 @@ public class TileRenderer
      * @param projection {@link Matrix4f}
      * @param view       {@link Matrix4f}
      */
-    public void render(Tile tile, Shader shader, Matrix4f projection, Matrix4f view)
+    public void render(Tile tile, Shader shader, Matrix4fc projection, Matrix4fc view)
     {
         shader.bind();
         this.textureMap.getOrDefault(tile.getObjectId(), Texture.MISSING).bind(0);

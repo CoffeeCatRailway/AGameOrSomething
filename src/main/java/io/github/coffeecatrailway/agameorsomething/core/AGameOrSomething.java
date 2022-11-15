@@ -107,7 +107,7 @@ public class AGameOrSomething
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
 
-        float sped = 1f / 6f;
+        float sped = 1f / 4f;
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.shouldClose())
@@ -124,7 +124,7 @@ public class AGameOrSomething
             while (unprocessedTime >= fpsCap) // Update logic (tick)
             {
                 if (this.window.hasResized())
-                    this.camera.adjustProjection(this.window);
+                    this.camera.adjustProjection();
 
                 unprocessedTime -= fpsCap;
                 shouldRender = true;

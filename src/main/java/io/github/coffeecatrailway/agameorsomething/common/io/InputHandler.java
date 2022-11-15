@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -69,20 +69,15 @@ public class InputHandler // TODO: Clean up & make all references static
             {
                 if (window != InputHandler.this.window.getId())
                     return;
-                MOUSE_POSITION.set(xPos - InputHandler.this.window.getWidth() / 2f, -(yPos - InputHandler.this.window.getHeight() / 2f));
+                MOUSE_POSITION.set(xPos, yPos);
             }
         };
         glfwSetCursorPosCallback(this.window.getId(), callback);
     }
 
-    public static Vector2f getMousePosition()
+    public static Vector2fc getMousePosition()
     {
-        return MOUSE_POSITION.get(new Vector2f());
-    }
-
-    public static Vector2f getMousePosInWorldSpace(Camera camera)
-    {
-        return getMousePosition().div(camera.getScale()).add(-camera.getPosition().x, camera.getPosition().y);
+        return MOUSE_POSITION;
     }
 
     public void tick()

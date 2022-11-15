@@ -4,7 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
@@ -100,7 +100,7 @@ public class Shader
             glUniform1f(location, value);
     }
 
-    public void setUniform(String name, Matrix4f value)
+    public void setUniform(String name, Matrix4fc value)
     {
         int location = glGetUniformLocation(this.program, name);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);

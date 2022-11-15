@@ -1,8 +1,10 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
+import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,8 @@ public abstract class AbstractWorld implements World
         return r;
     };
 
+    private static final Vector2i IN_VIEW_POS = new Vector2i();
+
     protected final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
     protected final TreeMap<Vector2ic, Tile> tilesFg;
 
@@ -51,33 +55,31 @@ public abstract class AbstractWorld implements World
     {
     }
 
-    public abstract void render(AGameOrSomething something, Camera camera);
 
     /**
      * @param pos    {@link Vector2ic} - Tile based position
      * @param window {@link Window} - Application window
      * @param camera {@link Camera} - Main game camera
-     * @return True if pos is within view on screen
+     * @return True if intersect is within view on screen
      */
     public boolean isPosInView(Vector2ic pos, Window window, Camera camera)
     {
-        float viewWidth = window.getWidth() / 4f / camera.getScale() + 2f;
-        float viewHeight = window.getHeight() / 4f / camera.getScale() + 2f;
-        Vector2i worldPos = pos.add((int) (camera.getPosition().x() / 2f), (int) (-camera.getPosition().y() / 2f), new Vector2i());
-        return worldPos.x() > -viewWidth && worldPos.x() < viewWidth && worldPos.y() > -viewHeight && worldPos.y() < viewHeight;
+        int viewWidth = (int) (window.getWidth() / 4f / camera.getZoom()) + 5;
+        int viewHeight = (int) (window.getHeight() / 4f / camera.getZoom()) + 5;
+        pos.add((int) -camera.getPosition().x(), (int) -camera.getPosition().y(), IN_VIEW_POS);
+        return IN_VIEW_POS.x() > -viewWidth && IN_VIEW_POS.x() < viewWidth && IN_VIEW_POS.y() > -viewHeight && IN_VIEW_POS.y() < viewHeight;
+//        Vector4f p = new Vector4f(1.0F).mul(camera.getProjectionMatrix()).mul(camera.getViewMatrix()).mul(pos.x(), pos.y(), 0.0F, 1.0F);
+//        return p.lengthSquared() < 1;
     }
 
+    @Override
     public Tile getTile(Vector2ic pos, boolean foreground)
     {
         Tile tile = foreground ? this.tilesFg.get(pos) : this.tilesBg.get(pos);
         return tile == null ? TileRegistry.AIR.get() : tile;
     }
 
-    public Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
-    {
-        return this.setTile(pos, tile, foreground, false);
-    }
-
+    @Override
     public Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force)
     {
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
