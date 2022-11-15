@@ -53,6 +53,7 @@ public abstract class AbstractWorld implements World
     @Override
     public void tick(AGameOrSomething something, Camera camera)
     {
+        this.correctCamera(something.getWindow(), camera);
     }
 
     @Override
@@ -70,6 +71,30 @@ public abstract class AbstractWorld implements World
 //        something.getTileRenderer().renderOnGrid(TileRegistry.SAND.get(), screenPosGrid, Shader.TILE_BASIC, camera);
     }
 
+    /**
+     * Corrects camera position to stay within the world
+     *
+     * @param window {@link Window} - Application window
+     * @param camera {@link Camera} - Main game camera
+     */
+    public void correctCamera(Window window, Camera camera)
+    {
+        camera.getPosition().get(CORRECT_CAMERA);
+//        float borderX = this.worldRadius - ((window.getWidth() / (float) this.worldRadius) / 2f) / camera.getZoom();
+        float borderX = this.worldRadius - 4f;
+        float borderY = this.worldRadius - 4f;
+
+//        System.out.println("Camera Position (" + CORRECT_CAMERA.x + ", " + CORRECT_CAMERA.y + ") - Border X/Y (" + borderX + ", " + borderY + ")");
+        if (CORRECT_CAMERA.x > borderX)
+            CORRECT_CAMERA.x = borderX;
+        if (CORRECT_CAMERA.x < -borderX)
+            CORRECT_CAMERA.x = -borderX;
+        if (CORRECT_CAMERA.y > borderY)
+            CORRECT_CAMERA.y = borderY;
+        if (CORRECT_CAMERA.y < -borderY)
+            CORRECT_CAMERA.y = -borderY;
+        camera.setPosition(CORRECT_CAMERA);
+    }
 
     /**
      * @param pos    {@link Vector2ic} - Tile based position
