@@ -45,6 +45,14 @@ public class Camera
         this.adjustProjection();
     }
 
+    public void tick()
+    {
+        if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
+            this.incrementZoom(-ZOOM_SPEED);
+        if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
+            this.incrementZoom(ZOOM_SPEED);
+    }
+
     public void setPosition(Vector2fc position)
     {
         this.position.set(position);

@@ -133,23 +133,19 @@ public class AGameOrSomething
                     glfwSetWindowShouldClose(this.window.getId(), true);
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_A))
-                    this.camera.addPosition(new Vector2f(sped, 0f));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
                     this.camera.addPosition(new Vector2f(-sped, 0f));
+                if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
+                    this.camera.addPosition(new Vector2f(sped, 0f));
 
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_W))
                     this.camera.addPosition(new Vector2f(0f, sped));
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
                     this.camera.addPosition(new Vector2f(0f, -sped));
 
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
-                    this.camera.zoom(sped);
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
-                    this.camera.zoom(-sped);
-
                 if (Window.getInputHandler().isKeyDown(GLFW_KEY_C))
                     this.camera.setPosition(new Vector2f(0f, 0f));
 
+                this.camera.tick();
                 this.world.tick(this, this.camera);
 
                 this.window.tick();
