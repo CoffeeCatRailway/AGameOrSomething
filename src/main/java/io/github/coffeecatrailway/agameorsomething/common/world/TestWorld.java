@@ -50,24 +50,24 @@ public class TestWorld extends AbstractWorld
     }
 
     @Override
-    public void tick(AGameOrSomething something, Camera camera)
+    public void tick(float delta, AGameOrSomething something, Camera camera)
     {
-        super.tick(something, camera);
+        super.tick(delta, something, camera);
+
+        Tile tile = null;
+
         if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+            tile = TileRegistry.SAND.get();
+        else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT))
+            tile = TileRegistry.DIRT.get();
+        else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_MIDDLE))
+            tile = TileRegistry.AIR.get();
+
+        if (tile != null)
         {
             TilePos pos = camera.trace(this);
             if (pos != TilePos.EMPTY)
-                this.setTile(pos.pos(), TileRegistry.SAND.get(), true);
-        } else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT))
-        {
-            TilePos pos = camera.trace(this);
-            if (pos != TilePos.EMPTY)
-                this.setTile(pos.pos(), TileRegistry.DIRT.get(), true);
-        } else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_MIDDLE))
-        {
-            TilePos pos = camera.trace(this);
-            if (pos != TilePos.EMPTY)
-                this.setTile(pos.pos(), TileRegistry.AIR.get(), true);
+                this.setTile(pos.pos(), tile, true);
         }
     }
 }

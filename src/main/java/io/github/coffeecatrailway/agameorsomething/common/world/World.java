@@ -17,7 +17,7 @@ public interface World
 {
     void generate();
 
-    void tick(AGameOrSomething something, Camera camera);
+    void tick(float delta, AGameOrSomething something, Camera camera);
 
     void render(AGameOrSomething something, Camera camera);
 

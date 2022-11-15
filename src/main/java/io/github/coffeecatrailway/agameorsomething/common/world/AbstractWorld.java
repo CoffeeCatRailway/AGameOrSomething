@@ -2,6 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
+import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -31,6 +32,7 @@ public abstract class AbstractWorld implements World
     };
 
     private static final Vector2i IN_VIEW_POS = new Vector2i();
+    private static final Vector2f CORRECT_CAMERA = new Vector2f();
 
     protected final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
     protected final TreeMap<Vector2ic, Tile> tilesFg;
@@ -38,6 +40,8 @@ public abstract class AbstractWorld implements World
     public static final int MIN_WORLD_RADIUS = 10;
     protected final int worldRadius; // Distance from 0,0 to each edge
     protected final int worldSize; // Width & height of the world
+
+    private PlayerEntity player;
 
     public AbstractWorld(int worldRadius)
     {
@@ -48,11 +52,15 @@ public abstract class AbstractWorld implements World
 
         this.tilesBg = new TreeMap<>(POS_COMPARATOR);
         this.tilesFg = new TreeMap<>(POS_COMPARATOR);
+
+        this.player = new PlayerEntity();
     }
 
     @Override
-    public void tick(AGameOrSomething something, Camera camera)
+    public void tick(float delta, AGameOrSomething something, Camera camera)
     {
+        this.player.tick(delta, something, camera, this);
+
         this.correctCamera(something.getWindow(), camera);
     }
 
@@ -69,6 +77,8 @@ public abstract class AbstractWorld implements World
 //        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getMousePosInWorldSpace(camera), Shader.TILE_BASIC, camera);
 //        Vector2i screenPosGrid = InputHandler.getMousePosInWorldSpace(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
 //        something.getTileRenderer().renderOnGrid(TileRegistry.SAND.get(), screenPosGrid, Shader.TILE_BASIC, camera);
+
+        this.player.render(Shader.SIMPLE, camera);
     }
 
     /**

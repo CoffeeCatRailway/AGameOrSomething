@@ -12,7 +12,6 @@ import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GLUtil;
@@ -32,10 +31,13 @@ public class AGameOrSomething
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String NAMESPACE = "agos";
 
+    public static final double FPS_CAP = 1d / 60d; // Used as delta
+
     private static AGameOrSomething INSTANCE;
 
     private final Window window;
     private Camera camera;
+
     private TileRenderer tileRenderer;
     private World world;
 
@@ -100,14 +102,11 @@ public class AGameOrSomething
         glClearColor(0f, 0f, 0f, 0f); // Set clear color
         glEnable(GL_TEXTURE_2D);
 
-        double fpsCap = 1d / 60d;
         double fpsPassed = 0;
         int fps = 0;
 
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
-
-        float sped = 1f / 4f;
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.shouldClose())
@@ -121,32 +120,19 @@ public class AGameOrSomething
 
             timeLast = time;
 
-            while (unprocessedTime >= fpsCap) // Update logic (tick)
+            while (unprocessedTime >= FPS_CAP) // Update logic (tick)
             {
                 if (this.window.hasResized())
                     this.camera.adjustProjection();
 
-                unprocessedTime -= fpsCap;
+                unprocessedTime -= FPS_CAP;
                 shouldRender = true;
 
                 if (Window.getInputHandler().isKeyPressed(GLFW_KEY_ESCAPE))
                     glfwSetWindowShouldClose(this.window.getId(), true);
 
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_A))
-                    this.camera.addPosition(new Vector2f(-sped, 0f));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_D))
-                    this.camera.addPosition(new Vector2f(sped, 0f));
-
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_W))
-                    this.camera.addPosition(new Vector2f(0f, sped));
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_S))
-                    this.camera.addPosition(new Vector2f(0f, -sped));
-
-                if (Window.getInputHandler().isKeyDown(GLFW_KEY_C))
-                    this.camera.setPosition(new Vector2f(0f, 0f));
-
                 this.camera.tick();
-                this.world.tick(this, this.camera);
+                this.world.tick((float) FPS_CAP, this, this.camera);
 
                 this.window.tick();
 
