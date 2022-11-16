@@ -103,7 +103,7 @@ public class Tile implements RegistrableSomething, HasTexture
     }
 
     @Override
-    public RegistrableSomething getInstance()
+    public Tile getInstance()
     {
         return this;
     }

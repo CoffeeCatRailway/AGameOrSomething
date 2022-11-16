@@ -19,11 +19,9 @@ public final class SomethingRegistry<T extends RegistrableSomething>
     private static int INTEGER_ID = 0;
 
     private final Int2ObjectHashMap<T> registry = new Int2ObjectHashMap<>();
-    private final Supplier<T> orElse;
 
-    private SomethingRegistry(Supplier<T> orElse)
+    private SomethingRegistry()
     {
-        this.orElse = orElse;
     }
 
     public void foreach(BiConsumer<Integer, T> action)
@@ -36,12 +34,12 @@ public final class SomethingRegistry<T extends RegistrableSomething>
         return this.registry.values();
     }
 
-    public Supplier<T> register(String id, Supplier<T> factory)
+    public <C extends T> Supplier<C> register(String id, Supplier<C> factory)
     {
         return register(new ObjectLocation(id), factory);
     }
 
-    public Supplier<T> register(ObjectLocation objectId, Supplier<T> factory)
+    public <C extends T> Supplier<C> register(ObjectLocation objectId, Supplier<C> factory)
     {
         int id = objectId.hashCode();
         if (this.registry.values().stream().filter(obj -> obj.getObjectId().equals(objectId)).collect(Collectors.toSet()).size() > 0)
@@ -54,11 +52,11 @@ public final class SomethingRegistry<T extends RegistrableSomething>
             LOGGER.warn("{} has hash code of {} witch already exists, given new id of {}", objectId, objectId.hashCode(), id);
         }
 
-        T object = factory.get();
+        C object = factory.get();
         object.setId(id, objectId);
         this.registry.put(id, object);
         LOGGER.debug("Object {} registered with id of {}", objectId, id);
-        return () -> this.registry.get(object.getId());
+        return () -> (C) this.registry.get(object.getId());
     }
 
     public Supplier<T> getById(int id)
@@ -70,12 +68,12 @@ public final class SomethingRegistry<T extends RegistrableSomething>
     {
         int id = objectId.hashCode();
         if (!this.registry.containsKey(id))
-            return () -> this.registry.values().stream().filter(obj1 -> obj1.getObjectId().equals(objectId)).findFirst().orElse(this.orElse.get());
+            return () -> this.registry.values().stream().filter(obj1 -> obj1.getObjectId().equals(objectId)).findFirst().orElse(null);
         return () -> this.registry.get(id);
     }
 
-    public static <C extends RegistrableSomething> SomethingRegistry<C> create(Supplier<C> orElse)
+    public static <C extends RegistrableSomething> SomethingRegistry<C> create(Class<C> clazz)
     {
-        return new SomethingRegistry<>(orElse);
+        return new SomethingRegistry<>();
     }
 }

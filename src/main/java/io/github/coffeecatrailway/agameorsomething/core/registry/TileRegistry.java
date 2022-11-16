@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class TileRegistry
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final SomethingRegistry<Tile> TILES = SomethingRegistry.create(TileRegistry.AIR);
+    public static final SomethingRegistry<Tile> TILES = SomethingRegistry.create(Tile.class);
 
     public static final Supplier<Tile> AIR = TILES.register("air", () -> new Tile(new Tile.TileData().setHasTexture(false).build()));
     public static final Supplier<Tile> GRASS = TILES.register("grass", () -> new Tile(new Tile.TileData().setHarvestLevel(1).setDrop(null).build()));
@@ -23,6 +23,6 @@ public class TileRegistry
 
     public static void load()
     {
-        LOGGER.info("Tiles registry loaded");
+        LOGGER.info("Tile registry loaded");
     }
 }
