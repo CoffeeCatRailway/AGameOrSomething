@@ -41,7 +41,7 @@ public abstract class AbstractWorld implements World
     protected final int worldRadius; // Distance from 0,0 to each edge
     protected final int worldSize; // Width & height of the world
 
-    private PlayerEntity player;
+    private final PlayerEntity player;
 
     public AbstractWorld(int worldRadius)
     {
@@ -67,7 +67,7 @@ public abstract class AbstractWorld implements World
     @Override
     public void render(AGameOrSomething something, Camera camera)
     {
-        Timer.start("tileRendering"); //TODO: Fix lag spike, check if background tile is visible
+        Timer.start("tileRendering"); //TODO: Fix lag spike, fix 'lines' appearing, check if background tile is visible
         this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SIMPLE, camera));
         this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SIMPLE, camera));
         long millis = Timer.end("tileRendering");

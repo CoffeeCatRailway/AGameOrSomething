@@ -58,6 +58,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     public static final boolean REGEN_ATLAS = true;
 
     public static final TextureAtlas<Tile> TILE_ATLAS = new TextureAtlas<>(TileRegistry.TILES, "tile");
+    public static final TextureAtlas<Entity> ENTITY_ATLAS = new TextureAtlas<>(EntityRegistry.ENTITIES, "entity");
 
     private final SomethingRegistry<T> registry;
     private final String filename;

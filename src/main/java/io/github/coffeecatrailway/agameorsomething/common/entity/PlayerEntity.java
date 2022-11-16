@@ -4,6 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
+import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,7 +22,13 @@ public class PlayerEntity extends Entity
 
     public PlayerEntity()
     {
-        super();
+        super(EntityRegistry.PLAYER.get().entityData);
+        this.setId(EntityRegistry.PLAYER.get().getId(), EntityRegistry.PLAYER.get().getObjectId());
+    }
+
+    public PlayerEntity(EntityData data)
+    {
+        super(data);
     }
 
     @Override

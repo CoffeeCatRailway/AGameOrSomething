@@ -18,10 +18,10 @@ public class VBOModels
     {
         float[] vertices = new float[]
                 {
-                        0f, 1f, 0f,    // top left     0
-                        1f, 1f, 0f,     // top right    1
-                        1f, 0f, 0f,    // bottom right 2
-                        0f, 0f, 0f,   // bottom left  3
+                        0f, 1f, 0f, // top left     0
+                        1f, 1f, 0f, // top right    1
+                        1f, 0f, 0f, // bottom right 2
+                        0f, 0f, 0f  // bottom left  3
                 };
 
         float[] textureCoords = new float[]

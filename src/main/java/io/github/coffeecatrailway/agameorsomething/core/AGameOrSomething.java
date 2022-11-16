@@ -9,6 +9,7 @@ import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
+import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,6 +94,9 @@ public class AGameOrSomething
 
         TileRegistry.load();
         TextureAtlas.TILE_ATLAS.init();
+
+        EntityRegistry.load();
+        TextureAtlas.ENTITY_ATLAS.init();
 
         this.tileRenderer = new TileRenderer();
         this.world = new TestWorld();
