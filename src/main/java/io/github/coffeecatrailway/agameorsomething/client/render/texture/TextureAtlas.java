@@ -3,7 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
-import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.SomethingRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;

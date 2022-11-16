@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
-import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4fc;

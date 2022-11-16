@@ -3,7 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.common.tile;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
-import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
 

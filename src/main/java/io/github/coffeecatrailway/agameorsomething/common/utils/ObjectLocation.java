@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.core.registry;
+package io.github.coffeecatrailway.agameorsomething.common.utils;
 
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 

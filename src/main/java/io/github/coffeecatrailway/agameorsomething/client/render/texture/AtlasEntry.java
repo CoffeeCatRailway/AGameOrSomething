@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
-import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 
 /**
  * @author CoffeeCatRailway
