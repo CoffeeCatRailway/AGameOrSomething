@@ -1,8 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
@@ -78,11 +76,6 @@ public class Tile implements RegistrableSomething, HasTexture
         return this.tileData.customTexture != null ? this.tileData.customTexture : new ObjectLocation(this.getObjectId().getNamespace(), "textures/tile/" + this.getObjectId().getPath());
     }
 
-    public VBOModel getModel()
-    {
-        return this.tileData.model;
-    }
-
     @Override
     public int getId()
     {
@@ -129,19 +122,17 @@ public class Tile implements RegistrableSomething, HasTexture
         private RegistrableSomething drop = null;
         private boolean hasTexture = true;
         private ObjectLocation customTexture = null;
-        private VBOModel model = VBOModels.SIMPLE_1X1;
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
             this.hasTexture = hasTexture;
             this.customTexture = customTexture;
-            this.model = model;
         }
 
         public boolean isUnbreakable()
@@ -184,15 +175,9 @@ public class Tile implements RegistrableSomething, HasTexture
             return this.setHasTexture(true);
         }
 
-        public TileData setModel(VBOModel model)
-        {
-            this.model = model;
-            return this;
-        }
-
         public TileData build()
         {
-            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.model);
+            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture);
         }
     }
 }

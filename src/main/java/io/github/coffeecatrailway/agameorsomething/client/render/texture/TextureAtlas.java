@@ -1,9 +1,11 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
+import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.SomethingRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
@@ -35,13 +37,6 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     private static final File TEMP_ATLAS_DIR = TEMP_ATLAS_PATH.toFile();
 
     private static final BufferedImage MISSING_IMAGE;
-    public static final Texture MISSING_TEXTURE;
-
-    // TODO: Options
-    public static final int ATLAS_SIZE = 128;
-    public static final boolean REGEN_ATLAS = true;
-
-    public static final TextureAtlas<Tile> TILE_ATLAS = new TextureAtlas<>(TileRegistry.TILES, "tiles");
 
     static
     {
@@ -54,8 +49,15 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        MISSING_TEXTURE = new Texture(MISSING_IMAGE);
     }
+
+    public static final ObjectLocation MISSING = new ObjectLocation("missing");
+
+    // TODO: Options
+    public static final int ATLAS_SIZE = 128;
+    public static final boolean REGEN_ATLAS = true;
+
+    public static final TextureAtlas<Tile> TILE_ATLAS = new TextureAtlas<>(TileRegistry.TILES, "tile");
 
     private final SomethingRegistry<T> registry;
     private final String filename;
@@ -83,9 +85,12 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             BufferedImage atlas;
 
             if (!atlasFile.exists() || REGEN_ATLAS)
-                atlas = this.generate(atlasFile);
+                atlas = this.generateAtlas(atlasFile);
             else
+            {
                 atlas = ImageIO.read(atlasFile);
+                // TODO: json file for atlas entries
+            }
 
             this.atlasTexture = new Texture(atlas);
         } catch (IOException e)
@@ -95,7 +100,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         }
     }
 
-    private BufferedImage generate(File atlasFile) throws IOException
+    private BufferedImage generateAtlas(File atlasFile) throws IOException
     {
         Timer.start("atlasGen");
         // Load textures from registry
