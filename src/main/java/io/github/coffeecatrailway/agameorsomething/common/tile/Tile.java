@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author CoffeeCatRailway
  * Created: 25/10/2022
  */
-public class Tile implements RegistrableSomething
+public class Tile implements RegistrableSomething, HasTexture
 {
     private final TileData tileData;
 
@@ -61,6 +61,7 @@ public class Tile implements RegistrableSomething
         return this.tileData.getDrop();
     }
 
+    @Override
     public boolean hasTexture()
     {
         return this.tileData.hasTexture;
@@ -71,9 +72,10 @@ public class Tile implements RegistrableSomething
         return this.hasTexture();
     }
 
-    public Texture getCustomTexture()
+    @Override
+    public ObjectLocation getTextureLocation()
     {
-        return this.tileData.customTexture;
+        return this.tileData.customTexture != null ? this.tileData.customTexture : new ObjectLocation(this.getObjectId().getNamespace(), "textures/tile/" + this.getObjectId().getPath());
     }
 
     public VBOModel getModel()
@@ -126,14 +128,14 @@ public class Tile implements RegistrableSomething
         private int harvestLevel = 0;
         private RegistrableSomething drop = null;
         private boolean hasTexture = true;
-        private Texture customTexture = null;
+        private ObjectLocation customTexture = null;
         private VBOModel model = VBOModels.SIMPLE_1X1;
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, Texture customTexture, VBOModel model)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
@@ -178,13 +180,8 @@ public class Tile implements RegistrableSomething
 
         public TileData setCustomTexture(ObjectLocation customTexture)
         {
-            return this.setCustomTexture(new Texture(customTexture, "tile"));
-        }
-
-        public TileData setCustomTexture(Texture customTexture)
-        {
-            this.customTexture = customTexture;
-            return this.setHasTexture(this.customTexture != null);
+            this.customTexture = new ObjectLocation(customTexture.getNamespace(), "textures/" + customTexture.getPath());
+            return this.setHasTexture(true);
         }
 
         public TileData setModel(VBOModel model)

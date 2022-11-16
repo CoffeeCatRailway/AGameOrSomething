@@ -4,7 +4,6 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -93,9 +92,9 @@ public class AGameOrSomething
         this.camera = new Camera(this.window);
 
         TileRegistry.load();
-        TextureAtlas.init();
-        this.tileRenderer = new TileRenderer();
+        TextureAtlas.TILE_ATLAS.init();
 
+        this.tileRenderer = new TileRenderer();
         this.world = new TestWorld();
     }
 
@@ -162,7 +161,7 @@ public class AGameOrSomething
     {
         this.tileRenderer.delete();
 
-        Texture.deleteStaticTextures();
+        TextureAtlas.MISSING_TEXTURE.delete();
         Shader.deleteStaticShaders();
         VBOModels.deleteStaticModels();
 

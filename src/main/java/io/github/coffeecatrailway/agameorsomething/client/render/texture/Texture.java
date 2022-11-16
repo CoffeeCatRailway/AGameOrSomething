@@ -28,49 +28,30 @@ public class Texture
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Set<Integer> DELETED = new HashSet<>();
 
-    public static final Texture MISSING = new Texture("missing.png");
+    private final int id;
+    private final int width;
+    private final int height;
 
-    private int id;
-    private int width;
-    private int height;
-
-    private final ObjectLocation location;
-
-    public Texture(String texture)
+    public Texture(BufferedImage image)
     {
-        this(new ObjectLocation("textures/" + texture));
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+
+        this.id = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, this.id);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        ByteBuffer pixels = loadImageToBuffer(image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.width, this.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     }
 
-    public Texture(ObjectLocation location, String subFolder)
+    public static BufferedImage loadImage(ObjectLocation location) throws IOException
     {
-        this(new ObjectLocation(location.getNamespace(), "textures/" + subFolder + "/" + location.getPath()));
-    }
-
-    public Texture(ObjectLocation location)
-    {
-        this.location = location;
         if (!location.getPath().toLowerCase(Locale.ROOT).endsWith(".png"))
             location = new ObjectLocation(location.getNamespace(), location.getPath() + ".png");
-
-        try
-        {
-            BufferedImage image = ImageIO.read(ResourceLoader.getResource(location));
-            this.width = image.getWidth();
-            this.height = image.getHeight();
-
-            this.id = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, this.id);
-
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-            ByteBuffer pixels = loadImageToBuffer(image);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.width, this.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-        } catch (IOException e)
-        {
-            LOGGER.error("Something went wrong loading texture {}!", location, e);
-            e.printStackTrace();
-        }
+        return ImageIO.read(ResourceLoader.getResource(location));
     }
 
     public int getWidth()
@@ -88,7 +69,7 @@ public class Texture
         if (!DELETED.contains(this.id))
         {
             glDeleteTextures(this.id);
-            LOGGER.debug("Deleted texture with id {} at {}", this.id, this.location);
+            LOGGER.debug("Deleted texture with id {}", this.id);
             DELETED.add(this.id);
         }
     }
@@ -108,13 +89,13 @@ public class Texture
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Texture texture = (Texture) o;
-        return id == texture.id && width == texture.width && height == texture.height && location.equals(texture.location);
+        return id == texture.id && width == texture.width && height == texture.height;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, width, height, location);
+        return Objects.hash(id, width, height);
     }
 
     public static ByteBuffer loadImageToBuffer(final BufferedImage image)
@@ -136,11 +117,5 @@ public class Texture
             }
         }
         return pixels.flip();
-    }
-
-    public static void deleteStaticTextures()
-    {
-        MISSING.delete();
-        LOGGER.warn("Public static textures deleted!");
     }
 }

@@ -30,6 +30,11 @@ public final class SomethingRegistry<T extends RegistrableSomething>
         this.registry.forEach(action);
     }
 
+    public Int2ObjectHashMap<T>.ValueCollection values()
+    {
+        return this.registry.values();
+    }
+
     public Supplier<T> register(String id, Supplier<T> factory)
     {
         return register(new ObjectLocation(id), factory);

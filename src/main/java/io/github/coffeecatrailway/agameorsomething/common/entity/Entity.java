@@ -3,6 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.common.entity;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
@@ -25,7 +26,7 @@ public abstract class Entity
 
     public Entity()
     {
-        this(VBOModels.SIMPLE_1X1, Texture.MISSING, new Vector2f());
+        this(VBOModels.SIMPLE_1X1, TextureAtlas.MISSING_TEXTURE, new Vector2f());
     }
 
     public Entity(VBOModel model, Texture texture, Vector2f position)
