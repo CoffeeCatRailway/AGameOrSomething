@@ -159,9 +159,6 @@ public class AGameOrSomething
 
     private void destroy()
     {
-        this.tileRenderer.delete();
-
-        TextureAtlas.MISSING_TEXTURE.delete();
         Shader.deleteStaticShaders();
         VBOModels.deleteStaticModels();
 

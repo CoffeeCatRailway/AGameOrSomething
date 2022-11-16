@@ -1,19 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
-import io.github.coffeecatrailway.agameorsomething.core.registry.ObjectLocation;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 /**
  * @author CoffeeCatRailway
@@ -21,17 +14,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class TileRenderer
 {
-    private final Map<ObjectLocation, Texture> textureMap = new HashMap<>();
-//    private final VBOModel model;
-
     public TileRenderer()
     {
-//        this.model = VBOModel.simple1x1Model();
-
-//        TileRegistry.TILES.foreach((id, tile) -> {
-//            if (tile.hasTexture() && !this.textureMap.containsKey(tile.getObjectId()))
-//                this.textureMap.put(tile.getObjectId(), new Texture(tile.getTextureLocation()));
-//        });
     }
 
     /**
@@ -81,17 +65,10 @@ public class TileRenderer
         shader.bind();
         TextureAtlas.TILE_ATLAS.getAtlasTexture().bind(0);
         shader.setUniform("tex", 0);
-        shader.setUniform("time", (float) glfwGetTime());
+//        shader.setUniform("time", (float) glfwGetTime());
         shader.setUniform("projection", projection);
         shader.setUniform("view", view);
-//        this.model.render();
-        tile.getModel().render();
+        TextureAtlas.TILE_ATLAS.getEntry(tile.getObjectId()).getModel().render();
         shader.unbind();
-    }
-
-    public void delete()
-    {
-        this.textureMap.values().stream().filter(tex -> !tex.equals(TextureAtlas.MISSING_TEXTURE)).forEach(Texture::delete);
-//        this.model.delete();
     }
 }
