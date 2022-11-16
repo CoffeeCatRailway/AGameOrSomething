@@ -106,7 +106,9 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             {
                 try
                 {
-                    textures.put(obj.getObjectId(), Texture.loadImage(obj.getTextureLocation()));
+                    BufferedImage texture = Texture.loadImage(obj.getTextureLocation());
+                    if (texture != null)
+                        textures.put(obj.getObjectId(), texture);
                 } catch (IOException e)
                 {
                     LOGGER.error("Something went wrong loading texture for {}", obj, e);
@@ -148,9 +150,11 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         return atlas;
     }
 
-    public Map<ObjectLocation, AtlasEntry> getEntries()
+    public AtlasEntry getEntry(ObjectLocation id)
     {
-        return this.entries;
+        if (!this.entries.containsKey(id))
+            return this.entries.get(MISSING);
+        return this.entries.get(id);
     }
 
     public Texture getAtlasTexture()

@@ -51,7 +51,14 @@ public class Texture
     {
         if (!location.getPath().toLowerCase(Locale.ROOT).endsWith(".png"))
             location = new ObjectLocation(location.getNamespace(), location.getPath() + ".png");
-        return ImageIO.read(ResourceLoader.getResource(location));
+        try
+        {
+            return ImageIO.read(ResourceLoader.getResource(location));
+        } catch (IllegalArgumentException e)
+        {
+            LOGGER.error(e);
+            return null;
+        }
     }
 
     public int getWidth()
