@@ -88,6 +88,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
             if (!atlasFile.exists() || REGEN_ATLAS)
             {
+                Timer.start("atlasGen");
                 atlas = this.generateAtlas(atlasFile);
 
                 JsonArray jsonArray = new JsonArray();
@@ -96,8 +97,10 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                 {
                     GSON.toJson(jsonArray, writer);
                 }
+                LOGGER.debug("Atlas '{}' generation took {}ms", this.filename, Timer.end("atlasGen"));
             } else
             {
+                Timer.start("atlasGen");
                 atlas = ImageIO.read(atlasFile);
                 try (Reader reader = new FileReader(TEMP_ATLAS_PATH.toString() + "/" + this.filename + ".json"))
                 {
@@ -107,6 +110,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                         this.entries.putIfAbsent(entry.getId(), entry);
                     });
                 }
+                LOGGER.debug("Atlas '{}' reading took {}ms", this.filename, Timer.end("atlasGen"));
             }
 
             this.atlasTexture = new Texture(atlas);
@@ -119,7 +123,6 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     private BufferedImage generateAtlas(File atlasFile) throws IOException
     {
-        Timer.start("atlasGen");
         // Load textures from registry
         final Map<ObjectLocation, BufferedImage> textures = new HashMap<>();
         textures.put(new ObjectLocation("missing"), MISSING_IMAGE);
@@ -167,8 +170,6 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         graphics.dispose();
 
         ImageIO.write(atlas, "PNG", atlasFile);
-        LOGGER.debug("Atlas '{}' generation took {}ms", this.filename, Timer.end("atlasGen"));
-
         return atlas;
     }
 
