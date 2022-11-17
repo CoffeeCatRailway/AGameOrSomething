@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.utils;
 
+import com.google.gson.JsonObject;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 
 import java.util.Locale;
@@ -32,6 +33,27 @@ public class ObjectLocation
     {
         this.namespace = namespace.toLowerCase(Locale.ROOT);
         this.path = path.toLowerCase(Locale.ROOT);
+    }
+
+    public ObjectLocation(JsonObject json)
+    {
+        if (json.has("namespace"))
+        {
+            this.namespace = json.get("namespace").getAsString().toLowerCase(Locale.ROOT);
+            this.path = json.get("path").getAsString().toLowerCase(Locale.ROOT);
+        } else
+        {
+            String[] parts = json.get("path").getAsString().toLowerCase(Locale.ROOT).split(":", 2);
+            this.namespace = parts[0];
+            this.path = parts[1];
+        }
+    }
+
+    public JsonObject serialize(JsonObject json)
+    {
+        json.addProperty("namespace", this.namespace);
+        json.addProperty("path", this.path);
+        return json;
     }
 
     public String getNamespace()

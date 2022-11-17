@@ -15,10 +15,11 @@ Parts of this project are based off a [series by Warmful Development](https://ww
 
 ---
 
-| Dependencies | Version      | Use                      |
-|--------------|--------------|--------------------------|
-| LWJGL        | 3.3.1        | Graphics                 |
-| JOML         | 1.10.4       | Maths                    |
-| Log4j        | 2.18.0       | Logging                  |
-| Netty        | 4.1.84.Final | Multiplayer (Eventually) |
-| Agrona       | 0.9.31       | Registries               |
+| Dependencies | Version      | Use                          |
+|--------------|--------------|------------------------------|
+| LWJGL        | 3.3.1        | Graphics                     |
+| JOML         | 1.10.4       | Maths                        |
+| Log4j        | 2.18.0       | Logging                      |
+| Netty        | 4.1.84.Final | Multiplayer (Eventually)     |
+| Agrona       | 0.9.31       | Registries                   |
+| Gson         | 2.10         | Serialization/Desrialization |

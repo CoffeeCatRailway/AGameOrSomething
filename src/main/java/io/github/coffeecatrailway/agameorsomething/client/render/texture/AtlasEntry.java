@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
+import com.google.gson.JsonObject;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 
@@ -15,7 +16,7 @@ public class AtlasEntry
     private final int width;
     private final int height;
 
-    private VBOModel model = null;
+    private VBOModel model = null; // TODO: Shaders?
 
     public AtlasEntry(ObjectLocation id, int x, int y, int width, int height)
     {
@@ -24,6 +25,25 @@ public class AtlasEntry
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    public AtlasEntry(JsonObject json)
+    {
+        this.id = new ObjectLocation(json.getAsJsonObject("id"));
+        this.x = json.get("x").getAsInt();
+        this.y = json.get("y").getAsInt();
+        this.width = json.get("width").getAsInt();
+        this.height = json.get("height").getAsInt();
+    }
+
+    public JsonObject serialize(JsonObject json)
+    {
+        json.add("id", this.id.serialize(new JsonObject()));
+        json.addProperty("x", this.x);
+        json.addProperty("y", this.y);
+        json.addProperty("width", this.width);
+        json.addProperty("height", this.height);
+        return json;
     }
 
     public boolean isOverlapping(AtlasEntry entry)
@@ -67,5 +87,10 @@ public class AtlasEntry
         }
 
         return this.model;
+    }
+
+    public ObjectLocation getId()
+    {
+        return this.id;
     }
 }

@@ -1,10 +1,11 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
+import com.google.gson.*;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
-import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.SomethingRegistry;
@@ -17,8 +18,7 @@ import org.joml.Math;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +35,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     private static final Path TEMP_ATLAS_PATH = Paths.get("./temp/atlas");
     private static final File TEMP_ATLAS_DIR = TEMP_ATLAS_PATH.toFile();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final BufferedImage MISSING_IMAGE;
 
@@ -86,11 +87,26 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             BufferedImage atlas;
 
             if (!atlasFile.exists() || REGEN_ATLAS)
+            {
                 atlas = this.generateAtlas(atlasFile);
-            else
+
+                JsonArray jsonArray = new JsonArray();
+                this.entries.values().forEach(entry -> jsonArray.add(entry.serialize(new JsonObject())));
+                try (Writer writer = new FileWriter(TEMP_ATLAS_PATH.toString() + "/" + this.filename + ".json"))
+                {
+                    GSON.toJson(jsonArray, writer);
+                }
+            } else
             {
                 atlas = ImageIO.read(atlasFile);
-                // TODO: json file for atlas entries
+                try (Reader reader = new FileReader(TEMP_ATLAS_PATH.toString() + "/" + this.filename + ".json"))
+                {
+                    JsonArray jsonArray = GSON.fromJson(reader, JsonArray.class);
+                    jsonArray.asList().stream().filter(JsonElement::isJsonObject).map(JsonElement::getAsJsonObject).forEach(obj -> {
+                        AtlasEntry entry = new AtlasEntry(obj);
+                        this.entries.putIfAbsent(entry.getId(), entry);
+                    });
+                }
             }
 
             this.atlasTexture = new Texture(atlas);
