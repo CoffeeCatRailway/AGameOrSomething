@@ -35,7 +35,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     private static final Path TEMP_ATLAS_PATH = Paths.get("./temp/atlas");
     private static final File TEMP_ATLAS_DIR = TEMP_ATLAS_PATH.toFile();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().create();
 
     private static final BufferedImage MISSING_IMAGE;
 
