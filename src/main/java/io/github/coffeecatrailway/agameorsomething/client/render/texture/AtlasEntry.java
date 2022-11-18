@@ -1,8 +1,9 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
 import com.google.gson.JsonObject;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
 
 /**
  * @author CoffeeCatRailway
@@ -11,92 +12,48 @@ import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 public class AtlasEntry
 {
     private final ObjectLocation id;
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
+    private final Vector4fc uvCoords;
 
-    private VBOModel model = null; // TODO: Shaders?
-
-    public AtlasEntry(ObjectLocation id, int x, int y, int width, int height)
+    public AtlasEntry(ObjectLocation id, float x, float y, float width, float height)
     {
         this.id = id;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this.uvCoords = new Vector4f(x / TextureAtlas.ATLAS_SIZE, y / TextureAtlas.ATLAS_SIZE, width / TextureAtlas.ATLAS_SIZE, height / TextureAtlas.ATLAS_SIZE);
     }
 
     public AtlasEntry(JsonObject json)
     {
         this.id = new ObjectLocation(json.getAsJsonObject("id"));
-        this.x = json.get("x").getAsInt();
-        this.y = json.get("y").getAsInt();
-        this.width = json.get("width").getAsInt();
-        this.height = json.get("height").getAsInt();
+        this.uvCoords = new Vector4f(json.get("x").getAsFloat() / TextureAtlas.ATLAS_SIZE,
+                json.get("y").getAsFloat() / TextureAtlas.ATLAS_SIZE,
+                json.get("width").getAsFloat() / TextureAtlas.ATLAS_SIZE,
+                json.get("height").getAsFloat() / TextureAtlas.ATLAS_SIZE);
     }
 
     public JsonObject serialize(JsonObject json)
     {
         json.add("id", this.id.serialize(new JsonObject()));
-        json.addProperty("x", this.x);
-        json.addProperty("y", this.y);
-        json.addProperty("width", this.width);
-        json.addProperty("height", this.height);
+        json.addProperty("x", this.uvCoords.x());
+        json.addProperty("y", this.uvCoords.y());
+        json.addProperty("width", this.uvCoords.z());
+        json.addProperty("height", this.uvCoords.w());
         return json;
     }
 
     public boolean isOverlapping(AtlasEntry entry)
     {
-        return this.x < entry.x + entry.width &&
-                this.x + this.width > entry.x &&
-                this.y < entry.y + entry.height &&
-                this.y + this.height > entry.y;
+        return this.uvCoords.x() < entry.uvCoords.x() + entry.uvCoords.z() &&
+                this.uvCoords.x() + this.uvCoords.z() > entry.uvCoords.x() &&
+                this.uvCoords.y() < entry.uvCoords.y() + entry.uvCoords.w() &&
+                this.uvCoords.y() + this.uvCoords.w() > entry.uvCoords.y();
     }
 
-    public VBOModel getModel()
+    public Vector4fc getUVCoords()
     {
-        if (this.model == null)
-        {
-            float[] vertices = new float[]
-                    {
-                            0f, 1f, 0f, // top left     0
-                            1f, 1f, 0f, // top right    1
-                            1f, 0f, 0f, // bottom right 2
-                            0f, 0f, 0f  // bottom left  3
-                    };
-
-            float x = (float) this.x / TextureAtlas.ATLAS_SIZE;
-            float y = (float) this.y / TextureAtlas.ATLAS_SIZE;
-            float w = (float) this.width / TextureAtlas.ATLAS_SIZE;
-            float h = (float) this.height / TextureAtlas.ATLAS_SIZE;
-            float[] textureCoords = new float[]
-                    {
-                            x, y,
-                            x + w, y,
-                            x + w, y + h,
-                            x, y + h
-                    };
-
-            int[] indices = new int[]
-                    {
-                            0, 1, 2,
-                            2, 3, 0
-                    };
-            this.model = new VBOModel(vertices, textureCoords, indices);
-        }
-
-        return this.model;
+        return this.uvCoords;
     }
 
     public ObjectLocation getId()
     {
         return this.id;
-    }
-
-    public void delete()
-    {
-        if (this.model != null)
-            this.model.delete();
     }
 }

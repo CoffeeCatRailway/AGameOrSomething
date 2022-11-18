@@ -4,6 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
@@ -45,7 +46,8 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 //        shader.setUniform("time", (float) glfwGetTime());
         shader.setUniform("projection", targetProjection);
         shader.setUniform("view", camera.getViewMatrix());
-        TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getModel().render();
+        shader.setUniform("uvCoords", TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getUVCoords());
+        VBOModels.SIMPLE_1X1.render();
         shader.unbind();
     }
 

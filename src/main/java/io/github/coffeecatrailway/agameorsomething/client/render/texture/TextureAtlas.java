@@ -188,7 +188,6 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     public void delete()
     {
-        this.entries.values().forEach(AtlasEntry::delete);
         this.entries.clear();
         this.atlasTexture.delete();
     }

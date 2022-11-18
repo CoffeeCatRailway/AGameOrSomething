@@ -5,6 +5,7 @@ import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4fc;
+import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ public class Shader
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final Shader SIMPLE = new Shader("simple");
+    public static final Shader SPRITE = new Shader("sprite");
 
     public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
 
@@ -109,6 +111,13 @@ public class Shader
             glUniformMatrix4fv(location, false, buffer);
     }
 
+    public void setUniform(String name, Vector4fc value)
+    {
+        int location = glGetUniformLocation(this.program, name);
+        if (location != -1)
+            glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+    }
+
     public void bind()
     {
         glUseProgram(this.program);
@@ -155,6 +164,7 @@ public class Shader
     public static void deleteStaticShaders()
     {
         SIMPLE.delete();
+        SPRITE.delete();
         LOGGER.warn("Static shaders deleted!");
     }
 }
