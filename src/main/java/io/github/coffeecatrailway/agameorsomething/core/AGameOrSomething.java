@@ -163,6 +163,7 @@ public class AGameOrSomething
 
     private void destroy()
     {
+        TextureAtlas.deleteStaticAtlases();
         Shader.deleteStaticShaders();
         VBOModels.deleteStaticModels();
 

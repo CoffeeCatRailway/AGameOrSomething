@@ -155,6 +155,6 @@ public class Shader
     public static void deleteStaticShaders()
     {
         SIMPLE.delete();
-        LOGGER.warn("Public static shaders deleted!");
+        LOGGER.warn("Static shaders deleted!");
     }
 }

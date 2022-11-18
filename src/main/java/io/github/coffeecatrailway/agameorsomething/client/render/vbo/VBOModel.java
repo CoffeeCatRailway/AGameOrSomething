@@ -72,11 +72,10 @@ public class VBOModel
 
     public void delete()
     {
-        LOGGER.debug("Deleting vao...");
         glDeleteVertexArrays(this.vaoId);
-        LOGGER.debug("Deleting vbo model...");
         glDeleteBuffers(this.vertexId);
         glDeleteBuffers(this.indicesId);
+        LOGGER.debug("Deleted vbo model {}", this.vertexId);
     }
 
     private FloatBuffer createFloatBuffer(float[] data) {

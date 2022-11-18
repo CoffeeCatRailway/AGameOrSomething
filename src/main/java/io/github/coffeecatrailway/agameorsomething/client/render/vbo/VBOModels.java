@@ -60,6 +60,6 @@ public class VBOModels
     {
         SIMPLE_1X1.delete();
         SIMPLE_1X2.delete();
-        LOGGER.warn("Public static models deleted!");
+        LOGGER.warn("Static models deleted!");
     }
 }

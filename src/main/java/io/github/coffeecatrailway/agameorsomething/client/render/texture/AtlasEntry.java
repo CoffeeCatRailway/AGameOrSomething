@@ -93,4 +93,10 @@ public class AtlasEntry
     {
         return this.id;
     }
+
+    public void delete()
+    {
+        if (this.model != null)
+            this.model.delete();
+    }
 }

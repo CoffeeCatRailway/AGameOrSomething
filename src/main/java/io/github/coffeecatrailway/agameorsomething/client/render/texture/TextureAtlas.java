@@ -167,6 +167,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             this.entries.putIfAbsent(entry.getKey(), atlasEntry);
         }
 
+        textures.values().forEach(Image::flush);
         graphics.dispose();
 
         ImageIO.write(atlas, "PNG", atlasFile);
@@ -183,5 +184,20 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     public Texture getAtlasTexture()
     {
         return this.atlasTexture;
+    }
+
+    public void delete()
+    {
+        this.entries.values().forEach(AtlasEntry::delete);
+        this.entries.clear();
+        this.atlasTexture.delete();
+    }
+
+    public static void deleteStaticAtlases()
+    {
+        MISSING_IMAGE.flush();
+        TILE_ATLAS.delete();
+        ENTITY_ATLAS.delete();
+        LOGGER.warn("Static atlases deleted!");
     }
 }
