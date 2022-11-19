@@ -1,9 +1,9 @@
 package io.github.coffeecatrailway.agameorsomething.core.registry;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.agrona.collections.Int2ObjectHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public final class SomethingRegistry<T extends RegistrableSomething>
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static int INTEGER_ID = 0;
 
     private final Int2ObjectHashMap<T> registry = new Int2ObjectHashMap<>();

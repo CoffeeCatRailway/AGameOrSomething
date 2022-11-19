@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
 import com.google.gson.*;
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
@@ -11,9 +12,8 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSome
 import io.github.coffeecatrailway.agameorsomething.core.registry.SomethingRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.agrona.collections.Object2ObjectHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Math;
+import org.slf4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final Path TEMP_ATLAS_PATH = Paths.get("./temp/atlas");
     private static final File TEMP_ATLAS_DIR = TEMP_ATLAS_PATH.toFile();
@@ -41,14 +41,15 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     static
     {
-        try
-        {
-            MISSING_IMAGE = ImageIO.read(ResourceLoader.getResource(new ObjectLocation("textures/missing.png")));
-        } catch (IOException e)
-        {
-            LOGGER.error(e);
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        MISSING_IMAGE = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < 16; ++y) {
+            for (int x = 0; x < 16; ++x) {
+                if (y < 8 ^ x < 8) {
+                    MISSING_IMAGE.setRGB(x, y, 0xFFF800F8);
+                } else {
+                    MISSING_IMAGE.setRGB(x, y, 0xFF000000);
+                }
+            }
         }
     }
 
@@ -114,10 +115,10 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             }
 
             this.atlasTexture = new Texture(atlas);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
-            LOGGER.error(e);
-            e.printStackTrace();
+            LOGGER.error("Failed to generate atlas", e);
         }
     }
 

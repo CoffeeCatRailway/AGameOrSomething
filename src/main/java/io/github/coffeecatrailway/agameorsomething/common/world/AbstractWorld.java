@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
@@ -8,11 +9,10 @@ import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
+import org.slf4j.Logger;
 
 import java.util.Comparator;
 import java.util.TreeMap;
@@ -23,7 +23,7 @@ import java.util.TreeMap;
  */
 public abstract class AbstractWorld implements World
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final Comparator<Vector2ic> POS_COMPARATOR = (pos1, pos2) -> {
         int r = Integer.compare(pos1.y(), pos2.y()) * -1;
         if (r == 0 && !pos1.equals(pos2))

@@ -1,7 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.mojang.logging.LogUtils;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -9,6 +8,7 @@ import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import org.slf4j.Logger;
 
 import java.nio.IntBuffer;
 
@@ -20,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Window
 {
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     private long id;
 

@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
@@ -7,10 +8,9 @@ import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
 
 /**
  * @author CoffeeCatRailway
@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class TestWorld extends AbstractWorld
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public TestWorld()
     {
