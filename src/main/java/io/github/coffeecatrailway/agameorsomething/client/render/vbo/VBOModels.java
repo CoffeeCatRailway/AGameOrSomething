@@ -39,7 +39,7 @@ public class VBOModels
                         2, 3, 0
                 };
         SIMPLE_1X1 = new VBOModel(vertices, textureCoords, indices);
-        SIMPLE_1X2 = new VBOModel(inflateVertices(vertices, 2f, 0f, 0f, 0f), textureCoords, indices);
+        SIMPLE_1X2 = new VBOModel(inflateVertices(vertices, 1f, 0f, 0f, 0f), textureCoords, indices);
 
         vertices = null;
         textureCoords = null;
