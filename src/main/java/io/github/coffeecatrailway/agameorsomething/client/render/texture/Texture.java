@@ -56,7 +56,7 @@ public class Texture
             return ImageIO.read(ResourceLoader.getResource(location));
         } catch (IllegalArgumentException e)
         {
-            LOGGER.error(e);
+            LOGGER.error("Texture {} failed to load!", location, e);
             return null;
         }
     }
