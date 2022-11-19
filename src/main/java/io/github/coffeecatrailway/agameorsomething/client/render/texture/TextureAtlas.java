@@ -3,7 +3,6 @@ package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
-import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -19,11 +18,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.lwjgl.opengl.GL11C.*;
 
 /**
  * @author CoffeeCatRailway
@@ -55,8 +57,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     public static final ObjectLocation MISSING = new ObjectLocation("missing");
 
-    // TODO: Options
-    public static final int ATLAS_SIZE = 128;
+    private static final int MAX_TEXTURE_SIZE = getMaxTextureSize();
     public static final boolean REGEN_ATLAS = true;
 
     public static final TextureAtlas<Tile> TILE_ATLAS = new TextureAtlas<>(TileRegistry.TILES, "tile");
@@ -64,6 +65,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     private final SomethingRegistry<T> registry;
     private final String filename;
+    private final STBStitcher<ObjectLocation> stitcher;
     private final Object2ObjectHashMap<ObjectLocation, AtlasEntry> entries = new Object2ObjectHashMap<>();
 
     private Texture atlasTexture;
@@ -72,6 +74,24 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     {
         this.registry = registry;
         this.filename = filename;
+        this.stitcher = new STBStitcher<>(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0);
+    }
+
+    private static int getMaxTextureSize() {
+        int maxTextureSize = glGetInteger(GL_MAX_TEXTURE_SIZE);
+
+        for (int size = Math.max(32768, maxTextureSize); size >= 1024; size >>= 1) {
+            // Proxy image 2D is used to verify the graphics driver can actually handle what it reports it can
+            glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+            int k = glGetTexLevelParameteri(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_WIDTH);
+            if (k != 0) {
+                return size;
+            }
+        }
+
+        maxTextureSize = Math.max(maxTextureSize, 1024);
+        LOGGER.info("Failed to determine maximum texture size by probing, trying GL_MAX_TEXTURE_SIZE = {}", maxTextureSize);
+        return maxTextureSize;
     }
 
     public void init()
@@ -98,7 +118,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                 {
                     GSON.toJson(jsonArray, writer);
                 }
-                LOGGER.debug("Atlas '{}' generation took {}ms", this.filename, Timer.end("atlasGen"));
+                LOGGER.info("Atlas '{}' generation took {}ms", this.filename, Timer.end("atlasGen"));
             } else
             {
                 Timer.start("atlasGen");
@@ -107,11 +127,11 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                 {
                     JsonArray jsonArray = GSON.fromJson(reader, JsonArray.class);
                     jsonArray.asList().stream().filter(JsonElement::isJsonObject).map(JsonElement::getAsJsonObject).forEach(obj -> {
-                        AtlasEntry entry = new AtlasEntry(obj);
+                        AtlasEntry entry = new AtlasEntry(obj, this);
                         this.entries.putIfAbsent(entry.getId(), entry);
                     });
                 }
-                LOGGER.debug("Atlas '{}' reading took {}ms", this.filename, Timer.end("atlasGen"));
+                LOGGER.info("Atlas '{}' reading took {}ms", this.filename, Timer.end("atlasGen"));
             }
 
             this.atlasTexture = new Texture(atlas);
@@ -126,15 +146,18 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     {
         // Load textures from registry
         final Map<ObjectLocation, BufferedImage> textures = new HashMap<>();
-        textures.put(new ObjectLocation("missing"), MISSING_IMAGE);
+        textures.put(MISSING, MISSING_IMAGE);
+        this.stitcher.add(MISSING, MISSING_IMAGE.getWidth(), MISSING_IMAGE.getHeight());
         this.registry.foreach((id, obj) -> {
             if (obj.hasTexture())
             {
                 try
                 {
                     BufferedImage texture = Texture.loadImage(obj.getTextureLocation());
-                    if (texture != null)
+                    if (texture != null) {
                         textures.put(obj.getObjectId(), texture);
+                        this.stitcher.add(obj.getObjectId(), texture.getWidth(), texture.getHeight());
+                    }
                 } catch (IOException e)
                 {
                     LOGGER.error("Something went wrong loading texture for {}", obj, e);
@@ -143,33 +166,43 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             }
         });
 
-        BufferedImage atlas = new BufferedImage(ATLAS_SIZE, ATLAS_SIZE, BufferedImage.TYPE_INT_ARGB);
+        this.stitcher.stitch();
+
+        BufferedImage atlas = new BufferedImage(this.stitcher.getWidth(), this.stitcher.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = atlas.getGraphics();
 
         // Add textures loaded from registry
-        int x, y;
-        for (Map.Entry<ObjectLocation, BufferedImage> entry : textures.entrySet())
-        {
-            BufferedImage image = entry.getValue();
-            x = 0;
-            y = 0;
-            AtlasEntry atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
-            while (this.entries.values().stream().anyMatch(atlasEntry::isOverlapping))
-            {
-                x = Math.clamp(0, ATLAS_SIZE - 1, x + 1);
-                if (x >= ATLAS_SIZE || x + image.getWidth() > ATLAS_SIZE)
-                {
-                    x = 0;
-                    y = Math.clamp(0, ATLAS_SIZE - 1, y + 1);
-                }
-                atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
-            }
-            graphics.drawImage(image, x, y, null);
-            this.entries.putIfAbsent(entry.getKey(), atlasEntry);
-        }
+        this.stitcher.walk((entry, x, y, width, height) -> {
+            graphics.drawImage(textures.get(entry), x, y, null);
+            this.entries.putIfAbsent(entry, new AtlasEntry(entry, this, x, y, width, height));
+        });
 
         textures.values().forEach(Image::flush);
         graphics.dispose();
+
+//        int x, y;
+//        for (Map.Entry<ObjectLocation, BufferedImage> entry : textures.entrySet())
+//        {
+//            BufferedImage image = entry.getValue();
+//            x = 0;
+//            y = 0;
+//            AtlasEntry atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
+//            while (this.entries.values().stream().anyMatch(atlasEntry::isOverlapping))
+//            {
+//                x = Math.clamp(0, ATLAS_SIZE - 1, x + 1);
+//                if (x >= ATLAS_SIZE || x + image.getWidth() > ATLAS_SIZE)
+//                {
+//                    x = 0;
+//                    y = Math.clamp(0, ATLAS_SIZE - 1, y + 1);
+//                }
+//                atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
+//            }
+//            graphics.drawImage(image, x, y, null);
+//            this.entries.putIfAbsent(entry.getKey(), atlasEntry);
+//        }
+//
+//        textures.values().forEach(Image::flush);
+//        graphics.dispose();
 
         ImageIO.write(atlas, "PNG", atlasFile);
         return atlas;
@@ -187,10 +220,21 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         return this.atlasTexture;
     }
 
+    public int getWidth()
+    {
+        return this.stitcher.getWidth();
+    }
+
+    public int getHeight()
+    {
+        return this.stitcher.getHeight();
+    }
+
     public void delete()
     {
         this.entries.clear();
         this.atlasTexture.delete();
+        this.stitcher.free();
     }
 
     public static void deleteStaticAtlases()
