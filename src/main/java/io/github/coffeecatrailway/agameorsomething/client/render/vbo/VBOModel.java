@@ -1,9 +1,9 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.vbo;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
+import org.slf4j.Logger;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL33.*;
  */
 public class VBOModel
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final int drawCount;
 

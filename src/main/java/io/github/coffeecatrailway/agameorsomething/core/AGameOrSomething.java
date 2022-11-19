@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.core;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
@@ -11,11 +12,10 @@ import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GLUtil;
+import org.slf4j.Logger;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class AGameOrSomething
 {
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final String NAMESPACE = "agos";
 
     public static final double FPS_CAP = 1d / 60d; // Used as delta

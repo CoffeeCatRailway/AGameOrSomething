@@ -1,8 +1,8 @@
 package io.github.coffeecatrailway.agameorsomething.core.registry;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.function.Supplier;
 
@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  */
 public class TileRegistry
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     public static final SomethingRegistry<Tile> TILES = SomethingRegistry.create(Tile.class);
 
     public static final Supplier<Tile> AIR = TILES.register("air", () -> new Tile(new Tile.TileData().setHasTexture(false).build()));

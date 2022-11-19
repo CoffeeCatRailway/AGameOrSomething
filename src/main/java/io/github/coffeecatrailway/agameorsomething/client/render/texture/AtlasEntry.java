@@ -13,20 +13,20 @@ public class AtlasEntry
 {
     private final ObjectLocation id;
     private final Vector4fc uvCoords;
+    private final TextureAtlas<?> atlas;
 
-    public AtlasEntry(ObjectLocation id, float x, float y, float width, float height)
+    public AtlasEntry(ObjectLocation id, TextureAtlas<?> atlas, int x, int y, int width, int height)
     {
         this.id = id;
-        this.uvCoords = new Vector4f(x / TextureAtlas.ATLAS_SIZE, y / TextureAtlas.ATLAS_SIZE, width / TextureAtlas.ATLAS_SIZE, height / TextureAtlas.ATLAS_SIZE);
+        this.atlas = atlas;
+        this.uvCoords = new Vector4f((float) x / (float) atlas.getWidth(), (float) y / (float) atlas.getHeight(), (float) width / (float) atlas.getWidth(), (float) height / (float) atlas.getHeight());
     }
 
-    public AtlasEntry(JsonObject json)
+    public AtlasEntry(JsonObject json, TextureAtlas<?> atlas)
     {
         this.id = new ObjectLocation(json.getAsJsonObject("id"));
-        this.uvCoords = new Vector4f(json.get("x").getAsFloat() / TextureAtlas.ATLAS_SIZE,
-                json.get("y").getAsFloat() / TextureAtlas.ATLAS_SIZE,
-                json.get("width").getAsFloat() / TextureAtlas.ATLAS_SIZE,
-                json.get("height").getAsFloat() / TextureAtlas.ATLAS_SIZE);
+        this.atlas = atlas;
+        this.uvCoords = new Vector4f(json.get("x").getAsFloat(), json.get("y").getAsFloat(), json.get("width").getAsFloat(), json.get("height").getAsFloat());
     }
 
     public JsonObject serialize(JsonObject json)
@@ -39,12 +39,9 @@ public class AtlasEntry
         return json;
     }
 
-    public boolean isOverlapping(AtlasEntry entry)
+    public ObjectLocation getId()
     {
-        return this.uvCoords.x() < entry.uvCoords.x() + entry.uvCoords.z() &&
-                this.uvCoords.x() + this.uvCoords.z() > entry.uvCoords.x() &&
-                this.uvCoords.y() < entry.uvCoords.y() + entry.uvCoords.w() &&
-                this.uvCoords.y() + this.uvCoords.w() > entry.uvCoords.y();
+        return this.id;
     }
 
     public Vector4fc getUVCoords()
@@ -52,8 +49,7 @@ public class AtlasEntry
         return this.uvCoords;
     }
 
-    public ObjectLocation getId()
-    {
-        return this.id;
+    public TextureAtlas<?> getAtlas() {
+        return atlas;
     }
 }
