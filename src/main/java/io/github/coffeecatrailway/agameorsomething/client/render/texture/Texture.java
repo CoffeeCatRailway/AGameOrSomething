@@ -1,10 +1,10 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.texture;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
+import org.slf4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
  */
 public class Texture
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Integer> DELETED = new HashSet<>();
 
     private final int id;

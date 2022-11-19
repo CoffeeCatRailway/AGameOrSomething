@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.vbo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
 /**
  * @author CoffeeCatRailway
@@ -9,7 +9,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class VBOModels
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
+
 
     public static final VBOModel SIMPLE_1X1;
     public static final VBOModel SIMPLE_1X2;

@@ -1,12 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4fc;
 import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class Shader
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final Shader SIMPLE = new Shader("simple");
     public static final Shader SPRITE = new Shader("sprite");
