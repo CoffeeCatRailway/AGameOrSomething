@@ -4,6 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -47,7 +48,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         shader.setUniform("projection", targetProjection);
         shader.setUniform("view", camera.getViewMatrix());
         shader.setUniform("uvCoords", TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getUVCoords());
-        VBOModels.SIMPLE_1X1.render();
+        this.entityData.model.render();
         shader.unbind();
     }
 
@@ -102,16 +103,18 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         private float maxHealth = 20f;
         private float passiveDefense = 0f;
         private RegistrableSomething drop = null;
+        private VBOModel model = VBOModels.SIMPLE_1X2;
 
         public EntityData()
         {
         }
 
-        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop)
+        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop, VBOModel model)
         {
             this.maxHealth = maxHealth;
             this.passiveDefense = passiveDefense;
             this.drop = drop;
+            this.model = model;
         }
 
         public EntityData setMaxHealth(float maxHealth)
@@ -132,9 +135,15 @@ public abstract class Entity implements RegistrableSomething, HasTexture
             return this;
         }
 
+        public EntityData setModel(VBOModel model)
+        {
+            this.model = model;
+            return this;
+        }
+
         public EntityData build()
         {
-            return new EntityData(this.maxHealth, this.passiveDefense, this.drop);
+            return new EntityData(this.maxHealth, this.passiveDefense, this.drop, this.model);
         }
     }
 }

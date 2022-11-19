@@ -2,7 +2,6 @@ package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
@@ -70,7 +69,7 @@ public class TileRenderer
         shader.setUniform("projection", projection);
         shader.setUniform("view", view);
         shader.setUniform("uvCoords", TextureAtlas.TILE_ATLAS.getEntry(tile.getObjectId()).getUVCoords());
-        VBOModels.SIMPLE_1X1.render();
+        tile.getModel().render();
         shader.unbind();
     }
 }
