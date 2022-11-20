@@ -1,10 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.client;
 
 import io.github.coffeecatrailway.agameorsomething.client.render.MousePicker;
-import io.github.coffeecatrailway.agameorsomething.common.io.InputHandler;
-import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
+import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
+import io.github.ocelot.window.Window;
+import io.github.ocelot.window.input.KeyboardHandler;
+import io.github.ocelot.window.input.MouseHandler;
 import org.joml.Math;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
@@ -47,9 +49,10 @@ public class Camera
 
     public void tick()
     {
-        if (Window.getInputHandler().isKeyDown(GLFW_KEY_UP))
+        KeyboardHandler keyboardHandler = AGameOrSomething.getInstance().getKeyboardHandler();
+        if (keyboardHandler.isKeyPressed(GLFW_KEY_UP))
             this.incrementZoom(-ZOOM_SPEED);
-        if (Window.getInputHandler().isKeyDown(GLFW_KEY_DOWN))
+        if (keyboardHandler.isKeyPressed(GLFW_KEY_DOWN))
             this.incrementZoom(ZOOM_SPEED);
     }
 
@@ -70,9 +73,9 @@ public class Camera
 
     public void adjustProjection()
     {
-        GL11.glViewport(0, 0, this.window.getWidth(), this.window.getHeight());
+        GL11.glViewport(0, 0, this.window.getFramebufferWidth(), this.window.getFramebufferHeight());
 //        this.projectionMatrix.identity().ortho(-this.window.getWidth() / 2f, this.window.getWidth() / 2f, -this.window.getHeight() / 2f, this.window.getHeight() / 2f, Z_NEAR, Z_FAR);
-        this.projectionMatrix.identity().perspective(Math.toRadians(70), (float) this.window.getWidth() / (float) this.window.getHeight(), Z_NEAR, Z_FAR);
+        this.projectionMatrix.identity().perspective(Math.toRadians(70), (float) this.window.getFramebufferWidth() / (float) this.window.getFramebufferHeight(), Z_NEAR, Z_FAR);
     }
 
     public Matrix4fc getProjectionMatrix()
@@ -97,7 +100,8 @@ public class Camera
 
     public Vector3f getLook()
     {
-        return MousePicker.getRay(this.projectionMatrix, this.getViewMatrix(), InputHandler.getMousePosition().x() / this.window.getWidth() * 2f - 1f, InputHandler.getMousePosition().y() / this.window.getHeight() * 2f - 1f);
+        MouseHandler mouseHandler = AGameOrSomething.getInstance().getMouseHandler();
+        return MousePicker.getRay(this.projectionMatrix, this.getViewMatrix(), (float) (mouseHandler.getMouseX() / this.window.getFramebufferWidth() * 2f - 1f), (float) (mouseHandler.getMouseY() / this.window.getFramebufferHeight() * 2f - 1f));
     }
 
     public void incrementZoom(float zoomInc)

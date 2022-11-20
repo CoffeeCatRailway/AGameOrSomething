@@ -1,6 +1,7 @@
 package texture;
 
 import com.google.gson.*;
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
@@ -12,9 +13,8 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSome
 import io.github.coffeecatrailway.agameorsomething.core.registry.SomethingRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.agrona.collections.Object2ObjectHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Math;
+import org.slf4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final Path TEMP_ATLAS_PATH = Paths.get("./temp/atlas");
     private static final File TEMP_ATLAS_DIR = TEMP_ATLAS_PATH.toFile();
@@ -47,8 +47,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             MISSING_IMAGE = ImageIO.read(ResourceLoader.getResource(new ObjectLocation("textures/missing.png")));
         } catch (IOException e)
         {
-            LOGGER.error(e);
-            e.printStackTrace();
+            LOGGER.error("Failed to load missing texture",e);
             throw new RuntimeException(e);
         }
     }
@@ -116,8 +115,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             this.atlasTexture = new Texture(atlas);
         } catch (IOException e)
         {
-            LOGGER.error(e);
-            e.printStackTrace();
+            LOGGER.error("Failed to initialize atlas", e);
         }
     }
 

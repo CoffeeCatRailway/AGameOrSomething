@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
-import io.github.coffeecatrailway.agameorsomething.common.io.Window;
+import io.github.ocelot.window.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -114,8 +114,8 @@ public abstract class AbstractWorld implements World
      */
     public boolean isPosInView(Vector2ic pos, Window window, Camera camera)
     {
-        int viewWidth = (int) (window.getWidth() / 4f / camera.getZoom()) + 5;
-        int viewHeight = (int) (window.getHeight() / 4f / camera.getZoom()) + 5;
+        int viewWidth = (int) (window.getFramebufferWidth() / 4f / camera.getZoom()) + 5;
+        int viewHeight = (int) (window.getFramebufferHeight() / 4f / camera.getZoom()) + 5;
         pos.add((int) -camera.getPosition().x(), (int) -camera.getPosition().y(), IN_VIEW_POS);
         return IN_VIEW_POS.x() > -viewWidth && IN_VIEW_POS.x() < viewWidth && IN_VIEW_POS.y() > -viewHeight && IN_VIEW_POS.y() < viewHeight;
 //        Vector4f p = new Vector4f(1.0F).mul(camera.getProjectionMatrix()).mul(camera.getViewMatrix()).mul(pos.x(), pos.y(), 0.0F, 1.0F);

@@ -10,6 +10,7 @@ version = project.projVersion
 repositories {
     mavenCentral()
     maven { url "https://libraries.minecraft.net" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -41,6 +42,7 @@ dependencies {
 
     implementation "io.netty:netty-all:${project.nettyVersion}"
     implementation "org.bouncycastle:bcpkix-jdk15on:1.65"
+    implementation "com.github.Ocelot5836:glfw-windows:96e3de7"
 
     implementation "org.agrona:agrona:${project.agronaVersion}"
 

@@ -6,14 +6,20 @@ import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
-import io.github.coffeecatrailway.agameorsomething.common.io.Window;
+import io.github.ocelot.window.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import io.github.ocelot.window.WindowEventListener;
+import io.github.ocelot.window.WindowManager;
+import io.github.ocelot.window.input.KeyMods;
+import io.github.ocelot.window.input.KeyboardHandler;
+import io.github.ocelot.window.input.MouseHandler;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
 import org.slf4j.Logger;
 
@@ -27,7 +33,7 @@ import static org.lwjgl.opengl.GL11.*;
  * @author CoffeeCatRailway
  * Created: 13/07/2022
  */
-public class AGameOrSomething
+public class AGameOrSomething implements WindowEventListener
 {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String NAMESPACE = "agos";
@@ -36,7 +42,10 @@ public class AGameOrSomething
 
     private static AGameOrSomething INSTANCE;
 
+    private final WindowManager windowManager;
     private final Window window;
+    private final KeyboardHandler keyboardHandler;
+    private final MouseHandler mouseHandler;
     private Camera camera;
 
     private TileRenderer tileRenderer;
@@ -44,28 +53,26 @@ public class AGameOrSomething
 
     private AGameOrSomething(int width, int height, boolean fullscreen)
     {
-        this.window = new Window(width, height).setFullscreen(fullscreen);
+        this.windowManager = new WindowManager();
+        this.window = this.windowManager.create(width, height, false);
+        this.window.setFullscreen(fullscreen);
+        this.window.addListener(this);
+        this.keyboardHandler = this.window.createKeyboardHandler();
+        this.mouseHandler = this.window.createMouseHandler();
     }
 
     private void init()
     {
-        // Setup error callback. Prints error to System.err
-        glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
-
-        // Initialize GLFW
-        if (!glfwInit())
-        {
-            LOGGER.error("Unable to initialize GLFW!");
-            throw new IllegalStateException("Unable to initialize GLFW!");
-        }
-
         // Configure
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
         // Create the window
-        this.window.initialize("AGameOrSomething");
+        this.window.create("AGameOrSomething");
+        GL.createCapabilities();
 
         GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStream()
         {
@@ -114,8 +121,10 @@ public class AGameOrSomething
         double unprocessedTime = 0;
 
         // Run until window is closed or 'ESCAPE' is pressed
-        while (!this.window.shouldClose())
+        while (!this.window.isClosed())
         {
+            this.windowManager.update();
+
             boolean shouldRender = false;
 
             double time = Timer.getTimeInSeconds();
@@ -127,37 +136,24 @@ public class AGameOrSomething
 
             while (unprocessedTime >= FPS_CAP) // Update logic (tick)
             {
-                if (this.window.hasResized())
-                    this.camera.adjustProjection();
-
                 unprocessedTime -= FPS_CAP;
                 shouldRender = true;
-
-                if (Window.getInputHandler().isKeyPressed(GLFW_KEY_ESCAPE))
-                    glfwSetWindowShouldClose(this.window.getId(), true);
 
                 this.camera.tick();
                 this.world.tick((float) FPS_CAP, this, this.camera);
 
-                this.window.tick();
-
                 if (fpsPassed >= 1d)
                 {
                     fpsPassed = 0;
-                    this.window.setTitleSuffix("Fps: " + fps);
+                    this.window.setTitle("AGameOrSomething - Fps: " + fps);
                     fps = 0;
                 }
             }
 
-            if (shouldRender && !this.window.isMoving())
-            {
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                this.world.render(this, this.camera);
-
-                glfwSwapBuffers(this.window.getId()); // swap the color buffers
-                fps++;
-            }
+            this.world.render(this, this.camera);
+            fps++;
         }
     }
 
@@ -167,12 +163,31 @@ public class AGameOrSomething
         Shader.deleteStaticShaders();
         VBOModels.deleteStaticModels();
 
-        this.window.destroy();
+        this.windowManager.free();
+    }
+
+    @Override
+    public void framebufferResized(Window window, int width, int height) {
+        this.camera.adjustProjection();
+    }
+
+    @Override
+    public void keyPressed(Window window, int key, int scanCode, KeyMods mods) {
+        if(key == GLFW_KEY_ESCAPE)
+            this.window.setClosing(true);
     }
 
     public Window getWindow()
     {
         return this.window;
+    }
+
+    public KeyboardHandler getKeyboardHandler() {
+        return keyboardHandler;
+    }
+
+    public MouseHandler getMouseHandler() {
+        return mouseHandler;
     }
 
     public Camera getCamera()
@@ -207,9 +222,5 @@ public class AGameOrSomething
 
         // Terminate GLFW & free
         LOGGER.warn("Terminating program");
-        glfwTerminate();
-        GLFWErrorCallback prevCallback = glfwSetErrorCallback(null);
-        if (prevCallback != null)
-            prevCallback.free();
     }
 }

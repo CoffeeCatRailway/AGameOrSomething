@@ -2,15 +2,16 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.common.io.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import io.github.ocelot.window.input.MouseHandler;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author CoffeeCatRailway
@@ -56,11 +57,12 @@ public class TestWorld extends AbstractWorld
 
         Tile tile = null;
 
-        if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+        MouseHandler mouseHandler = something.getMouseHandler();
+        if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
             tile = TileRegistry.SAND.get();
-        else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT))
+        else if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
             tile = TileRegistry.DIRT.get();
-        else if (Window.getInputHandler().isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_MIDDLE))
+        else if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE))
             tile = TileRegistry.AIR.get();
 
         if (tile != null)
