@@ -48,6 +48,6 @@ public class PlayerEntity extends Entity
         if (keyboardHandler.isKeyPressed(GLFW_KEY_C))
             this.position.set(0f);
 
-        camera.setPosition(camera.getPosition().lerp(this.position, CAMERA_SMOOTHNESS, LERP_CAMERA));
+        camera.setPosition(camera.getPosition().lerp(this.position, CAMERA_SMOOTHNESS, LERP_CAMERA).add(.1f, 0f));
     }
 }
