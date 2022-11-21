@@ -6,19 +6,18 @@ import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
-import io.github.ocelot.window.Window;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import io.github.ocelot.window.Window;
 import io.github.ocelot.window.WindowEventListener;
 import io.github.ocelot.window.WindowManager;
 import io.github.ocelot.window.input.KeyMods;
 import io.github.ocelot.window.input.KeyboardHandler;
 import io.github.ocelot.window.input.MouseHandler;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
 import org.slf4j.Logger;
@@ -125,7 +124,7 @@ public class AGameOrSomething implements WindowEventListener
         {
             this.windowManager.update();
 
-            boolean shouldRender = false;
+//            boolean shouldRender = false;
 
             double time = Timer.getTimeInSeconds();
             double timePassed = time - timeLast;
@@ -137,7 +136,7 @@ public class AGameOrSomething implements WindowEventListener
             while (unprocessedTime >= FPS_CAP) // Update logic (tick)
             {
                 unprocessedTime -= FPS_CAP;
-                shouldRender = true;
+//                shouldRender = true;
 
                 this.camera.tick();
                 this.world.tick((float) FPS_CAP, this, this.camera);
@@ -150,10 +149,16 @@ public class AGameOrSomething implements WindowEventListener
                 }
             }
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            if (this.window.isFocused())
+            {
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            this.world.render(this, this.camera);
-            fps++;
+                this.world.render(this, this.camera);
+                glDisable(GL_BLEND);
+                fps++;
+            }
         }
     }
 
@@ -167,13 +172,15 @@ public class AGameOrSomething implements WindowEventListener
     }
 
     @Override
-    public void framebufferResized(Window window, int width, int height) {
+    public void framebufferResized(Window window, int width, int height)
+    {
         this.camera.adjustProjection();
     }
 
     @Override
-    public void keyPressed(Window window, int key, int scanCode, KeyMods mods) {
-        if(key == GLFW_KEY_ESCAPE)
+    public void keyPressed(Window window, int key, int scanCode, KeyMods mods)
+    {
+        if (key == GLFW_KEY_ESCAPE)
             this.window.setClosing(true);
     }
 
@@ -182,11 +189,13 @@ public class AGameOrSomething implements WindowEventListener
         return this.window;
     }
 
-    public KeyboardHandler getKeyboardHandler() {
+    public KeyboardHandler getKeyboardHandler()
+    {
         return keyboardHandler;
     }
 
-    public MouseHandler getMouseHandler() {
+    public MouseHandler getMouseHandler()
+    {
         return mouseHandler;
     }
 
