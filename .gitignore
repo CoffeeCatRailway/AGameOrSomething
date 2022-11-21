@@ -2,6 +2,6 @@ build/
 .gradle/
 .idea/
 logs/
-old/
+other/
 temp/
 *.log
