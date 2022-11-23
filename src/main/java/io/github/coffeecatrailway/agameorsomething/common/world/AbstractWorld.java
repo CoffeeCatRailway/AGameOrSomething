@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.ocelot.window.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;

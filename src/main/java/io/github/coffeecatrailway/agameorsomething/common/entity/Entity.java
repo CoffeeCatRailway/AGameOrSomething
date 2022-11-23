@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.entity;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
@@ -43,11 +43,11 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
         shader.bind();
         TextureAtlas.ENTITY_ATLAS.getAtlasTexture().bind(0);
-        shader.setUniform("tex", 0);
+        shader.setUniformi("tex", 0);
 //        shader.setUniform("time", (float) glfwGetTime());
-        shader.setUniform("projection", targetProjection);
-        shader.setUniform("view", camera.getViewMatrix());
-        shader.setUniform("uvCoords", TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getUVCoords());
+        shader.setUniformMatrix4f("projection", targetProjection);
+        shader.setUniformMatrix4f("view", camera.getViewMatrix());
+        shader.setUniformVector4f("uvCoords", TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getUVCoords());
         this.entityData.model.render();
         shader.unbind();
     }

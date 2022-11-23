@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.client.render.vbo;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.render.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 

@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client.render;
+package io.github.coffeecatrailway.agameorsomething.client.render.shader;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
@@ -88,21 +88,21 @@ public class Shader
         }
     }
 
-    public void setUniform(String name, int value)
+    public void setUniformi(String name, int value)
     {
         int location = glGetUniformLocation(this.program, name);
         if (location != -1)
             glUniform1i(location, value);
     }
 
-    public void setUniform(String name, float value)
+    public void setUniformf(String name, float value)
     {
         int location = glGetUniformLocation(this.program, name);
         if (location != -1)
             glUniform1f(location, value);
     }
 
-    public void setUniform(String name, Matrix4fc value)
+    public void setUniformMatrix4f(String name, Matrix4fc value)
     {
         int location = glGetUniformLocation(this.program, name);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
@@ -111,7 +111,7 @@ public class Shader
             glUniformMatrix4fv(location, false, buffer);
     }
 
-    public void setUniform(String name, Vector4fc value)
+    public void setUniformVector4f(String name, Vector4fc value)
     {
         int location = glGetUniformLocation(this.program, name);
         if (location != -1)
