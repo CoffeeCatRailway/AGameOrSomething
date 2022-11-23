@@ -2,11 +2,9 @@
 
 uniform sampler2D tex;
 
-in vec2 texCoords0;
-
-out vec4 fragColor;
+varying vec2 vTexCoords;
 
 void main()
 {
-    fragColor = texture2D(tex, texCoords0);
+    gl_FragColor = texture2D(tex, vTexCoords);
 }

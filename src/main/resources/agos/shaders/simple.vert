@@ -3,13 +3,13 @@
 uniform mat4 projection;
 uniform mat4 view;
 
-in vec3 position;
-in vec2 texCoords;
+attribute vec3 position;
+attribute vec2 texCoords;
 
-out vec2 texCoords0;
+varying vec2 vTexCoords;
 
 void main()
 {
-    texCoords0 = texCoords;
+    vTexCoords = texCoords;
     gl_Position = projection * view * vec4(position, 1);
 }
