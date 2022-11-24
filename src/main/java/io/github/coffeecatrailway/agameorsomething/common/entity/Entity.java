@@ -21,7 +21,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     private int id;
     private ObjectLocation objectId;
 
-    protected Vector2f position = new Vector2f(); // TODO: Have `lastPosition` for collision box updating
+    protected Vector2f position = new Vector2f();
     protected float health;
 
     public Entity(EntityData entityData)
@@ -43,13 +43,28 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     @Override
     public boolean hasTexture()
     {
-        return TextureAtlas.ENTITY_ATLAS.has(this.getObjectId()) && TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()) != null;
+        return true;
     }
 
     @Override
     public ObjectLocation getTextureLocation()
     {
         return new ObjectLocation(this.getObjectId().getNamespace(), "textures/entity/" + this.getObjectId().getPath());
+    }
+
+    public Vector2f getPosition()
+    {
+        return this.position;
+    }
+
+    public float getHealth()
+    {
+        return this.health;
+    }
+
+    public void setHealth(float health)
+    {
+        this.health = health;
     }
 
     @Override

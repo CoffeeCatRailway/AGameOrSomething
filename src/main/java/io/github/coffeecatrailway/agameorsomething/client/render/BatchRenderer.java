@@ -5,6 +5,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.AtlasEntry;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VAO;
+import org.joml.Math;
 import org.joml.Vector4fc;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -24,8 +25,11 @@ public class BatchRenderer
 
     private int index;
     private final int maxIndex;
-    private float r = 1f, g = 1f, b = 1f, a = 1f;
     private boolean drawing = false;
+
+    private float r = 1f, g = 1f, b = 1f, a = 1f;
+    private float rotationRadians = 0f;
+    private float originX = 0f, originY = 0f;
 
     public BatchRenderer()
     {
@@ -58,7 +62,7 @@ public class BatchRenderer
     }
 
     /**
-     * @param hex Color in hex format
+     * @param hex      Color in hex format
      * @param hasAlpha True if has value includes alpha
      */
     public void setColor(int hex, boolean hasAlpha)
@@ -81,6 +85,31 @@ public class BatchRenderer
         this.g = g;
         this.b = b;
         this.a = a;
+    }
+
+    /**
+     * @param rotationDegrees Rotation in degrees
+     */
+    public void setRotationDegrees(float rotationDegrees)
+    {
+        this.rotationRadians = (float) (rotationDegrees * (Math.PI / 180f));
+    }
+
+    /**
+     * @param rotation Rotation in radians
+     */
+    public void setRotation(float rotation)
+    {
+        this.rotationRadians = rotation;
+    }
+
+    /**
+     * Sets the origin for rotations
+     */
+    public void setOrigin(float x, float y)
+    {
+        this.originX = x;
+        this.originY = y;
     }
 
     /**
@@ -148,6 +177,9 @@ public class BatchRenderer
         this.index = 0;
         renderCalls = 0;
         this.texture = null;
+
+        this.setRotation(0f);
+        this.setOrigin(0f, 0f);
     }
 
     public void end()
@@ -174,6 +206,7 @@ public class BatchRenderer
 
     /**
      * Draw atlas entry at x,y with width & height
+     *
      * @param entry {@link AtlasEntry} - Entry to be rendered
      */
     public void draw(AtlasEntry entry, float x, float y, float width, float height)
@@ -185,33 +218,64 @@ public class BatchRenderer
     /**
      * Draw atlas entry at x,y with width & height
      * u,v is the top left of the sprite with u2,v2 being the bottom right
+     *
      * @param texture {@link Texture} - Texture to be rendered
      */
     public void draw(Texture texture, float x, float y, float width, float height, float u, float v, float u2, float v2)
     {
         this.checkFlush(texture);
 
-//        float x1 = x;
-//        float y1 = y;
+        float x1 = x;
+        float y1 = y;
 
         float x2 = x + width;
-//        float y2 = y;
+        float y2 = y;
 
         float x3 = x + width;
         float y3 = y + height;
 
-//        float x4 = x;
+        float x4 = x;
         float y4 = y + height;
 
+        if (this.rotationRadians != 0f)
+        {
+            float scaleX = 1f;//width/tex.getWidth();
+            float scaleY = 1f;//height/tex.getHeight();
+
+            float cx = this.originX * scaleX;
+            float cy = this.originY * scaleY;
+
+            float p1x = -cx;
+            float p1y = -cy;
+            float p2x = width - cx;
+            float p2y = -cy;
+            float p3x = width - cx;
+            float p3y = height - cy;
+            float p4x = -cx;
+            float p4y = height - cy;
+
+            final float cos = Math.cos(this.rotationRadians);
+            final float sin = Math.sin(this.rotationRadians);
+
+            x1 = x + (cos * p1x - sin * p1y) + cx; // TOP LEFT
+            y1 = y + (sin * p1x + cos * p1y) + cy;
+            x2 = x + (cos * p2x - sin * p2y) + cx; // TOP RIGHT
+            y2 = y + (sin * p2x + cos * p2y) + cy;
+            x3 = x + (cos * p3x - sin * p3y) + cx; // BOTTOM RIGHT
+            y3 = y + (sin * p3x + cos * p3y) + cy;
+            x4 = x + (cos * p4x - sin * p4y) + cx; // BOTTOM LEFT
+            y4 = y + (sin * p4x + cos * p4y) + cy;
+        }
+
         // top left, top right, bottom left
-        this.vertex(x, y, this.r, this.g, this.b, this.a, u, v2);
-        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v2);
-        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v);
+        this.vertex(x1, y1, this.r, this.g, this.b, this.a, u, v2);
+        this.vertex(x2, y2, this.r, this.g, this.b, this.a, u2, v2);
+        this.vertex(x4, y4, this.r, this.g, this.b, this.a, u, v);
 
         // top right, bottom right, bottom left
-        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v2);
+        this.vertex(x2, y2, this.r, this.g, this.b, this.a, u2, v2);
         this.vertex(x3, y3, this.r, this.g, this.b, this.a, u2, v);
-        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v);
+        this.vertex(x4, y4, this.r, this.g, this.b, this.a, u, v);
     }
 
     private void vertex(float x, float y, float r, float g, float b, float a, float u, float v)
