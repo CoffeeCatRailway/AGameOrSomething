@@ -16,8 +16,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL20C.GL_MAX_TEXTURE_IMAGE_UNITS;
 
 /**
  * @author CoffeeCatRailway
@@ -27,6 +27,8 @@ public class Texture
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Integer> DELETED = new HashSet<>();
+
+    public static final int MAX_TEXTURES = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
 
     private final int id;
     private final int width;
@@ -83,7 +85,7 @@ public class Texture
 
     public void bind(int sampler)
     {
-        if (sampler >= 0 && sampler <= 31)
+        if (sampler >= 0 && sampler < MAX_TEXTURES)
         {
             glActiveTexture(GL_TEXTURE0 + sampler);
             glBindTexture(GL_TEXTURE_2D, this.id);

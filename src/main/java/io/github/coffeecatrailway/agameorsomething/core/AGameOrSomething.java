@@ -2,8 +2,10 @@ package io.github.coffeecatrailway.agameorsomething.core;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.AtlasEntry;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -115,9 +117,19 @@ public class AGameOrSomething implements WindowEventListener
 
         double fpsPassed = 0;
         int fps = 0;
+        long frameTime = 0;
 
         double timeLast = Timer.getTimeInSeconds();
         double unprocessedTime = 0;
+
+        BatchRenderer batch = new BatchRenderer();
+
+        glDisable(GL_DEPTH_TEST);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glClearColor(0f, 0f, 0f, 0f);
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.isClosed())
@@ -144,21 +156,34 @@ public class AGameOrSomething implements WindowEventListener
                 if (fpsPassed >= 1d)
                 {
                     fpsPassed = 0;
-                    this.window.setTitle("AGameOrSomething - Fps: " + fps);
+                    this.window.setTitle("AGameOrSomething - Fps: " + fps + ", " + frameTime + "ms");
                     fps = 0;
                 }
             }
 
+            frameTime = System.currentTimeMillis();
             if (this.window.isFocused())
             {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                batch.updateUniforms(this.camera);
 
-                this.world.render(this, this.camera);
-                glDisable(GL_BLEND);
+//                this.world.render(this, this.camera);
+
+                batch.begin();
+                batch.setColor(1f, 1f, 1f, 1f);
+                for (int y = -10; y < 11; y++)
+                {
+                    for(int x = -10; x < 11; x++)
+                    {
+                        AtlasEntry entry = TextureAtlas.TILE_ATLAS.getEntry((x + y) % 2 == 0 ? TileRegistry.DIRT.get().getObjectId() : TileRegistry.GRASS.get().getObjectId());
+                        batch.draw(entry, x, y, 1f, 1f);
+                    }
+                }
+                batch.end();
+
                 fps++;
             }
+            frameTime = System.currentTimeMillis() - frameTime;
         }
     }
 
