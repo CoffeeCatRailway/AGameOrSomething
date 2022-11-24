@@ -82,7 +82,7 @@ public abstract class AbstractWorld implements World
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
 
-        this.player.render(batch, camera);
+        this.player.render(something, batch, camera);
     }
 
     /**

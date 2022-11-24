@@ -32,7 +32,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     public abstract void tick(float delta, AGameOrSomething something, Camera camera, World world);
 
-    public void render(BatchRenderer batch, Camera camera)
+    public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);

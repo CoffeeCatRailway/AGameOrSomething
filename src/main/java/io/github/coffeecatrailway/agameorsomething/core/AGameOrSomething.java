@@ -166,18 +166,6 @@ public class AGameOrSomething implements WindowEventListener
 
                 this.world.render(this, batch, this.camera);
 
-//                batch.begin();
-//                batch.setColor(1f, 1f, 1f, 1f);
-//                for (int y = -10; y < 11; y++)
-//                {
-//                    for(int x = -10; x < 11; x++)
-//                    {
-//                        AtlasEntry entry = TextureAtlas.TILE_ATLAS.getEntry((x + y) % 2 == 0 ? TileRegistry.DIRT.get().getObjectId() : TileRegistry.GRASS.get().getObjectId());
-//                        batch.draw(entry, x, y, 1f, 1f);
-//                    }
-//                }
-//                batch.end();
-
                 fps++;
             }
             frameTime = System.currentTimeMillis() - frameTime;
