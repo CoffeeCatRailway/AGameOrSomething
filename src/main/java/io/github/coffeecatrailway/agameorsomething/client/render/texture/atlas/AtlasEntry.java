@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client.render.texture;
+package io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas;
 
 import com.google.gson.JsonObject;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;

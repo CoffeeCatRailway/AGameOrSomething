@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;

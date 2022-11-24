@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client.render.texture;
+package io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas;
 
 import com.mojang.logging.LogUtils;
 import org.lwjgl.stb.STBRPContext;

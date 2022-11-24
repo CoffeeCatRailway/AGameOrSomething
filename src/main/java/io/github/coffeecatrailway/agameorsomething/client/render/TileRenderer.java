@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;

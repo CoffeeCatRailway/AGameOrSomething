@@ -1,7 +1,9 @@
-package io.github.coffeecatrailway.agameorsomething.client.render.texture;
+package io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas;
 
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;

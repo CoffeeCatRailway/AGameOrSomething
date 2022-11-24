@@ -3,7 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.common.entity;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
