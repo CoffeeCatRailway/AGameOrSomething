@@ -8,7 +8,10 @@ import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
  */
 public interface HasTexture
 {
-    boolean hasTexture();
+    default boolean hasTexture()
+    {
+        return true;
+    }
 
     ObjectLocation getTextureLocation();
 }

@@ -41,12 +41,6 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     }
 
     @Override
-    public boolean hasTexture()
-    {
-        return true;
-    }
-
-    @Override
     public ObjectLocation getTextureLocation()
     {
         return new ObjectLocation(this.getObjectId().getNamespace(), "textures/entity/" + this.getObjectId().getPath());
