@@ -1,16 +1,13 @@
 package io.github.coffeecatrailway.agameorsomething.common.entity;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
-import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
-import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 /**
@@ -35,27 +32,18 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     public abstract void tick(float delta, AGameOrSomething something, Camera camera, World world);
 
-    public void render(Shader shader, Camera camera)
+    public void render(BatchRenderer batch, Camera camera)
     {
-        Matrix4f targetPos = new Matrix4f().translate(this.position.x, this.position.y, 0f);
-        Matrix4f targetProjection = new Matrix4f(camera.getProjectionMatrix());
-        targetProjection.mul(targetPos);
-
-        shader.bind();
-        TextureAtlas.ENTITY_ATLAS.getAtlasTexture().bind(0);
-        shader.setUniformi("tex", 0);
-//        shader.setUniform("time", (float) glfwGetTime());
-        shader.setUniformMatrix4f("projection", targetProjection);
-        shader.setUniformMatrix4f("view", camera.getViewMatrix());
-        shader.setUniformVector4f("uvCoords", TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()).getUVCoords());
-        this.entityData.model.render();
-        shader.unbind();
+        batch.begin();
+        batch.setColor(1f, 1f, 1f, 1f);
+        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()), this.position.x, this.position.y, 1f, 2f);
+        batch.end();
     }
 
     @Override
     public boolean hasTexture()
     {
-        return true;
+        return TextureAtlas.ENTITY_ATLAS.has(this.getObjectId()) && TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()) != null;
     }
 
     @Override
@@ -103,18 +91,16 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         private float maxHealth = 20f;
         private float passiveDefense = 0f;
         private RegistrableSomething drop = null;
-        private VBOModel model = VBOModels.SIMPLE_1X2;
 
         public EntityData()
         {
         }
 
-        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop, VBOModel model)
+        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop)
         {
             this.maxHealth = maxHealth;
             this.passiveDefense = passiveDefense;
             this.drop = drop;
-            this.model = model;
         }
 
         public EntityData setMaxHealth(float maxHealth)
@@ -135,15 +121,9 @@ public abstract class Entity implements RegistrableSomething, HasTexture
             return this;
         }
 
-        public EntityData setModel(VBOModel model)
-        {
-            this.model = model;
-            return this;
-        }
-
         public EntityData build()
         {
-            return new EntityData(this.maxHealth, this.passiveDefense, this.drop, this.model);
+            return new EntityData(this.maxHealth, this.passiveDefense, this.drop);
         }
     }
 }

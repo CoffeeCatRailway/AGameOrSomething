@@ -3,7 +3,6 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
-import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
@@ -83,7 +82,7 @@ public abstract class AbstractWorld implements World
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
 
-        this.player.render(Shader.SPRITE, camera);
+        this.player.render(batch, camera);
     }
 
     /**

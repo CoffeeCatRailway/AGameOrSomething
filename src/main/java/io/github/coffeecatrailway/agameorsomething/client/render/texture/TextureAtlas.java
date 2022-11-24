@@ -210,9 +210,14 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     public AtlasEntry getEntry(ObjectLocation id)
     {
-        if (!this.entries.containsKey(id))
+        if (!this.has(id))
             return this.entries.get(MISSING);
         return this.entries.get(id);
+    }
+
+    public boolean has(ObjectLocation id)
+    {
+        return this.entries.containsKey(id);
     }
 
     public Texture getAtlasTexture()
