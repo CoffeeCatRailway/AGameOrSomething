@@ -162,6 +162,7 @@ public class AGameOrSomething implements WindowEventListener
             {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
                 batch.updateUniforms(this.camera);
+                batch.setColor(0f, 0f, 0f, 0f);
 
                 this.world.render(this, batch, this.camera);
 

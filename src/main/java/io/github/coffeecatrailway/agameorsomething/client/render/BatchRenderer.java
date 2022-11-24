@@ -50,6 +50,26 @@ public class BatchRenderer
     }
 
     /**
+     * @param hex Color in hex format
+     */
+    public void setColor(int hex)
+    {
+        this.setColor(hex, false);
+    }
+
+    /**
+     * @param hex Color in hex format
+     * @param hasAlpha True if has value includes alpha
+     */
+    public void setColor(int hex, boolean hasAlpha)
+    {
+        this.a = hasAlpha ? ((hex >> 24) & 0xFF) / 255f : 1f;
+        this.r = ((hex >> 16) & 0xFF) / 255f;
+        this.g = ((hex >> 8) & 0xFF) / 255f;
+        this.b = (hex & 0xFF) / 255f;
+    }
+
+    /**
      * @param r Red channel
      * @param g Green channel
      * @param b Blue channel
