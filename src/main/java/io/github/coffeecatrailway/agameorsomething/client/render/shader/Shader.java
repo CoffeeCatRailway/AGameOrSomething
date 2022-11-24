@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -23,10 +24,13 @@ public class Shader
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final Shader SIMPLE = new Shader("simple");
-    public static final Shader SPRITE = new Shader("sprite");
+    public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1, ATTRIB_COLOR = 2;
+    public static final List<ShaderAttribute> DEFAULT_ATTRIBUTES = List.of(new ShaderAttribute("position", 3, GL_FLOAT),
+            new ShaderAttribute("texCoords", 2, GL_FLOAT),
+            new ShaderAttribute("texColor", 4, GL_FLOAT));
 
-    public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
+    public static final Shader SIMPLE = new Shader("simple", DEFAULT_ATTRIBUTES);
+    public static final Shader SPRITE = new Shader("sprite", DEFAULT_ATTRIBUTES);
 
     private final int program;
     private final int vertex;
@@ -35,12 +39,17 @@ public class Shader
     private final ObjectLocation vertexLocation;
     private final ObjectLocation fragmentLocation;
 
-    public Shader(String shader)
+    public Shader(String shader, List<ShaderAttribute> attributes)
     {
-        this(new ObjectLocation("shaders/" + shader + ".vert"), new ObjectLocation("shaders/" + shader + ".frag"));
+        this(shader, attributes.toArray(ShaderAttribute[]::new));
     }
 
-    public Shader(ObjectLocation vertexLocation, ObjectLocation fragmentLocation)
+    public Shader(String shader, ShaderAttribute... attributes)
+    {
+        this(new ObjectLocation("shaders/" + shader + ".vert"), new ObjectLocation("shaders/" + shader + ".frag"), attributes);
+    }
+
+    public Shader(ObjectLocation vertexLocation, ObjectLocation fragmentLocation, ShaderAttribute... attributes)
     {
         this.program = glCreateProgram();
         this.vertexLocation = vertexLocation;
@@ -66,9 +75,6 @@ public class Shader
 
         glAttachShader(this.program, this.vertex);
         glAttachShader(this.program, this.fragment);
-
-        glBindAttribLocation(this.program, ATTRIB_POSITION, "position");
-        glBindAttribLocation(this.program, ATTRIB_TEX_COORDS, "texCoords");
 
         glLinkProgram(this.program);
         if (glGetProgrami(this.program, GL_LINK_STATUS) != GL_TRUE)

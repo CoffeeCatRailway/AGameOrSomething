@@ -4,10 +4,10 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform vec4 uvCoords;
 
-attribute vec3 position;
-attribute vec2 texCoords;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
 
-varying vec2 vTexCoords;
+out vec2 vTexCoords;
 
 void main()
 {

@@ -2,7 +2,7 @@
 
 uniform sampler2D tex;
 
-varying vec2 vTexCoords;
+in vec2 vTexCoords;
 
 void main()
 {
