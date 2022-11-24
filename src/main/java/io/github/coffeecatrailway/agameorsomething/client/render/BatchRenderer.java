@@ -49,6 +49,12 @@ public class BatchRenderer
         this.maxIndex = size * 6;
     }
 
+    /**
+     * @param r Red channel
+     * @param g Green channel
+     * @param b Blue channel
+     * @param a Alpha channel
+     */
     public void setColor(float r, float g, float b, float a)
     {
         this.r = r;
@@ -57,11 +63,23 @@ public class BatchRenderer
         this.a = a;
     }
 
+    /**
+     * Updates uniforms for projection, view & texture sampler
+     * Uses base shader set in constructor
+     *
+     * @param camera {@link Camera} - Main camera
+     */
     public void updateUniforms(Camera camera)
     {
         this.updateUniforms(camera, this.shader);
     }
 
+    /**
+     * Updates uniforms for projection, view & texture sampler
+     *
+     * @param camera {@link Camera} - Main camera
+     * @param shader {@link Shader} - Shader to be used
+     */
     public void updateUniforms(Camera camera, Shader shader)
     {
         shader.bind();
@@ -81,6 +99,11 @@ public class BatchRenderer
         this.setShader(shader, true, camera);
     }
 
+    /**
+     * @param shader         {@link Shader} - Shader to be used
+     * @param updateUniforms {@link Boolean} - If uniforms should be updated
+     * @param camera         {@link Camera} - Main camera
+     */
     public void setShader(Shader shader, boolean updateUniforms, Camera camera)
     {
         if (shader == null)
@@ -117,6 +140,9 @@ public class BatchRenderer
         this.shader.unbind();
     }
 
+    /**
+     * Renders data if any was entered
+     */
     public void flush()
     {
         if (this.index > 0)
@@ -126,12 +152,21 @@ public class BatchRenderer
         }
     }
 
+    /**
+     * Draw atlas entry at x,y with width & height
+     * @param entry {@link AtlasEntry} - Entry to be rendered
+     */
     public void draw(AtlasEntry entry, float x, float y, float width, float height)
     {
         Vector4fc uv = entry.getUVCoords();
         this.draw(entry.getAtlas().getAtlasTexture(), x, y, width, height, uv.x(), uv.y(), uv.x() + uv.z(), uv.y() + uv.w());
     }
 
+    /**
+     * Draw atlas entry at x,y with width & height
+     * u,v is the top left of the sprite with u2,v2 being the bottom right
+     * @param texture {@link Texture} - Texture to be rendered
+     */
     public void draw(Texture texture, float x, float y, float width, float height, float u, float v, float u2, float v2)
     {
         this.checkFlush(texture);

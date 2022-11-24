@@ -12,10 +12,16 @@ import org.joml.Vector2ic;
 /**
  * @author CoffeeCatRailway
  * Created: 26/10/2022
+ * <p>
+ * Deprecated because of batch rendering
+ * Still usable but, not recomended
  */
+@Deprecated
 public class TileRenderer
 {
-    public TileRenderer()
+    public static final TileRenderer RENDERER = new TileRenderer();
+
+    private TileRenderer()
     {
     }
 

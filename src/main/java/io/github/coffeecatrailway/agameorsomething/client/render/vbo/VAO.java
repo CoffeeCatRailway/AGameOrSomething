@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
@@ -23,7 +22,6 @@ public class VAO
     private final int vertexCount;
     private final ShaderAttribute[] attributes;
     private int componentsSize;
-
 
     public VAO(int vertexCount, List<ShaderAttribute> attributes)
     {
@@ -78,11 +76,17 @@ public class VAO
         glDrawArrays(mode, 0, this.vertexCount);
     }
 
+    /**
+     * Binds vbo buffer
+     */
     public void bindWrite()
     {
         glBindBuffer(GL_ARRAY_BUFFER, this.vboId);
     }
 
+    /**
+     * Binds vao buffer & attributes
+     */
     public void bind()
     {
         glBindVertexArray(this.vaoId);
@@ -90,6 +94,9 @@ public class VAO
             glEnableVertexAttribArray(i);
     }
 
+    /**
+     * Unbinds vao buffer & attributes
+     */
     public void unbind()
     {
         for (int i = 0; i < this.attributes.length; i++)

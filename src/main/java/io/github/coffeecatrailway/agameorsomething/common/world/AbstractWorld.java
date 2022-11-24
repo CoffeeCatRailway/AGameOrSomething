@@ -2,13 +2,15 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
-import io.github.ocelot.window.Window;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import io.github.ocelot.window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -65,18 +67,21 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public void render(AGameOrSomething something, Camera camera)
+    public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
     {
-        Timer.start("tileRendering"); //TODO: Fix lag spike, fix 'lines' appearing, check if background tile is visible
-        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SPRITE, camera));
-        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).forEach((entry) -> something.getTileRenderer().renderOnGrid(entry.getValue(), entry.getKey(), Shader.SPRITE, camera));
+        Timer.start("tileRendering"); //TODO: Optimize, fix 'lines' appearing, check if background tile is visible
+        batch.begin();
+        batch.setColor(1f, 1f, 1f, 1f);
+
+        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera))
+                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), 1f, 1f));
+        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera))
+                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), 1f, 1f));
+
+        batch.end();
         long millis = Timer.end("tileRendering");
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
-
-//        something.getTileRenderer().renderOffGrid(TileRegistry.SAND.get(), InputHandler.getMousePosInWorldSpace(camera), Shader.TILE_BASIC, camera);
-//        Vector2i screenPosGrid = InputHandler.getMousePosInWorldSpace(camera).div(2f).add(.5f, .5f).get(RoundingMode.FLOOR, new Vector2i());
-//        something.getTileRenderer().renderOnGrid(TileRegistry.SAND.get(), screenPosGrid, Shader.TILE_BASIC, camera);
 
         this.player.render(Shader.SPRITE, camera);
     }

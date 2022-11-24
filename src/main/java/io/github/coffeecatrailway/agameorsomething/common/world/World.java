@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -19,7 +20,7 @@ public interface World
 
     void tick(float delta, AGameOrSomething something, Camera camera);
 
-    void render(AGameOrSomething something, Camera camera);
+    void render(AGameOrSomething something, BatchRenderer batch, Camera camera);
 
     default Tile getTile(TilePos pos)
     {

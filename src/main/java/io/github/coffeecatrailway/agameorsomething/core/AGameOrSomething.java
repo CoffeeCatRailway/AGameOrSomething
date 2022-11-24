@@ -3,9 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.core;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
-import io.github.coffeecatrailway.agameorsomething.client.render.TileRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.AtlasEntry;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -49,7 +47,6 @@ public class AGameOrSomething implements WindowEventListener
     private final MouseHandler mouseHandler;
     private Camera camera;
 
-    private TileRenderer tileRenderer;
     private World world;
 
     private AGameOrSomething(int width, int height, boolean fullscreen)
@@ -106,7 +103,6 @@ public class AGameOrSomething implements WindowEventListener
         EntityRegistry.load();
         TextureAtlas.ENTITY_ATLAS.init();
 
-        this.tileRenderer = new TileRenderer();
         this.world = new TestWorld();
     }
 
@@ -167,19 +163,19 @@ public class AGameOrSomething implements WindowEventListener
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
                 batch.updateUniforms(this.camera);
 
-//                this.world.render(this, this.camera);
+                this.world.render(this, batch, this.camera);
 
-                batch.begin();
-                batch.setColor(1f, 1f, 1f, 1f);
-                for (int y = -10; y < 11; y++)
-                {
-                    for(int x = -10; x < 11; x++)
-                    {
-                        AtlasEntry entry = TextureAtlas.TILE_ATLAS.getEntry((x + y) % 2 == 0 ? TileRegistry.DIRT.get().getObjectId() : TileRegistry.GRASS.get().getObjectId());
-                        batch.draw(entry, x, y, 1f, 1f);
-                    }
-                }
-                batch.end();
+//                batch.begin();
+//                batch.setColor(1f, 1f, 1f, 1f);
+//                for (int y = -10; y < 11; y++)
+//                {
+//                    for(int x = -10; x < 11; x++)
+//                    {
+//                        AtlasEntry entry = TextureAtlas.TILE_ATLAS.getEntry((x + y) % 2 == 0 ? TileRegistry.DIRT.get().getObjectId() : TileRegistry.GRASS.get().getObjectId());
+//                        batch.draw(entry, x, y, 1f, 1f);
+//                    }
+//                }
+//                batch.end();
 
                 fps++;
             }
@@ -227,11 +223,6 @@ public class AGameOrSomething implements WindowEventListener
     public Camera getCamera()
     {
         return this.camera;
-    }
-
-    public TileRenderer getTileRenderer()
-    {
-        return this.tileRenderer;
     }
 
     public World getWorld()
