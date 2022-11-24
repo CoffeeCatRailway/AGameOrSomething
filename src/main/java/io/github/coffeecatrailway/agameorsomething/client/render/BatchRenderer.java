@@ -204,14 +204,14 @@ public class BatchRenderer
         float y4 = y + height;
 
         // top left, top right, bottom left
-        this.vertex(x, y, this.r, this.g, this.b, this.a, u, v);
-        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v);
-        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v2);
+        this.vertex(x, y, this.r, this.g, this.b, this.a, u, v2);
+        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v2);
+        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v);
 
         // top right, bottom right, bottom left
-        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v);
-        this.vertex(x3, y3, this.r, this.g, this.b, this.a, u2, v2);
-        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v2);
+        this.vertex(x2, y, this.r, this.g, this.b, this.a, u2, v2);
+        this.vertex(x3, y3, this.r, this.g, this.b, this.a, u2, v);
+        this.vertex(x, y4, this.r, this.g, this.b, this.a, u, v);
     }
 
     private void vertex(float x, float y, float r, float g, float b, float a, float u, float v)
