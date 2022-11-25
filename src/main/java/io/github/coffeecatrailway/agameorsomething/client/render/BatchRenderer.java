@@ -30,6 +30,7 @@ public class BatchRenderer
     private float r = 1f, g = 1f, b = 1f, a = 1f;
     private float rotationRadians = 0f;
     private float originX = 0f, originY = 0f;
+    private boolean customOrigin = false;
 
     public BatchRenderer()
     {
@@ -110,6 +111,7 @@ public class BatchRenderer
     {
         this.originX = x;
         this.originY = y;
+        this.customOrigin = true;
     }
 
     /**
@@ -180,6 +182,7 @@ public class BatchRenderer
 
         this.setRotation(0f);
         this.setOrigin(0f, 0f);
+        this.customOrigin = false;
     }
 
     public void end()
@@ -239,8 +242,14 @@ public class BatchRenderer
 
         if (this.rotationRadians != 0f)
         {
-            float scaleX = 1f;//width/tex.getWidth();
-            float scaleY = 1f;//height/tex.getHeight();
+            float scaleX = 1f;//width / texture.getWidth();
+            float scaleY = 1f;//height / texture.getHeight();
+
+            if (!this.customOrigin)
+            {
+                this.originX = width / 2f;
+                this.originY = height / 2f;
+            }
 
             float cx = this.originX * scaleX;
             float cy = this.originY * scaleY;
