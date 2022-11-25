@@ -2,6 +2,8 @@ package io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas;
 
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.Animation;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasAnimation;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
@@ -155,10 +157,28 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             {
                 try
                 {
-                    BufferedImage texture = Texture.loadImage(obj.getTextureLocation());
-                    if (texture != null) {
-                        textures.put(obj.getObjectId(), texture);
-                        this.stitcher.add(obj.getObjectId(), texture.getWidth(), texture.getHeight());
+                    if (obj instanceof HasAnimation anim)
+                    {
+                        for (Animation anim1 : anim.getAnimations())
+                        {
+                            for (ObjectLocation path : anim1.getAllFrames())
+                            {
+                                BufferedImage texture = Texture.loadImage(path);
+                                if (texture != null)
+                                {
+                                    textures.put(path, texture);
+                                    this.stitcher.add(path, texture.getWidth(), texture.getHeight());
+                                }
+                            }
+                        }
+                    } else
+                    {
+                        BufferedImage texture = Texture.loadImage(obj.getTextureLocation());
+                        if (texture != null)
+                        {
+                            textures.put(obj.getObjectId(), texture);
+                            this.stitcher.add(obj.getObjectId(), texture.getWidth(), texture.getHeight());
+                        }
                     }
                 } catch (IOException e)
                 {

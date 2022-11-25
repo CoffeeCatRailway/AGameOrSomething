@@ -27,6 +27,11 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public Entity(EntityData entityData)
     {
         this.entityData = entityData;
+        this.init();
+    }
+
+    public void init()
+    {
         this.health = this.entityData.maxHealth;
     }
 
