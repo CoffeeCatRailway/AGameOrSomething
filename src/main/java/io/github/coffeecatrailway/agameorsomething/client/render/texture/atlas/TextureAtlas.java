@@ -161,7 +161,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                     {
                         for (Animation anim1 : anim.getAnimations())
                         {
-                            for (ObjectLocation path : anim1.getAllFrames())
+                            for (ObjectLocation path : anim1.getBaseFrames())
                             {
                                 BufferedImage texture = Texture.loadImage(path);
                                 if (texture != null)

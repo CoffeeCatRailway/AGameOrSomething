@@ -9,7 +9,8 @@ import org.joml.Math;
  */
 public class Animation
 {
-    private final ObjectLocation[] frames;
+    private final ObjectLocation[] baseFrames;
+    private ObjectLocation[] frames;
     private int currentIndex = 0;
 
     private float speed = 1f, timer = 0f;
@@ -24,13 +25,15 @@ public class Animation
         this.frames = new ObjectLocation[frameCount];
         for (int i = 0; i < frameCount; i++)
             this.frames[i] = new ObjectLocation(id.getNamespace(), "textures/" + subFolder + "/" + id.getPath() + i);
+        this.baseFrames = this.frames;
     }
 
     public Animation frameOrder(int... frameIndices)
     {
         final ObjectLocation[] old = this.frames;
-        for (int i = 0; i < old.length; i++)
-            this.frames[frameIndices[i]] = old[i];
+        this.frames = new ObjectLocation[frameIndices.length];
+        for (int i = 0; i < frameIndices.length; i++)
+            this.frames[i] = old[frameIndices[i]];
         return this;
     }
 
@@ -52,13 +55,18 @@ public class Animation
             this.currentIndex = 0;
     }
 
-    public ObjectLocation getCurrentFrame()
+    public ObjectLocation[] getBaseFrames()
     {
-        return this.frames[this.currentIndex];
+        return this.baseFrames;
     }
 
     public ObjectLocation[] getAllFrames()
     {
         return this.frames;
+    }
+
+    public ObjectLocation getCurrentFrame()
+    {
+        return this.frames[this.currentIndex];
     }
 }

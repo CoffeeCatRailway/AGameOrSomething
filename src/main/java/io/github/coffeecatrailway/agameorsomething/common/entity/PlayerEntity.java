@@ -41,7 +41,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     public void init()
     {
         super.init();
-        this.currentAnimation = new Animation("player_idle", "entity", 4);//.frameOrder(0, 1, 3, 2);
+        this.currentAnimation = new Animation("player_idle", "entity", 4);//.frameOrder(0, 1, 2, 3, 0, 2);
     }
 
     @Override
