@@ -109,22 +109,24 @@ public class Texture
 
     public static ByteBuffer loadImageToBuffer(final BufferedImage image)
     {
-        int width = image.getWidth();
-        int height = image.getHeight();
+        int[] pixels = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
-        int[] pixelsRaw = image.getRGB(0, 0, width, height, null, 0, width);
-        ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * 4);
-        for (int x = 0; x < width; x++)
+        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
+
+        for (int y = 0; y < image.getHeight(); y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < image.getWidth(); x++)
             {
-                int pixel = pixelsRaw[x * width + y];
-                pixels.put((byte) ((pixel >> 16) & 0xFF));  // red
-                pixels.put((byte) ((pixel >> 8) & 0xFF));   // green
-                pixels.put((byte) (pixel & 0xFF));          // blue
-                pixels.put((byte) ((pixel >> 24) & 0xFF));  // alpha
+                int pixel = pixels[y * image.getWidth() + x];
+                buffer.put((byte) ((pixel >> 16) & 0xFF));      // Red component
+                buffer.put((byte) ((pixel >> 8) & 0xFF));       // Green component
+                buffer.put((byte) (pixel & 0xFF));              // Blue component
+                buffer.put((byte) ((pixel >> 24) & 0xFF));      // Alpha component. Only for RGBA
             }
         }
-        return pixels.flip();
+
+        buffer.flip();
+        return buffer;
     }
 }
