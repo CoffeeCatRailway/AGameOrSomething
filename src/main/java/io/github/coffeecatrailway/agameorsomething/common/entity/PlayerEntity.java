@@ -27,7 +27,9 @@ public class PlayerEntity extends Entity implements HasAnimation
     private Animation idleAnimation;
     private Animation walkUpAnimation;
     private Animation walkDownAnimation;
+    private Animation walkSideAnimation;
     private Animation currentAnimation;
+    private boolean flipHorizontal = false;
 
     public PlayerEntity()
     {
@@ -45,8 +47,9 @@ public class PlayerEntity extends Entity implements HasAnimation
     {
         super.init();
         this.idleAnimation = new Animation("player_idle", "entity", 4);//.frameOrder(0, 1, 2, 3, 0, 2);
-        this.walkUpAnimation = new Animation("player_walk_up", "entity", 3).frameOrder(0, 1, 0, 2);
-        this.walkDownAnimation = new Animation("player_walk_down", "entity", 3).frameOrder(0, 1, 0, 2);
+        this.walkUpAnimation = new Animation("player_walk_up", "entity", 3).speed(.75f).frameOrder(0, 1, 0, 2);
+        this.walkDownAnimation = new Animation("player_walk_down", "entity", 3).speed(.75f).frameOrder(0, 1, 0, 2);
+        this.walkSideAnimation = new Animation("player_walk_side", "entity", 3).speed(.75f).frameOrder(0, 1, 0, 2);
         this.currentAnimation = this.idleAnimation;
     }
 
@@ -54,17 +57,9 @@ public class PlayerEntity extends Entity implements HasAnimation
     public void tick(float delta, AGameOrSomething something, Camera camera, World world)
     {
         this.currentAnimation = this.idleAnimation;
+        this.flipHorizontal = false;
 
         KeyboardHandler keyboardHandler = AGameOrSomething.getInstance().getKeyboardHandler();
-        if (keyboardHandler.isKeyPressed(GLFW_KEY_A))
-        {
-            this.position.x -= WALK_SPED * delta;
-        }
-        if (keyboardHandler.isKeyPressed(GLFW_KEY_D))
-        {
-            this.position.x += WALK_SPED * delta;
-        }
-
         if (keyboardHandler.isKeyPressed(GLFW_KEY_W))
         {
             this.position.y += WALK_SPED * delta;
@@ -74,6 +69,17 @@ public class PlayerEntity extends Entity implements HasAnimation
         {
             this.position.y -= WALK_SPED * delta;
             this.currentAnimation = this.walkDownAnimation;
+        }
+        if (keyboardHandler.isKeyPressed(GLFW_KEY_A))
+        {
+            this.position.x -= WALK_SPED * delta;
+            this.currentAnimation = this.walkSideAnimation;
+            this.flipHorizontal = true;
+        }
+        if (keyboardHandler.isKeyPressed(GLFW_KEY_D))
+        {
+            this.position.x += WALK_SPED * delta;
+            this.currentAnimation = this.walkSideAnimation;
         }
 
         this.currentAnimation.tick();
@@ -89,13 +95,13 @@ public class PlayerEntity extends Entity implements HasAnimation
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
-        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.currentAnimation.getCurrentFrame()), this.position.x, this.position.y, 1f, 2f);
+        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.currentAnimation.getCurrentFrame()), this.position.x + (this.flipHorizontal ? 1f : 0f), this.position.y, this.flipHorizontal ? -1f : 1f, 2f);
         batch.end();
     }
 
     @Override
     public Animation[] getAnimations()
     {
-        return new Animation[] {this.idleAnimation, this.walkUpAnimation, this.walkDownAnimation};
+        return new Animation[] {this.idleAnimation, this.walkUpAnimation, this.walkDownAnimation, this.walkSideAnimation};
     }
 }
