@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11C.*;
 
@@ -48,11 +49,15 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     static
     {
         MISSING_IMAGE = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
-        for (int y = 0; y < 16; ++y) {
-            for (int x = 0; x < 16; ++x) {
-                if (y < 8 ^ x < 8) {
+        for (int y = 0; y < 16; ++y)
+        {
+            for (int x = 0; x < 16; ++x)
+            {
+                if (y < 8 ^ x < 8)
+                {
                     MISSING_IMAGE.setRGB(x, y, 0xFFF800F8);
-                } else {
+                } else
+                {
                     MISSING_IMAGE.setRGB(x, y, 0xFF000000);
                 }
             }
@@ -81,14 +86,17 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         this.stitcher = new STBStitcher<>(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0);
     }
 
-    private static int getMaxTextureSize() {
+    private static int getMaxTextureSize()
+    {
         int maxTextureSize = glGetInteger(GL_MAX_TEXTURE_SIZE);
 
-        for (int size = Math.max(32768, maxTextureSize); size >= 1024; size >>= 1) {
+        for (int size = Math.max(32768, maxTextureSize); size >= 1024; size >>= 1)
+        {
             // Proxy image 2D is used to verify the graphics driver can actually handle what it reports it can
             glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
             int k = glGetTexLevelParameteri(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_WIDTH);
-            if (k != 0) {
+            if (k != 0)
+            {
                 return size;
             }
         }
@@ -99,6 +107,11 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     }
 
     public void init()
+    {
+        this.init(extraTextures -> {});
+    }
+
+    public void init(Consumer<Map<ObjectLocation, ObjectLocation>> extraTextures)
     {
         try
         {
@@ -114,7 +127,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             if (!atlasFile.exists() || REGEN_ATLAS)
             {
                 Timer.start("atlasGen");
-                atlas = this.generateAtlas(atlasFile);
+                atlas = this.generateAtlas(atlasFile, extraTextures);
 
                 JsonArray jsonArray = new JsonArray();
                 this.entries.values().forEach(entry -> jsonArray.add(entry.serialize(new JsonObject())));
@@ -139,55 +152,56 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
             }
 
             this.atlasTexture = new Texture(atlas);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             LOGGER.error("Failed to generate atlas", e);
         }
     }
 
-    private BufferedImage generateAtlas(File atlasFile) throws IOException
+    private BufferedImage generateAtlas(File atlasFile, Consumer<Map<ObjectLocation, ObjectLocation>> extraTextures) throws IOException
     {
+        // Generate texture ids & paths
+        final Map<ObjectLocation, ObjectLocation> texturePaths = new HashMap<>();
+        this.registry.values().forEach(obj -> {
+            if (obj.hasTexture())
+            {
+                if (obj instanceof HasAnimation anim)
+                {
+                    for (Animation anim1 : anim.getAnimations())
+                    {
+                        for (ObjectLocation path : anim1.getBaseFrames())
+                        {
+                            texturePaths.put(path, path);
+                        }
+                    }
+                } else
+                {
+                    texturePaths.put(obj.getObjectId(), obj.getTextureLocation());
+                }
+            }
+        });
+        extraTextures.accept(texturePaths);
+
         // Load textures from registry
         final Map<ObjectLocation, BufferedImage> textures = new HashMap<>();
         textures.put(MISSING, MISSING_IMAGE);
         this.stitcher.add(MISSING, MISSING_IMAGE.getWidth(), MISSING_IMAGE.getHeight());
-        this.registry.foreach((id, obj) -> {
-            if (obj.hasTexture())
+        texturePaths.forEach((id, path) -> {
+            try
             {
-                try
+                BufferedImage texture = Texture.loadImage(path);
+                if (texture != null)
                 {
-                    if (obj instanceof HasAnimation anim)
-                    {
-                        for (Animation anim1 : anim.getAnimations())
-                        {
-                            for (ObjectLocation path : anim1.getBaseFrames())
-                            {
-                                BufferedImage texture = Texture.loadImage(path);
-                                if (texture != null)
-                                {
-                                    textures.put(path, texture);
-                                    this.stitcher.add(path, texture.getWidth(), texture.getHeight());
-                                }
-                            }
-                        }
-                    } else
-                    {
-                        BufferedImage texture = Texture.loadImage(obj.getTextureLocation());
-                        if (texture != null)
-                        {
-                            textures.put(obj.getObjectId(), texture);
-                            this.stitcher.add(obj.getObjectId(), texture.getWidth(), texture.getHeight());
-                        }
-                    }
-                } catch (IOException e)
-                {
-                    LOGGER.error("Something went wrong loading texture for {}", obj, e);
-                    e.printStackTrace();
+                    textures.put(id, texture);
+                    this.stitcher.add(id, texture.getWidth(), texture.getHeight());
                 }
+            } catch (IOException e)
+            {
+                LOGGER.error("Something went wrong loading texture for {}", id, e);
+                e.printStackTrace();
             }
         });
-
+        texturePaths.clear();
         this.stitcher.stitch();
 
         BufferedImage atlas = new BufferedImage(this.stitcher.getWidth(), this.stitcher.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -200,31 +214,8 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         });
 
         textures.values().forEach(Image::flush);
+        textures.clear();
         graphics.dispose();
-
-//        int x, y;
-//        for (Map.Entry<ObjectLocation, BufferedImage> entry : textures.entrySet())
-//        {
-//            BufferedImage image = entry.getValue();
-//            x = 0;
-//            y = 0;
-//            AtlasEntry atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
-//            while (this.entries.values().stream().anyMatch(atlasEntry::isOverlapping))
-//            {
-//                x = Math.clamp(0, ATLAS_SIZE - 1, x + 1);
-//                if (x >= ATLAS_SIZE || x + image.getWidth() > ATLAS_SIZE)
-//                {
-//                    x = 0;
-//                    y = Math.clamp(0, ATLAS_SIZE - 1, y + 1);
-//                }
-//                atlasEntry = new AtlasEntry(entry.getKey(), x, y, image.getWidth(), image.getHeight());
-//            }
-//            graphics.drawImage(image, x, y, null);
-//            this.entries.putIfAbsent(entry.getKey(), atlasEntry);
-//        }
-//
-//        textures.values().forEach(Image::flush);
-//        graphics.dispose();
 
         ImageIO.write(atlas, "PNG", atlasFile);
         return atlas;
