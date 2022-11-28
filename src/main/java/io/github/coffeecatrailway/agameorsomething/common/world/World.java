@@ -3,6 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
+import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -62,4 +63,10 @@ public interface World
         }
         return new TilePos(new Vector2f(dx, dy), pos, false);
     }
+
+    void addEntity(Entity entity);
+
+    int getWorldRadius();
+
+    int getWorldSize();
 }

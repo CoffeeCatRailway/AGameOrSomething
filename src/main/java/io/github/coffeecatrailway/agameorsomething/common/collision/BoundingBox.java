@@ -28,9 +28,9 @@ public class BoundingBox
     public boolean isIntersecting(BoundingBox other)
     {
         return this.position.x < other.position.x + other.bounds.x
-                && this.position.x + this.bounds.x >= other.position.x
+                && this.position.x + this.bounds.x > other.position.x
                 && this.position.y < other.position.y + other.bounds.y
-                && this.position.y + this.bounds.y >= other.position.y;
+                && this.position.y + this.bounds.y > other.position.y;
     }
 
     private Vector2f getCenter()
@@ -66,5 +66,10 @@ public class BoundingBox
     public void setPosition(Vector2fc position)
     {
         this.position.set(position);
+    }
+
+    public Vector2fc getBounds()
+    {
+        return this.bounds;
     }
 }

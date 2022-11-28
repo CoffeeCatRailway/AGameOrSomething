@@ -5,6 +5,7 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
+import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -12,14 +13,13 @@ import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import io.github.ocelot.window.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.slf4j.Logger;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author CoffeeCatRailway
@@ -41,6 +41,7 @@ public abstract class AbstractWorld implements World
     private final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
     private final TreeMap<Vector2ic, Tile> tilesFg;
     private final Map<Vector2ic, BoundingBox> boundingBoxes = new HashMap<>();
+    private final Set<Entity> entities = new HashSet<>();
 
     public static final int MIN_WORLD_RADIUS = 10;
     protected final int worldRadius; // Distance from 0,0 to each edge
@@ -59,16 +60,23 @@ public abstract class AbstractWorld implements World
         this.tilesFg = new TreeMap<>(POS_COMPARATOR);
 
         this.player = new PlayerEntity();
+        this.entities.add(this.player);
     }
 
     @Override
     public void tick(float delta, AGameOrSomething something, Camera camera)
     {
-        this.player.tick(delta, something, camera, this);
+        for (Entity entity : this.entities)
+        {
+            entity.tick(delta, something, camera, this);
 
-        this.player.checkTileCollision(this);
-        // Loop through entities to check entity/entity collision
-        this.player.checkTileCollision(this);
+            entity.checkTileCollision(this);
+            this.getSurroundingEntities(entity.getPosition(), 3f).forEach(entity1 -> {
+//                if (!entity.equals(entity1))
+                    entity.checkEntityCollision(entity1);
+            });
+            entity.checkTileCollision(this);
+        }
 
         this.correctCamera(something.getWindow(), camera);
     }
@@ -90,7 +98,7 @@ public abstract class AbstractWorld implements World
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
 
-        this.player.render(something, batch, camera);
+        this.entities.forEach(entity -> entity.render(something, batch, camera));
     }
 
     /**
@@ -170,11 +178,24 @@ public abstract class AbstractWorld implements World
         return TileRegistry.AIR.get();
     }
 
+    @Override
+    public void addEntity(Entity entity)
+    {
+        this.entities.add(entity);
+    }
+
+    public Set<Entity> getSurroundingEntities(Vector2fc origin, float radius)
+    {
+        return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toSet());
+    }
+
+    @Override
     public int getWorldRadius()
     {
         return this.worldRadius;
     }
 
+    @Override
     public int getWorldSize()
     {
         return this.worldSize;

@@ -2,6 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.common.entity.WanderingEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -54,6 +55,14 @@ public class TestWorld extends AbstractWorld
 
         this.setTile(new Vector2i(1, 0), TileRegistry.SAND.get(), true);
         this.setTile(new Vector2i(-1, 0), TileRegistry.SAND.get(), true);
+
+        WanderingEntity wanderer = new WanderingEntity();
+        wanderer.getPosition().set(-10f, 10f);
+        this.addEntity(wanderer);
+
+        WanderingEntity wanderer1 = new WanderingEntity();
+        wanderer1.getPosition().set(10f, 10f);
+        this.addEntity(wanderer1);
         LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 

@@ -10,6 +10,7 @@ import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector2i;
 
 /**
@@ -49,7 +50,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
-        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()), this.position.x, this.position.y, 1f, 2f);
+        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()), this.position.x, this.position.y, this.boundingBox.getBounds().x(), this.boundingBox.getBounds().y());
         batch.end();
     }
 
@@ -67,6 +68,15 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         }
     }
 
+    public void checkEntityCollision(Entity entity)
+    {
+        if (entity.isCollidable())
+        {
+            if (this.boundingBox.isIntersecting(entity.boundingBox))
+                this.boundingBox.correctPosition(entity.boundingBox, this.position);
+        }
+    }
+
     @Override
     public ObjectLocation getTextureLocation()
     {
@@ -76,6 +86,16 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public Vector2f getPosition()
     {
         return this.position;
+    }
+
+    public Vector2fc getBounds()
+    {
+        return this.boundingBox.getBounds();
+    }
+
+    public boolean isCollidable()
+    {
+        return this.getBounds().x() > 0f && this.getBounds().y() > 0f;
     }
 
     public float getHealth()
@@ -98,6 +118,11 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public ObjectLocation getObjectId()
     {
         return this.objectId;
+    }
+
+    protected void setId(Entity entity)
+    {
+        this.setId(entity.getId(), entity.getObjectId());
     }
 
     @Override

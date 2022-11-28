@@ -34,7 +34,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     public PlayerEntity()
     {
         super(EntityRegistry.PLAYER.get().entityData);
-        this.setId(EntityRegistry.PLAYER.get().getId(), EntityRegistry.PLAYER.get().getObjectId());
+        this.setId(EntityRegistry.PLAYER.get());
     }
 
     public PlayerEntity(EntityData data)

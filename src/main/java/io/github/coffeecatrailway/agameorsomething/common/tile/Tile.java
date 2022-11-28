@@ -142,7 +142,7 @@ public class Tile implements RegistrableSomething, HasTexture
         private boolean hasTexture = true;
         private ObjectLocation customTexture = null;
         private VBOModel model = VBOModels.SIMPLE_1X1;
-        private Vector2f bounds = new Vector2f(1f);
+        private Vector2f bounds = new Vector2f(1f); // TODO: Make other tiles respect bounds
 
         public TileData()
         {
