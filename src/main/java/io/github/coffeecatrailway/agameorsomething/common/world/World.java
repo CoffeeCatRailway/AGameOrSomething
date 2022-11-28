@@ -2,6 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
+import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -28,6 +29,8 @@ public interface World
     }
 
     Tile getTile(Vector2ic pos, boolean foreground);
+
+    BoundingBox getTileBounds(Vector2ic pos);
 
     default Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
     {

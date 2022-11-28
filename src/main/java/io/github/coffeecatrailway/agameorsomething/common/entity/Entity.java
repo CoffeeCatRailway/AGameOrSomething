@@ -4,11 +4,13 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 /**
  * @author CoffeeCatRailway
@@ -22,6 +24,8 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     private ObjectLocation objectId;
 
     protected Vector2f position = new Vector2f();
+    protected BoundingBox boundingBox;
+
     protected float health;
 
     public Entity(EntityData entityData)
@@ -32,10 +36,14 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     public void init()
     {
+        this.boundingBox = new BoundingBox(this.position, this.entityData.bounds);
         this.health = this.entityData.maxHealth;
     }
 
-    public abstract void tick(float delta, AGameOrSomething something, Camera camera, World world);
+    public void tick(float delta, AGameOrSomething something, Camera camera, World world)
+    {
+        this.boundingBox.setPosition(this.position);
+    }
 
     public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
     {
@@ -43,6 +51,20 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         batch.setColor(1f, 1f, 1f, 1f);
         batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.getObjectId()), this.position.x, this.position.y, 1f, 2f);
         batch.end();
+    }
+
+    public void checkTileCollision(World world)
+    {
+        Vector2i pos = new Vector2i();
+        for (int y = -2; y < 3; y++)
+        {
+            for (int x = -2; x < 3; x++)
+            {
+                BoundingBox box = world.getTileBounds(pos.set((int) this.position.x, (int) this.position.y).add(x, y));
+                if (box != null && this.boundingBox.isIntersecting(box))
+                    this.boundingBox.correctPosition(box, this.position);
+            }
+        }
     }
 
     @Override
@@ -105,16 +127,18 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         private float maxHealth = 20f;
         private float passiveDefense = 0f;
         private RegistrableSomething drop = null;
+        private Vector2f bounds = new Vector2f(1f);
 
         public EntityData()
         {
         }
 
-        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop)
+        public EntityData(float maxHealth, float passiveDefense, RegistrableSomething drop, Vector2f bounds)
         {
             this.maxHealth = maxHealth;
             this.passiveDefense = passiveDefense;
             this.drop = drop;
+            this.bounds = bounds;
         }
 
         public EntityData setMaxHealth(float maxHealth)
@@ -135,9 +159,15 @@ public abstract class Entity implements RegistrableSomething, HasTexture
             return this;
         }
 
+        public EntityData setBounds(Vector2f bounds)
+        {
+            this.bounds = bounds;
+            return this;
+        }
+
         public EntityData build()
         {
-            return new EntityData(this.maxHealth, this.passiveDefense, this.drop);
+            return new EntityData(this.maxHealth, this.passiveDefense, this.drop, this.bounds);
         }
     }
 }

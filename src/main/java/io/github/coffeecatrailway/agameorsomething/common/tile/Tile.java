@@ -6,6 +6,8 @@ import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 import java.util.Objects;
 
@@ -83,6 +85,16 @@ public class Tile implements RegistrableSomething, HasTexture
         return this.tileData.model;
     }
 
+    public Vector2fc getBounds()
+    {
+        return this.tileData.bounds;
+    }
+
+    public boolean isCollidable()
+    {
+        return this.getBounds().x() > 0f && this.getBounds().y() > 0f;
+    }
+
     @Override
     public int getId()
     {
@@ -130,18 +142,20 @@ public class Tile implements RegistrableSomething, HasTexture
         private boolean hasTexture = true;
         private ObjectLocation customTexture = null;
         private VBOModel model = VBOModels.SIMPLE_1X1;
+        private Vector2f bounds = new Vector2f(1f);
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model, Vector2f bounds)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
             this.hasTexture = hasTexture;
             this.customTexture = customTexture;
             this.model = model;
+            this.bounds = bounds;
         }
 
         public boolean isUnbreakable()
@@ -190,9 +204,15 @@ public class Tile implements RegistrableSomething, HasTexture
             return this;
         }
 
+        public TileData setBounds(Vector2f bounds)
+        {
+            this.bounds = bounds.absolute();
+            return this;
+        }
+
         public TileData build()
         {
-            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.model);
+            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.model, this.bounds);
         }
     }
 }

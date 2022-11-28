@@ -108,7 +108,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
 
     public void init()
     {
-        this.init(extraTextures -> {});
+        this.init(extraTextures -> {});// TODO: Use for json file in namespace directory
     }
 
     public void init(Consumer<Map<ObjectLocation, ObjectLocation>> extraTextures)

@@ -56,6 +56,8 @@ public class PlayerEntity extends Entity implements HasAnimation
     @Override
     public void tick(float delta, AGameOrSomething something, Camera camera, World world)
     {
+        super.tick(delta, something, camera, world);
+
         this.currentAnimation = this.idleAnimation;
         this.flipHorizontal = false;
 

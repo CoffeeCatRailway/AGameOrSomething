@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -16,6 +17,8 @@ import org.joml.Vector2ic;
 import org.slf4j.Logger;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -35,14 +38,15 @@ public abstract class AbstractWorld implements World
     private static final Vector2i IN_VIEW_POS = new Vector2i();
     private static final Vector2f CORRECT_CAMERA = new Vector2f();
 
-    protected final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
-    protected final TreeMap<Vector2ic, Tile> tilesFg;
+    private final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
+    private final TreeMap<Vector2ic, Tile> tilesFg;
+    private final Map<Vector2ic, BoundingBox> boundingBoxes = new HashMap<>();
 
     public static final int MIN_WORLD_RADIUS = 10;
     protected final int worldRadius; // Distance from 0,0 to each edge
     protected final int worldSize; // Width & height of the world
 
-    private final PlayerEntity player;
+    protected final PlayerEntity player;
 
     public AbstractWorld(int worldRadius)
     {
@@ -61,6 +65,10 @@ public abstract class AbstractWorld implements World
     public void tick(float delta, AGameOrSomething something, Camera camera)
     {
         this.player.tick(delta, something, camera, this);
+
+        this.player.checkTileCollision(this);
+        // Loop through entities to check entity/entity collision
+        this.player.checkTileCollision(this);
 
         this.correctCamera(something.getWindow(), camera);
     }
@@ -134,6 +142,12 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
+    public BoundingBox getTileBounds(Vector2ic pos)
+    {
+        return this.boundingBoxes.get(pos);
+    }
+
+    @Override
     public Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force)
     {
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
@@ -144,7 +158,13 @@ public abstract class AbstractWorld implements World
         if (force || !this.getTile(pos, foreground).equals(tile))
         {
             if (foreground)
+            {
+                if (tile.isCollidable())
+                    this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), (Vector2f) tile.getBounds()));
+                else
+                    this.boundingBoxes.remove(pos);
                 return this.tilesFg.put(pos, tile);
+            }
             return this.tilesBg.put(pos, tile);
         }
         return TileRegistry.AIR.get();
