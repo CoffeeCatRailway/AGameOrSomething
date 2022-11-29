@@ -35,10 +35,7 @@ public class WanderingEntity extends Entity
         super.tick(delta, something, camera, world);
 
         if (this.position.distance(this.nextPos) < .5f)
-        {
             this.pickNextPos(world);
-            System.out.printf("New pos: %s,%s\n", this.nextPos.x, this.nextPos.y);
-        }
 
         float x = this.nextPos.x - this.position.x;
         float y = this.nextPos.y - this.position.y;

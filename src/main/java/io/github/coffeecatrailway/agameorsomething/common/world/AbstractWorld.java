@@ -71,10 +71,7 @@ public abstract class AbstractWorld implements World
             entity.tick(delta, something, camera, this);
 
             entity.checkTileCollision(this);
-            this.getSurroundingEntities(entity.getPosition(), 3f).forEach(entity1 -> {
-//                if (!entity.equals(entity1))
-                    entity.checkEntityCollision(entity1);
-            });
+            this.getSurroundingEntities(entity.getPosition(), 3f).forEach(entity::checkEntityCollision);
             entity.checkTileCollision(this);
         }
 

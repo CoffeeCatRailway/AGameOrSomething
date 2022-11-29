@@ -50,17 +50,16 @@ public class BoundingBox
         if (overlap.x * overlap.x > overlap.y * overlap.y)
         {
             if (overlap.x < 0f)
-                this.position.x = other.position.x - this.bounds.x;
+                toCorrect.x = other.position.x - this.bounds.x;
             else if (overlap.x > 0f)
-                this.position.x = other.position.x + other.bounds.x;
+                toCorrect.x = other.position.x + other.bounds.x;
         } else
         {
             if (overlap.y < 0f)
-                this.position.y = other.position.y - this.bounds.y;
+                toCorrect.y = other.position.y - this.bounds.y;
             else if (overlap.y > 0f)
-                this.position.y = other.position.y + other.bounds.y;
+                toCorrect.y = other.position.y + other.bounds.y;
         }
-        toCorrect.set(this.position);
     }
 
     public void setPosition(Vector2fc position)
