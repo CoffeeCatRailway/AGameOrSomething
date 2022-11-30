@@ -95,7 +95,12 @@ public abstract class AbstractWorld implements World
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
 
-        this.entities.forEach(entity -> entity.render(something, batch, camera));
+        this.entities.stream().sorted((entity1, entity2) -> {
+            int r = Float.compare(entity1.getPosition().y(), entity2.getPosition().y()) * -1;
+            if (r == 0 && !entity1.equals(entity2))
+                r = Float.compare(entity1.getPosition().x(), entity2.getPosition().x());
+            return r;
+        }).forEach(entity -> entity.render(something, batch, camera));
     }
 
     /**
