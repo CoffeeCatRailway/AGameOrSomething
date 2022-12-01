@@ -36,29 +36,25 @@ public class BoundingBox
     private Vector2f getCenter()
     {
         Vector2f ret = new Vector2f();
-        return this.position.add(this.bounds.div(2f, ret), ret);
-    }
-
-    private Vector2f getOverlap(BoundingBox other)
-    {
-        return this.getCenter().sub(other.getCenter());
+        this.bounds.div(2f, ret);
+        return this.position.add(ret, ret);
     }
     
-    public void correctPosition(BoundingBox other, Vector2f toCorrect)
+    public void correctAndStop(BoundingBox other)
     {
-        Vector2f overlap = this.getOverlap(other);
-        if (overlap.x * overlap.x > overlap.y * overlap.y)
+        Vector2f correction = this.getCenter().sub(other.getCenter());
+        if (correction.x * correction.x > correction.y * correction.y)
         {
-            if (overlap.x < 0f)
-                toCorrect.x = other.position.x - this.bounds.x;
-            else if (overlap.x > 0f)
-                toCorrect.x = other.position.x + other.bounds.x;
+            if (correction.x < 0f)
+                this.position.x = other.position.x - this.bounds.x;
+            else if (correction.x > 0f)
+                this.position.x = other.position.x + other.bounds.x;
         } else
         {
-            if (overlap.y < 0f)
-                toCorrect.y = other.position.y - this.bounds.y;
-            else if (overlap.y > 0f)
-                toCorrect.y = other.position.y + other.bounds.y;
+            if (correction.y < 0f)
+                this.position.y = other.position.y - this.bounds.y;
+            else if (correction.y > 0f)
+                this.position.y = other.position.y + other.bounds.y;
         }
     }
 

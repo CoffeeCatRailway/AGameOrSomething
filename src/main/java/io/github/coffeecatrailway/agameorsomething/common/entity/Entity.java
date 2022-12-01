@@ -63,7 +63,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
             {
                 BoundingBox box = world.getTileBounds(pos.set((int) this.position.x, (int) this.position.y).add(x, y));
                 if (box != null && this.boundingBox.isIntersecting(box))
-                    this.boundingBox.correctPosition(box, this.position);
+                    this.boundingBox.correctAndStop(box);
             }
         }
     }
