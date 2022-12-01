@@ -76,7 +76,7 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
+    public void render(AGameOrSomething something, BatchRenderer batch)
     {
         Timer.start("tileRendering"); //TODO: Optimize, fix 'lines' appearing, check if background tile is visible
         batch.begin();

@@ -92,7 +92,7 @@ public class Tile implements RegistrableSomething, HasTexture
 
     public boolean isCollidable()
     {
-        return this.getBounds().x() > 0f && this.getBounds().y() > 0f;
+        return this.getBounds().x() > 0f && this.getBounds().y() > 0f && this.isVisible();
     }
 
     @Override
