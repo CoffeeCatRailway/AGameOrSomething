@@ -28,18 +28,18 @@ import java.util.stream.Collectors;
 public abstract class AbstractWorld implements World
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Comparator<Vector2ic> POS_COMPARATOR = (pos1, pos2) -> {
-        int r = Integer.compare(pos1.y(), pos2.y()) * -1;
-        if (r == 0 && !pos1.equals(pos2))
-            r = Integer.compare(pos1.x(), pos2.x());
+    private static final Comparator<Map.Entry<Vector2ic, Tile>> POS_COMPARATOR = (entry1, entry2) -> {
+        int r = Integer.compare(entry1.getKey().y(), entry2.getKey().y()) * -1;
+        if (r == 0 && !entry1.getKey().equals(entry2.getKey()))
+            r = Integer.compare(entry1.getKey().x(), entry2.getKey().x());
         return r;
     };
 
     private static final Vector2i IN_VIEW_POS = new Vector2i();
     private static final Vector2f CORRECT_CAMERA = new Vector2f();
 
-    private final TreeMap<Vector2ic, Tile> tilesBg; // TODO: Convert to chunk based system
-    private final TreeMap<Vector2ic, Tile> tilesFg;
+    private final Map<Vector2ic, Tile> tilesBg = new HashMap<>(); // TODO: Convert to chunk based system
+    private final Map<Vector2ic, Tile> tilesFg = new HashMap<>();
     private final Map<Vector2ic, BoundingBox> boundingBoxes = new HashMap<>();
     private final Set<Entity> entities = new HashSet<>();
 
@@ -55,9 +55,6 @@ public abstract class AbstractWorld implements World
             worldRadius = MIN_WORLD_RADIUS;
         this.worldRadius = worldRadius;
         this.worldSize = this.worldRadius * 2 + 1;
-
-        this.tilesBg = new TreeMap<>(POS_COMPARATOR);
-        this.tilesFg = new TreeMap<>(POS_COMPARATOR);
 
         this.player = new PlayerEntity();
         this.entities.add(this.player);
@@ -85,10 +82,10 @@ public abstract class AbstractWorld implements World
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
 
-        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera))
-                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), 1f, 1f));
-        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera))
-                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), 1f, 1f));
+        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).sorted(POS_COMPARATOR)
+                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).sorted(POS_COMPARATOR)
+                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
 
         batch.end();
         long millis = Timer.end("tileRendering");
