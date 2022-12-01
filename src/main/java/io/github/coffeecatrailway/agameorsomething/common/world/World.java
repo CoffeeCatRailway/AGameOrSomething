@@ -1,6 +1,5 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
@@ -20,9 +19,9 @@ public interface World
 {
     void generate();
 
-    void tick(float delta, AGameOrSomething something, Camera camera);
+    void tick(float delta, AGameOrSomething something);
 
-    void render(AGameOrSomething something, BatchRenderer batch, Camera camera);
+    void render(AGameOrSomething something, BatchRenderer batch);
 
     default Tile getTile(TilePos pos)
     {

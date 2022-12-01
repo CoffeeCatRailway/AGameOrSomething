@@ -148,7 +148,7 @@ public class AGameOrSomething implements WindowEventListener
 //                shouldRender = true;
 
                 this.camera.tick();
-                this.world.tick((float) FPS_CAP, this, this.camera);
+                this.world.tick((float) FPS_CAP, this);
 
                 if (fpsPassed >= 1d)
                 {
@@ -165,7 +165,7 @@ public class AGameOrSomething implements WindowEventListener
                 batch.updateUniforms(this.camera);
                 batch.setColor(0f, 0f, 0f, 0f);
 
-                this.world.render(this, batch, this.camera);
+                this.world.render(this, batch);
 
                 fps++;
             }

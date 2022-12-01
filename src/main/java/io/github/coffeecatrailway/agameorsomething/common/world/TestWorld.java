@@ -1,7 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.common.entity.WanderingEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
@@ -67,9 +66,9 @@ public class TestWorld extends AbstractWorld
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something, Camera camera)
+    public void tick(float delta, AGameOrSomething something)
     {
-        super.tick(delta, something, camera);
+        super.tick(delta, something);
 //        this.box2.getPosition().set(this.player.getPosition());
 //        if (this.box2.isIntersecting(this.box1))
 //            this.box2.correctPosition(this.box1, this.player.getPosition());
@@ -86,7 +85,7 @@ public class TestWorld extends AbstractWorld
 
         if (tile != null)
         {
-            TilePos pos = camera.trace(this);
+            TilePos pos = something.getCamera().trace(this);
             if (pos != TilePos.EMPTY)
                 this.setTile(pos.pos(), tile, true);
         }

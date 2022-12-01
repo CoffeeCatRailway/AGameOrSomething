@@ -61,18 +61,18 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something, Camera camera)
+    public void tick(float delta, AGameOrSomething something)
     {
         for (Entity entity : this.entities)
         {
-            entity.tick(delta, something, camera, this);
+            entity.tick(delta, something, something.getCamera(), this);
 
             entity.checkTileCollision(this);
-            this.getSurroundingEntities(entity.getPosition(), 3f).forEach(entity::checkEntityCollision);
+            this.getEntitiesWithin(entity.getPosition(), 3f).forEach(entity::checkEntityCollision);
             entity.checkTileCollision(this);
         }
 
-        this.correctCamera(something.getWindow(), camera);
+        this.correctCamera(something.getWindow(), something.getCamera());
     }
 
     @Override
@@ -82,9 +82,9 @@ public abstract class AbstractWorld implements World
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
 
-        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).sorted(POS_COMPARATOR)
+        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR)
                 .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
-        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), camera)).sorted(POS_COMPARATOR)
+        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR)
                 .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
 
         batch.end();
@@ -167,7 +167,7 @@ public abstract class AbstractWorld implements World
             if (foreground)
             {
                 if (tile.isCollidable())
-                    this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), (Vector2f) tile.getBounds()));
+                    this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), tile.getBounds()));
                 else
                     this.boundingBoxes.remove(pos);
                 return this.tilesFg.put(pos, tile);
@@ -183,9 +183,9 @@ public abstract class AbstractWorld implements World
         this.entities.add(entity);
     }
 
-    public Set<Entity> getSurroundingEntities(Vector2fc origin, float radius)
+    public Set<Entity> getEntitiesWithin(Vector2fc origin, float radius)
     {
-        return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toSet());
+        return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
