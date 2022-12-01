@@ -71,8 +71,13 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public void checkEntityCollision(Entity entity)
     {
         if (entity.isCollidable())
+        {
             if (this.boundingBox.isIntersecting(entity.boundingBox))
-                this.boundingBox.correctPosition(entity.boundingBox, this.position);
+            {
+                this.boundingBox.correctAndPush(entity.boundingBox);
+                entity.boundingBox.correctAndPush(this.boundingBox);
+            }
+        }
     }
 
     @Override
