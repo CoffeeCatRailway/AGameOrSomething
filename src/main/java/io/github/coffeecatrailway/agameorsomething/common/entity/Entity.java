@@ -46,7 +46,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         this.boundingBox.setPosition(this.position);
     }
 
-    public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
+    public void render(AGameOrSomething something, BatchRenderer batch)
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
