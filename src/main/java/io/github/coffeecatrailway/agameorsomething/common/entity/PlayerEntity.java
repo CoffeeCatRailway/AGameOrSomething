@@ -93,7 +93,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch, Camera camera)
+    public void render(AGameOrSomething something, BatchRenderer batch)
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
