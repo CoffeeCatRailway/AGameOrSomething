@@ -32,12 +32,7 @@ public interface World
 
     BoundingBox getTileBounds(Vector2ic pos);
 
-    default Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
-    {
-        return this.setTile(pos, tile, foreground, false);
-    }
-
-    Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force);
+    Tile setTile(Vector2ic pos, Tile tile, boolean foreground);
 
     default TilePos trace(Vector3fc start, Vector3fc end)
     {

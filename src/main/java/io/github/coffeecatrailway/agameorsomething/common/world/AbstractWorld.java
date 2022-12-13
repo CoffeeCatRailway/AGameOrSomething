@@ -155,21 +155,21 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public Tile setTile(Vector2ic pos, Tile tile, boolean foreground, boolean force)
+    public Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
     {
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
         {
             LOGGER.warn("Tile {} was placed outside of world at position {}", tile.getObjectId(), pos);
             return TileRegistry.AIR.get();
         }
-        if (force || !this.getTile(pos, foreground).equals(tile))
+        if (!this.getTile(pos, foreground).equals(tile))
         {
             if (foreground)
             {
                 if (tile.isCollidable())
                     this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), tile.getBounds()));
                 else
-                    this.boundingBoxes.remove(pos);
+                    this.boundingBoxes.put(pos, BoundingBox.EMPTY);
                 return this.tilesFg.put(pos, tile);
             }
             return this.tilesBg.put(pos, tile);

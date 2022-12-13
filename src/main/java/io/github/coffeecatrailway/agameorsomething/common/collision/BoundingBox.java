@@ -10,6 +10,7 @@ import org.joml.Vector2fc;
 public class BoundingBox
 {
     public static final float COLLISION_PADDING = .001f;
+    public static final BoundingBox EMPTY = new BoundingBox(new Vector2f(0f), new Vector2f(0f));
 
     private final Vector2f position;
     private final Vector2f bounds = new Vector2f();
