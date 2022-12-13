@@ -6,7 +6,6 @@ import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
-import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -47,17 +46,12 @@ public abstract class AbstractWorld implements World
     protected final int worldRadius; // Distance from 0,0 to each edge
     protected final int worldSize; // Width & height of the world
 
-    protected final PlayerEntity player;
-
     public AbstractWorld(int worldRadius)
     {
         if (worldRadius < MIN_WORLD_RADIUS)
             worldRadius = MIN_WORLD_RADIUS;
         this.worldRadius = worldRadius;
         this.worldSize = this.worldRadius * 2 + 1;
-
-        this.player = new PlayerEntity();
-        this.entities.add(this.player);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
+import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.entity.WanderingEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
@@ -22,6 +23,8 @@ public class TestWorld extends AbstractWorld
     private static final Logger LOGGER = LogUtils.getLogger();
 
 //    private BoundingBox box1, box2;
+
+    protected PlayerEntity player;
 
     public TestWorld()
     {
@@ -54,6 +57,9 @@ public class TestWorld extends AbstractWorld
 
         this.setTile(new Vector2i(1, 0), TileRegistry.SAND.get(), true);
         this.setTile(new Vector2i(-1, 0), TileRegistry.SAND.get(), true);
+
+        this.player = new PlayerEntity();
+        this.addEntity(this.player);
 
         WanderingEntity wanderer = new WanderingEntity();
         wanderer.getPosition().set(-10f, 10f);
