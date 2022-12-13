@@ -185,7 +185,7 @@ public abstract class AbstractWorld implements World
 
     public Set<Entity> getEntitiesWithin(Vector2fc origin, float radius)
     {
-        return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toUnmodifiableSet());
+        return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toSet());
     }
 
     @Override
