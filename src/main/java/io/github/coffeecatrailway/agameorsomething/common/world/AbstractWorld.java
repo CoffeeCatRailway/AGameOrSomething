@@ -174,6 +174,8 @@ public abstract class AbstractWorld implements World
     @Override
     public void addEntity(Entity entity)
     {
+        if (this.entities.stream().map(Entity::getUUID).anyMatch(uuid -> uuid.equals(entity.getUUID())))
+            throw new IllegalStateException("Entity with uuid '" + entity.getUUID().toString() + "' already exists!");
         this.entities.add(entity);
     }
 

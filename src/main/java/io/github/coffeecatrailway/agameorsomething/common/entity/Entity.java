@@ -5,6 +5,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
+import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
@@ -12,6 +13,9 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSome
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector2i;
+
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author CoffeeCatRailway
@@ -23,6 +27,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     private int id;
     private ObjectLocation objectId;
+    protected UUID uuid = MatUtils.insecureUUID();
 
     protected Vector2f position = new Vector2f();
     protected BoundingBox boundingBox;
@@ -70,13 +75,10 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     public void checkEntityCollision(Entity entity)
     {
-        if (entity.isCollidable())
+        if (!this.uuid.equals(entity.uuid) && entity.isCollidable() && this.boundingBox.isIntersecting(entity.boundingBox))
         {
-            if (this.boundingBox.isIntersecting(entity.boundingBox))
-            {
-                this.boundingBox.correctAndPush(entity.boundingBox);
-                entity.boundingBox.correctAndPush(this.boundingBox);
-            }
+            this.boundingBox.correctAndPush(entity.boundingBox);
+            entity.boundingBox.correctAndPush(this.boundingBox);
         }
     }
 
@@ -135,6 +137,16 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         this.objectId = objectId;
     }
 
+    public UUID getUUID()
+    {
+        return this.uuid;
+    }
+
+    public void setUUID(UUID uuid)
+    {
+        this.uuid = uuid;
+    }
+
     @Override
     public Entity getInstance()
     {
@@ -147,7 +159,13 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return id == entity.id && objectId.equals(entity.objectId);
+        return id == entity.id && objectId.equals(entity.objectId) && uuid.equals(entity.uuid);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, objectId, uuid);
     }
 
     public static class EntityData
