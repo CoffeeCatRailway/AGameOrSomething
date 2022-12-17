@@ -30,7 +30,7 @@ public final class LineRenderer
 
     public static void drawBox(Vector2fc bottomLeft, Vector2fc topRight)
     {
-        drawLineSegments(bottomLeft.x(), bottomLeft.y(),
+        drawLineStrip(bottomLeft.x(), bottomLeft.y(),
                 topRight.x(), bottomLeft.y(),
                 topRight.x(), topRight.y(),
                 bottomLeft.x(), topRight.y(),
@@ -39,10 +39,10 @@ public final class LineRenderer
 
     public static void drawLine(Vector2fc start, Vector2fc end)
     {
-        drawLineSegments(start.x(), start.y(), end.x(), end.y());
+        drawLineStrip(start.x(), start.y(), end.x(), end.y());
     }
 
-    public static void drawLineSegments(float... vertices)
+    public static void drawLineStrip(float... vertices)
     {
         assert vertices.length % 2 == 0;
         assert vertices.length >= 4;
