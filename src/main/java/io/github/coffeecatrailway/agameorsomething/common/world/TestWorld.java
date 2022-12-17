@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
-import io.github.coffeecatrailway.agameorsomething.common.entity.WanderingEntity;
+import io.github.coffeecatrailway.agameorsomething.common.entity.TestEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -61,13 +61,18 @@ public class TestWorld extends AbstractWorld
         this.player = new PlayerEntity();
         this.addEntity(this.player);
 
-        WanderingEntity wanderer = new WanderingEntity();
-        wanderer.getPosition().set(-10f, 10f);
+        TestEntity wanderer = new TestEntity();
+        wanderer.getPosition().set(-10f, 5f);
         this.addEntity(wanderer);
 
-        WanderingEntity wanderer1 = new WanderingEntity();
-        wanderer1.getPosition().set(10f, 10f);
+        TestEntity wanderer1 = new TestEntity();
+        wanderer1.getPosition().set(10f, 5f);
         this.addEntity(wanderer1);
+
+        TestEntity wanderer2 = new TestEntity();
+        wanderer2.setShouldWander(false);
+        wanderer2.getPosition().set(0, -5f);
+        this.addEntity(wanderer2);
         LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 

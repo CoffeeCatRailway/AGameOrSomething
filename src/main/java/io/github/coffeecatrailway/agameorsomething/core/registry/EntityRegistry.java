@@ -3,7 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.core.registry;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
-import io.github.coffeecatrailway.agameorsomething.common.entity.WanderingEntity;
+import io.github.coffeecatrailway.agameorsomething.common.entity.TestEntity;
 import org.joml.Vector2f;
 import org.slf4j.Logger;
 
@@ -20,7 +20,7 @@ public class EntityRegistry
 
     public static final Supplier<PlayerEntity> PLAYER = ENTITIES.register("player", () -> new PlayerEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 1.5f)).build()));
 
-    public static final Supplier<WanderingEntity> WANDERER = ENTITIES.register("wanderer", () -> new WanderingEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 2f)).build()));
+    public static final Supplier<TestEntity> TEST = ENTITIES.register("wanderer", () -> new TestEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 2f)).build()));
 
     public static void load()
     {

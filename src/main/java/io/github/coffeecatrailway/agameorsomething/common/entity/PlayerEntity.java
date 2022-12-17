@@ -99,6 +99,7 @@ public class PlayerEntity extends Entity implements HasAnimation
         batch.setColor(1f, 1f, 1f, 1f);
         batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.currentAnimation.getCurrentFrame()), this.position.x + (this.flipHorizontal ? 1f : 0f), this.position.y, this.flipHorizontal ? -1f : 1f, 2f);
         batch.end();
+//        LineRenderer.drawBoundingBox(this.boundingBox);
     }
 
     @Override

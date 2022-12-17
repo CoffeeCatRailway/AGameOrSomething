@@ -1,6 +1,8 @@
 package io.github.coffeecatrailway.agameorsomething.common.entity;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
@@ -12,19 +14,20 @@ import org.joml.Vector2f;
  * @author CoffeeCatRailway
  * Created: 28/11/2022
  */
-public class WanderingEntity extends Entity
+public class TestEntity extends Entity
 {
     private static final Random RANDOM = new Random();
 
     private final Vector2f nextPos = new Vector2f(0f, 5f);
+    private boolean shouldWander = true;
 
-    public WanderingEntity()
+    public TestEntity()
     {
-        this(EntityRegistry.WANDERER.get().entityData);
-        this.setId(EntityRegistry.WANDERER.get());
+        this(EntityRegistry.TEST.get().entityData);
+        this.setId(EntityRegistry.TEST.get());
     }
 
-    public WanderingEntity(EntityData entityData)
+    public TestEntity(EntityData entityData)
     {
         super(entityData);
     }
@@ -34,14 +37,24 @@ public class WanderingEntity extends Entity
     {
         super.tick(delta, something, camera, world);
 
-        if (this.position.distance(this.nextPos) < .5f)
-            this.pickNextPos(world);
+        if (this.shouldWander)
+        {
+            if (this.position.distance(this.nextPos) < .5f)
+                this.pickNextPos(world);
 
-        float x = this.nextPos.x - this.position.x;
-        float y = this.nextPos.y - this.position.y;
-        float dist = Math.sqrt(x * x + y * y);
-        float mult = 5f / dist;
-        this.position.add(x * mult * delta, y * mult * delta);
+            float x = this.nextPos.x - this.position.x;
+            float y = this.nextPos.y - this.position.y;
+            float dist = Math.sqrt(x * x + y * y);
+            float mult = 5f / dist;
+            this.position.add(x * mult * delta, y * mult * delta);
+        }
+    }
+
+    @Override
+    public void render(AGameOrSomething something, BatchRenderer batch)
+    {
+        super.render(something, batch);
+        LineRenderer.drawBoundingBox(this.boundingBox);
     }
 
     private void pickNextPos(World world)
@@ -54,5 +67,10 @@ public class WanderingEntity extends Entity
     private float random(float min, float max)
     {
         return min + RANDOM.nextFloat() * (max - min);
+    }
+
+    public void setShouldWander(boolean shouldWander)
+    {
+        this.shouldWander = shouldWander;
     }
 }
