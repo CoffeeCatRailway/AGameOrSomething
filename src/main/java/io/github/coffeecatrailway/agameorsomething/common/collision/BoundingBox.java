@@ -41,8 +41,8 @@ public class BoundingBox
         this.bounds.div(2f, this.center);
         return this.center.add(this.position);
     }
-    
-    public void correctAndStop(BoundingBox other)
+
+    public void correctAndStop(BoundingBox other) // TODO: Fix sticking when hugging a wall
     {
         Vector2f correction = this.getCenter().sub(other.getCenter());
         if (correction.x * correction.x > correction.y * correction.y)
@@ -60,13 +60,14 @@ public class BoundingBox
         }
     }
 
-    public void correctAndPush(BoundingBox other) // TODO: Fix "phasing"
+    public void correctAndPush(BoundingBox other)
     {
-        Vector2f correction = this.getCenter().sub(other.getCenter()).div(20f);
-        if (correction.x * correction.x > correction.y * correction.y)
-            this.position.x += correction.x;
-        else
-            this.position.y += correction.y;
+        this.position.add(this.getCenter().sub(other.getCenter()).normalize().div(24f));
+    }
+
+    public Vector2fc getPosition()
+    {
+        return this.position;
     }
 
     public void setPosition(Vector2fc position)
