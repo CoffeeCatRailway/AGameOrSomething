@@ -12,6 +12,8 @@ public class BoundingBox
     public static final float COLLISION_PADDING = .001f;
     public static final BoundingBox EMPTY = new BoundingBox(new Vector2f(0f), new Vector2f(0f));
 
+    private final Vector2f center = new Vector2f();
+
     private final Vector2f position;
     private final Vector2f bounds = new Vector2f();
 
@@ -36,9 +38,8 @@ public class BoundingBox
 
     private Vector2f getCenter()
     {
-        Vector2f ret = new Vector2f();
-        this.bounds.div(2f, ret);
-        return this.position.add(ret, ret);
+        this.bounds.div(2f, this.center);
+        return this.center.add(this.position);
     }
     
     public void correctAndStop(BoundingBox other)
