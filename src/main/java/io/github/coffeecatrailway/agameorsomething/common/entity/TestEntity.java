@@ -2,7 +2,6 @@ package io.github.coffeecatrailway.agameorsomething.common.entity;
 
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
-import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
@@ -54,7 +53,7 @@ public class TestEntity extends Entity
     public void render(AGameOrSomething something, BatchRenderer batch)
     {
         super.render(something, batch);
-        LineRenderer.drawBoundingBox(this.boundingBox);
+//        LineRenderer.drawBoundingBox(this.boundingBox);
     }
 
     private void pickNextPos(World world)

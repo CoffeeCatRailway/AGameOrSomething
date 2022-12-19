@@ -61,7 +61,7 @@ public class PlayerEntity extends Entity implements HasAnimation
         this.currentAnimation = this.idleAnimation;
         this.flipHorizontal = false;
 
-        KeyboardHandler keyboardHandler = AGameOrSomething.getInstance().getKeyboardHandler();
+        KeyboardHandler keyboardHandler = something.getKeyboardHandler();
         if (keyboardHandler.isKeyPressed(GLFW_KEY_W))
         {
             this.position.y += WALK_SPED * delta;

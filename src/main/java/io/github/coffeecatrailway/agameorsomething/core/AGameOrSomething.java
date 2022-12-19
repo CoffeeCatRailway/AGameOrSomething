@@ -39,6 +39,7 @@ public class AGameOrSomething implements WindowEventListener
 
     public static final double FPS_CAP = 1d / 60d; // Used as delta
 
+    private static boolean DEBUG_RENDER = false;
     private static AGameOrSomething INSTANCE;
 
     private final WindowManager windowManager;
@@ -161,6 +162,11 @@ public class AGameOrSomething implements WindowEventListener
             frameTime = System.currentTimeMillis();
             if (this.window.isFocused())
             {
+                // Debug keys code
+                if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
+                    DEBUG_RENDER = !DEBUG_RENDER;
+
+                // Render code
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
                 batch.updateUniforms(this.camera);
                 batch.setColor(0f, 0f, 0f, 0f);
@@ -223,6 +229,11 @@ public class AGameOrSomething implements WindowEventListener
     public static AGameOrSomething getInstance()
     {
         return INSTANCE;
+    }
+
+    public static boolean isDebugRender()
+    {
+        return DEBUG_RENDER;
     }
 
     public static void main(String[] args)

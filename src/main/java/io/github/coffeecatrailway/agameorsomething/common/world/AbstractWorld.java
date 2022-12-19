@@ -3,6 +3,7 @@ package io.github.coffeecatrailway.agameorsomething.common.world;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author CoffeeCatRailway
@@ -76,22 +78,29 @@ public abstract class AbstractWorld implements World
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
 
-        this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR)
-                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
-        this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR)
-                .forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        // Render tiles
+        this.getViewableTiles(something, false).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.getViewableTiles(something, true).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
 
         batch.end();
         long millis = Timer.end("tileRendering");
         if (millis >= 30L)
             LOGGER.warn("Tile rendering took {}ms", millis);
 
+        // Render entities
         this.entities.stream().sorted((entity1, entity2) -> {
             int r = Float.compare(entity1.getPosition().y(), entity2.getPosition().y()) * -1;
             if (r == 0 && !entity1.equals(entity2))
                 r = Float.compare(entity1.getPosition().x(), entity2.getPosition().x());
             return r;
-        }).forEach(entity -> entity.render(something, batch));
+        }).forEach(entity -> {
+            entity.render(something, batch);
+            if (AGameOrSomething.isDebugRender()) // Render entity bounds
+            {
+                LineRenderer.setLineColor(1f, 0f, 0f);
+                LineRenderer.drawBox(entity.getPosition(), entity.getBounds().add(entity.getPosition(), new Vector2f()));
+            }
+        });
     }
 
     /**
@@ -133,6 +142,13 @@ public abstract class AbstractWorld implements World
         return IN_VIEW_POS.x() > -viewWidth && IN_VIEW_POS.x() < viewWidth && IN_VIEW_POS.y() > -viewHeight && IN_VIEW_POS.y() < viewHeight;
 //        Vector4f p = new Vector4f(1.0F).mul(camera.getProjectionMatrix()).mul(camera.getViewMatrix()).mul(pos.x(), pos.y(), 0.0F, 1.0F);
 //        return p.lengthSquared() < 1;
+    }
+
+    public Stream<Map.Entry<Vector2ic, Tile>> getViewableTiles(AGameOrSomething something, boolean foreground)
+    {
+        if (foreground)
+            return this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
+        return this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
     }
 
     @Override
