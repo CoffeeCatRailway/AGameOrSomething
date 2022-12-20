@@ -34,6 +34,21 @@ public interface World
 
     Tile setTile(Vector2ic pos, Tile tile, boolean foreground);
 
+    /**
+     * @return If tile can be placed at position in foreground
+     */
+    default boolean canPlaceTileAt(Vector2ic pos, Tile tile)
+    {
+        Vector2i tmp = new Vector2i();
+        if (tile.getBounds().x() < 0 || tile.getBounds().y() < 0)
+            return false;
+        for (int y = 0; y < tile.getBounds().y() - 1; y++)
+            for (int x = 0; x < tile.getBounds().x() - 1; x++)
+                if (!this.getTile(pos.add(x, y, tmp), true).isReplaceable())
+                    return false;
+        return this.getTile(pos, true).isReplaceable();
+    }
+
     default TilePos trace(Vector3fc start, Vector3fc end)
     {
         Vector3f ray = end.sub(start, new Vector3f()).normalize();

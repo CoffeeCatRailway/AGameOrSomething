@@ -6,8 +6,8 @@ import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 
 import java.util.Objects;
 
@@ -80,19 +80,27 @@ public class Tile implements RegistrableSomething, HasTexture
         return this.tileData.customTexture != null ? this.tileData.customTexture : new ObjectLocation(this.getObjectId().getNamespace(), "textures/tile/" + this.getObjectId().getPath());
     }
 
+    /**
+     * No longer used but left in-case
+     */
     public VBOModel getModel()
     {
         return this.tileData.model;
     }
 
-    public Vector2fc getBounds()
+    public Vector2ic getBounds()
     {
         return this.tileData.bounds;
     }
 
     public boolean isCollidable()
     {
-        return this.getBounds().x() > 0f && this.getBounds().y() > 0f && this.isVisible();
+        return this.getBounds().x() > 0 && this.getBounds().y() > 0 && this.isVisible();
+    }
+
+    public boolean isReplaceable()
+    {
+        return false;
     }
 
     @Override
@@ -142,13 +150,13 @@ public class Tile implements RegistrableSomething, HasTexture
         private boolean hasTexture = true;
         private ObjectLocation customTexture = null;
         private VBOModel model = VBOModels.SIMPLE_1X1;
-        private Vector2f bounds = new Vector2f(1f); // TODO: Make other tiles respect bounds
+        private Vector2i bounds = new Vector2i(1); // TODO: Make other tiles respect bounds
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model, Vector2f bounds)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model, Vector2i bounds)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
@@ -204,7 +212,7 @@ public class Tile implements RegistrableSomething, HasTexture
             return this;
         }
 
-        public TileData setBounds(Vector2f bounds)
+        public TileData setBounds(Vector2i bounds)
         {
             this.bounds = bounds.absolute();
             return this;

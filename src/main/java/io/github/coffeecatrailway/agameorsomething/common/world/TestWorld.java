@@ -84,20 +84,21 @@ public class TestWorld extends AbstractWorld
 //        if (this.box2.isIntersecting(this.box1))
 //            this.box2.correctPosition(this.box1, this.player.getPosition());
 
-        Tile tile = null;
 
         MouseHandler mouseHandler = something.getMouseHandler();
+        Tile tile = null;
+        boolean middleMouse = mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE);
         if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
             tile = TileRegistry.SAND.get();
         else if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
             tile = TileRegistry.DIRT.get();
-        else if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE))
+        else if (middleMouse)
             tile = TileRegistry.AIR.get();
 
         if (tile != null)
         {
             TilePos pos = something.getCamera().trace(this);
-            if (pos != TilePos.EMPTY)
+            if (pos != TilePos.EMPTY && (this.canPlaceTileAt(pos.pos(), tile) || middleMouse))
                 this.setTile(pos.pos(), tile, true);
         }
     }

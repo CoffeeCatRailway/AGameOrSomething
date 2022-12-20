@@ -2,6 +2,7 @@ package io.github.coffeecatrailway.agameorsomething.common.collision;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.joml.Vector2ic;
 
 /**
  * @author CoffeeCatRailway
@@ -26,6 +27,12 @@ public class BoundingBox
     {
         this.position = position;
         bounds.sub(new Vector2f(COLLISION_PADDING), this.bounds); // "fixed"
+    }
+
+    public BoundingBox(Vector2f position, Vector2ic bounds)
+    {
+        this.position = position;
+        this.bounds.set((float) bounds.x() - COLLISION_PADDING, (float) bounds.y() - COLLISION_PADDING); // "fixed"
     }
 
     public boolean isIntersecting(BoundingBox other)

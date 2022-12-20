@@ -138,7 +138,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                 LOGGER.info("Atlas '{}' generation took {}ms", this.filename, Timer.end("atlasGen"));
             } else
             {
-                Timer.start("atlasGen");
+                Timer.start("atlasLoad");
                 atlas = ImageIO.read(atlasFile);
                 try (Reader reader = new FileReader(TEMP_ATLAS_PATH.toString() + "/" + this.filename + ".json"))
                 {
@@ -148,13 +148,13 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
                         this.entries.putIfAbsent(entry.getId(), entry);
                     });
                 }
-                LOGGER.info("Atlas '{}' reading took {}ms", this.filename, Timer.end("atlasGen"));
+                LOGGER.info("Atlas '{}' loaded in {}ms", this.filename, Timer.end("atlasLoad"));
             }
 
             this.atlasTexture = new Texture(atlas);
         } catch (IOException e)
         {
-            LOGGER.error("Failed to generate atlas", e);
+            LOGGER.error("Failed to generate/load atlas", e);
         }
     }
 
