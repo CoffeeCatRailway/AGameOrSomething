@@ -23,30 +23,32 @@ public interface World
 
     void render(AGameOrSomething something, BatchRenderer batch);
 
+    TileSet getTileSet(TileSet.Level level);
+
     default Tile getTile(TilePos pos)
     {
-        return this.getTile(pos.pos(), pos.foreground());
+        return this.getTile(pos.pos(), pos.level());
     }
 
-    Tile getTile(Vector2ic pos, boolean foreground);
+    Tile getTile(Vector2ic pos, TileSet.Level level);
 
-    BoundingBox getTileBounds(Vector2ic pos);
+    BoundingBox getTileBounds(Vector2ic pos, TileSet.Level level);
 
-    Tile setTile(Vector2ic pos, Tile tile, boolean foreground);
+    Tile setTile(Vector2ic pos, Tile tile, TileSet.Level level);
 
     /**
-     * @return If tile can be placed at position in foreground
+     * @return If tile can be placed at position
      */
-    default boolean canPlaceTileAt(Vector2ic pos, Tile tile)
+    default boolean canPlaceTileAt(Vector2ic pos, Tile tile, TileSet.Level level)
     {
         Vector2i tmp = new Vector2i();
         if (tile.getBounds().x() < 0 || tile.getBounds().y() < 0)
             return false;
         for (int y = 0; y < tile.getBounds().y() - 1; y++)
             for (int x = 0; x < tile.getBounds().x() - 1; x++)
-                if (!this.getTile(pos.add(x, y, tmp), true).isReplaceable())
+                if (!this.getTile(pos.add(x, y, tmp), level).isReplaceable())
                     return false;
-        return this.getTile(pos, true).isReplaceable();
+        return this.getTile(pos, level).isReplaceable();
     }
 
     default TilePos trace(Vector3fc start, Vector3fc end)
@@ -62,15 +64,20 @@ public interface World
             return TilePos.EMPTY;
 
         Vector2i pos = new Vector2i((int) Math.floor(dx), (int) Math.floor(dy));
-        Tile tile = this.getTile(pos, false);
+        Tile tile = this.getTile(pos, TileSet.Level.FOREGROUND); // Probably a better way of doing this...
         if (tile == TileRegistry.AIR.get())
         {
-            tile = this.getTile(pos, true);
+            tile = this.getTile(pos, TileSet.Level.MIDGROUND);
             if (tile == TileRegistry.AIR.get())
-                return TilePos.EMPTY;
-            return new TilePos(new Vector2f(dx, dy), pos, true);
+            {
+                tile = this.getTile(pos, TileSet.Level.BACKGROUND);
+                if (tile == TileRegistry.AIR.get())
+                    return TilePos.EMPTY;
+                return new TilePos(new Vector2f(dx, dy), pos, TileSet.Level.BACKGROUND);
+            }
+            return new TilePos(new Vector2f(dx, dy), pos, TileSet.Level.MIDGROUND);
         }
-        return new TilePos(new Vector2f(dx, dy), pos, false);
+        return new TilePos(new Vector2f(dx, dy), pos, TileSet.Level.FOREGROUND);
     }
 
     void addEntity(Entity entity);

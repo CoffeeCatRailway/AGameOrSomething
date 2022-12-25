@@ -7,6 +7,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.T
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.world.TileSet;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
@@ -66,7 +67,7 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         {
             for (int x = -2; x < 3; x++)
             {
-                BoundingBox box = world.getTileBounds(pos.set((int) this.position.x, (int) this.position.y).add(x, y));
+                BoundingBox box = world.getTileBounds(pos.set((int) this.position.x, (int) this.position.y).add(x, y), TileSet.Level.FOREGROUND);
                 if (box != null && this.boundingBox.isIntersecting(box))
                     this.boundingBox.correctAndStop(box);
             }

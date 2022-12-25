@@ -39,9 +39,9 @@ public abstract class AbstractWorld implements World
     private static final Vector2i IN_VIEW_POS = new Vector2i();
     private static final Vector2f CORRECT_CAMERA = new Vector2f();
 
-    private final Map<Vector2ic, Tile> tilesBg = new HashMap<>(); // TODO: Convert to chunk based system
-    private final Map<Vector2ic, Tile> tilesFg = new HashMap<>();
-    private final Map<Vector2ic, BoundingBox> boundingBoxes = new HashMap<>();
+    private final TileSet background = new TileSet().disableBounds();
+//    private final TileSet midground = new TileSet();
+    private final TileSet foreground = new TileSet();
     private final Set<Entity> entities = new HashSet<>();
 
     public static final int MIN_WORLD_RADIUS = 10;
@@ -79,8 +79,9 @@ public abstract class AbstractWorld implements World
         batch.setColor(1f, 1f, 1f, 1f);
 
         // Render tiles
-        this.getViewableTiles(something, false).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
-        this.getViewableTiles(something, true).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.getViewableTiles(something, TileSet.Level.BACKGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+//        this.getViewableTiles(something, TileSet.Level.MIDGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.getViewableTiles(something, TileSet.Level.FOREGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
 
         batch.end();
         long millis = Timer.end("tileRendering");
@@ -144,46 +145,44 @@ public abstract class AbstractWorld implements World
 //        return p.lengthSquared() < 1;
     }
 
-    public Stream<Map.Entry<Vector2ic, Tile>> getViewableTiles(AGameOrSomething something, boolean foreground)
+    public Stream<Map.Entry<Vector2ic, Tile>> getViewableTiles(AGameOrSomething something, TileSet.Level level)
     {
-        if (foreground)
-            return this.tilesFg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
-        return this.tilesBg.entrySet().stream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
+        return this.getTileSet(level).entryStream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
     }
 
     @Override
-    public Tile getTile(Vector2ic pos, boolean foreground)
+    public TileSet getTileSet(TileSet.Level level)
     {
-        Tile tile = foreground ? this.tilesFg.get(pos) : this.tilesBg.get(pos);
-        return tile == null ? TileRegistry.AIR.get() : tile;
+        return switch (level)
+                {
+                    case BACKGROUND -> this.background;
+                    case MIDGROUND -> this.background;
+                    case FOREGROUND -> this.foreground;
+                };
     }
 
     @Override
-    public BoundingBox getTileBounds(Vector2ic pos)
+    public Tile getTile(Vector2ic pos, TileSet.Level level)
     {
-        return this.boundingBoxes.get(pos);
+        return this.getTileSet(level).getTile(pos);
     }
 
     @Override
-    public Tile setTile(Vector2ic pos, Tile tile, boolean foreground)
+    public BoundingBox getTileBounds(Vector2ic pos, TileSet.Level level)
+    {
+        return this.getTileSet(level).getBounds(pos);
+    }
+
+    @Override
+    public Tile setTile(Vector2ic pos, Tile tile, TileSet.Level level)
     {
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
         {
             LOGGER.warn("Tile {} was placed outside of world at position {}", tile.getObjectId(), pos);
             return TileRegistry.AIR.get();
         }
-        if (!this.getTile(pos, foreground).equals(tile))
-        {
-            if (foreground)
-            {
-                if (tile.isCollidable())
-                    this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), tile.getBounds()));
-                else
-                    this.boundingBoxes.put(pos, BoundingBox.EMPTY);
-                return this.tilesFg.put(pos, tile);
-            }
-            return this.tilesBg.put(pos, tile);
-        }
+        if (!this.getTile(pos, level).equals(tile))
+            return this.getTileSet(level).setTile(pos, tile);
         return TileRegistry.AIR.get();
     }
 

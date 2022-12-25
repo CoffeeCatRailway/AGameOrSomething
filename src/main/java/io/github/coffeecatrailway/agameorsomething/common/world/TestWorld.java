@@ -22,17 +22,12 @@ public class TestWorld extends AbstractWorld
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-//    private BoundingBox box1, box2;
-
     protected PlayerEntity player;
 
     public TestWorld()
     {
         super(40);
         this.generate();
-
-//        this.box1 = new BoundingBox(new Vector2f(1f, 0f), 1f, 1f);
-//        this.box2 = new BoundingBox(new Vector2f(0f), 1f, 1.5f);
     }
 
     @Override
@@ -48,25 +43,25 @@ public class TestWorld extends AbstractWorld
                 borderFlag = pos.x == this.worldRadius || pos.x == -this.worldRadius || pos.y == this.worldRadius || pos.y == -this.worldRadius;
                 if (borderFlag)
                 {
-                    this.setTile(pos, TileRegistry.SAND.get(), false);
-                    this.setTile(pos, TileRegistry.DIRT.get(), true);
+                    this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.BACKGROUND);
+                    this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.FOREGROUND);
                 } else
-                    this.setTile(pos, (pos.distance(0, 0) < 4 ? TileRegistry.DIRT.get() : TileRegistry.GRASS.get()), false);
+                    this.setTile(pos, (pos.distance(0, 0) < 4 ? TileRegistry.DIRT.get() : TileRegistry.GRASS.get()), TileSet.Level.BACKGROUND);
             }
         }
 
-        this.setTile(new Vector2i(1, 0), TileRegistry.SAND.get(), true);
-        this.setTile(new Vector2i(-1, 0), TileRegistry.SAND.get(), true);
+        this.setTile(new Vector2i(1, 0), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+        this.setTile(new Vector2i(-1, 0), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
 
         this.player = new PlayerEntity();
         this.addEntity(this.player);
 
         TestEntity wanderer = new TestEntity();
-        wanderer.getPosition().set(-10f, 5f);
+        wanderer.getPosition().set(-10f, 5.5f);
         this.addEntity(wanderer);
 
         TestEntity wanderer1 = new TestEntity();
-        wanderer1.getPosition().set(10f, 5f);
+        wanderer1.getPosition().set(10f, 4.5f);
         this.addEntity(wanderer1);
 
         TestEntity wanderer2 = new TestEntity();
@@ -80,10 +75,6 @@ public class TestWorld extends AbstractWorld
     public void tick(float delta, AGameOrSomething something)
     {
         super.tick(delta, something);
-//        this.box2.getPosition().set(this.player.getPosition());
-//        if (this.box2.isIntersecting(this.box1))
-//            this.box2.correctPosition(this.box1, this.player.getPosition());
-
 
         MouseHandler mouseHandler = something.getMouseHandler();
         Tile tile = null;
@@ -98,8 +89,8 @@ public class TestWorld extends AbstractWorld
         if (tile != null)
         {
             TilePos pos = something.getCamera().trace(this);
-            if (pos != TilePos.EMPTY && (this.canPlaceTileAt(pos.pos(), tile) || middleMouse))
-                this.setTile(pos.pos(), tile, true);
+            if (pos != TilePos.EMPTY && (this.canPlaceTileAt(pos.pos(), tile, TileSet.Level.FOREGROUND) || middleMouse))
+                this.setTile(pos.pos(), tile, TileSet.Level.FOREGROUND);
         }
     }
 }
