@@ -57,11 +57,13 @@ public class TestWorld extends AbstractWorld
         this.addEntity(this.player);
 
         TestEntity wanderer = new TestEntity();
-        wanderer.getPosition().set(-10f, 5.5f);
+        wanderer.nextPos.set(2f, 5f);
+        wanderer.getPosition().set(-10f, 5f);
         this.addEntity(wanderer);
 
         TestEntity wanderer1 = new TestEntity();
-        wanderer1.getPosition().set(10f, 4.5f);
+        wanderer1.nextPos.set(-2f, 5f);
+        wanderer1.getPosition().set(10f, 5f);
         this.addEntity(wanderer1);
 
         TestEntity wanderer2 = new TestEntity();

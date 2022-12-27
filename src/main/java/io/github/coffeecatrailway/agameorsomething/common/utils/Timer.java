@@ -44,9 +44,4 @@ public final class Timer
     {
         return (double) System.nanoTime() / (double) 1_000_000_000L;
     }
-
-//    private static double getTimeInMilliseconds() // https://www.folkstalk.com/tech/nanotime-to-milliseconds-java-with-code-examples/
-//    {
-//        return (double) System.nanoTime() / (double) 1_000_000L;
-//    }
 }

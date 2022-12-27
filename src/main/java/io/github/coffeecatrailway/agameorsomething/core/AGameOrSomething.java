@@ -118,7 +118,7 @@ public class AGameOrSomething implements WindowEventListener
         long frameTime = 0;
 
         double timeLast = Timer.getTimeInSeconds();
-        double unprocessedTime = 0;
+        double deltaTime = 0;
 
         BatchRenderer batch = new BatchRenderer();
 
@@ -134,29 +134,26 @@ public class AGameOrSomething implements WindowEventListener
         {
             this.windowManager.update();
 
-//            boolean shouldRender = false;
-
             double time = Timer.getTimeInSeconds();
             double timePassed = time - timeLast;
-            unprocessedTime += timePassed;
+            deltaTime += timePassed;
             fpsPassed += timePassed;
 
             timeLast = time;
 
-            while (unprocessedTime >= FPS_CAP) // Update logic (tick)
+            while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
-                unprocessedTime -= FPS_CAP;
-//                shouldRender = true;
-
                 this.camera.tick();
-                this.world.tick((float) FPS_CAP, this);
+                this.world.tick((float) deltaTime, this);
 
                 if (fpsPassed >= 1d)
                 {
-                    fpsPassed = 0;
+                    fpsPassed = 0d;
                     this.window.setTitle("AGameOrSomething - Fps: " + fps + ", " + frameTime + "ms");
                     fps = 0;
                 }
+
+                deltaTime = 0d;
             }
 
             frameTime = System.currentTimeMillis();

@@ -17,7 +17,7 @@ public class TestEntity extends Entity
 {
     private static final Random RANDOM = new Random();
 
-    private final Vector2f nextPos = new Vector2f(0f, 5f);
+    public final Vector2f nextPos = new Vector2f(0f);
     private boolean shouldWander = true;
 
     public TestEntity()
