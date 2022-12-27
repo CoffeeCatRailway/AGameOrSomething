@@ -30,11 +30,22 @@ public interface World
         return this.getTile(pos.pos(), pos.level());
     }
 
-    Tile getTile(Vector2ic pos, TileSet.Level level);
+    default Tile getTile(Vector2ic pos, TileSet.Level level)
+    {
+        return this.getTileSet(level).getTile(pos);
+    }
 
-    BoundingBox getTileBounds(Vector2ic pos, TileSet.Level level);
+    default BoundingBox getTileBounds(Vector2ic pos, TileSet.Level level)
+    {
+        return this.getTileSet(level).getBounds(pos);
+    }
 
-    Tile setTile(Vector2ic pos, Tile tile, TileSet.Level level);
+    default Tile setTile(Vector2ic pos, Tile tile, TileSet.Level level)
+    {
+        if (!this.getTile(pos, level).equals(tile))
+            return this.getTileSet(level).setTile(pos, tile);
+        return TileRegistry.AIR.get();
+    }
 
     /**
      * @return If tile can be placed at position

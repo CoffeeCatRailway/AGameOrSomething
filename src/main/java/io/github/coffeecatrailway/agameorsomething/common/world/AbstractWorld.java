@@ -5,7 +5,6 @@ import io.github.coffeecatrailway.agameorsomething.client.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
@@ -18,7 +17,10 @@ import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -162,18 +164,6 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public Tile getTile(Vector2ic pos, TileSet.Level level)
-    {
-        return this.getTileSet(level).getTile(pos);
-    }
-
-    @Override
-    public BoundingBox getTileBounds(Vector2ic pos, TileSet.Level level)
-    {
-        return this.getTileSet(level).getBounds(pos);
-    }
-
-    @Override
     public Tile setTile(Vector2ic pos, Tile tile, TileSet.Level level)
     {
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
@@ -181,9 +171,7 @@ public abstract class AbstractWorld implements World
             LOGGER.warn("Tile {} was placed outside of world at position {}", tile.getObjectId(), pos);
             return TileRegistry.AIR.get();
         }
-        if (!this.getTile(pos, level).equals(tile))
-            return this.getTileSet(level).setTile(pos, tile);
-        return TileRegistry.AIR.get();
+        return World.super.setTile(pos, tile, level);
     }
 
     @Override
