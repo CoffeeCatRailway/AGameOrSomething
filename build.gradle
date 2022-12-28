@@ -32,6 +32,7 @@ dependencies {
         implementation "org.lwjgl:lwjgl::natives-$platform"
     }
 
+    compileOnly 'org.jetbrains:annotations:23.0.0'
     implementation "com.mojang:logging:1.0.0"
     implementation 'org.slf4j:slf4j-api:2.0.3'
 
@@ -50,7 +51,7 @@ dependencies {
 }
 
 jar {
-    manifest.attributes["Main-Class"] = "io.github.coffeecatrailway.agameorsomething.AGameOrSomething"
+    manifest.attributes["Main-Class"] = "io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething"
     manifest.attributes["Implementation-Title"] = "A Game or Somthing"
     manifest.attributes["Implementation-Version"] = project.projVersion
 
