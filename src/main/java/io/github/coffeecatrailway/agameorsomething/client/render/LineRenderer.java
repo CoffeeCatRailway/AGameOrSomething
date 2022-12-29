@@ -37,6 +37,11 @@ public final class LineRenderer
                 bottomLeft.x(), bottomLeft.y());
     }
 
+    public static void drawBox(float x1, float y1, float x2, float y2)
+    {
+        drawLineStrip(x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
+    }
+
     public static void drawLine(Vector2fc start, Vector2fc end)
     {
         drawLineStrip(start.x(), start.y(), end.x(), end.y());

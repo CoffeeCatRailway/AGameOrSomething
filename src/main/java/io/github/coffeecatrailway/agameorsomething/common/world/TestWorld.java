@@ -1,14 +1,20 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
+import io.github.coffeecatrailway.agameorsomething.client.particle.ParticleEmitter;
+import io.github.coffeecatrailway.agameorsomething.client.particle.SimpleParticleEmitter;
+import io.github.coffeecatrailway.agameorsomething.client.particle.TestParticle;
+import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.agameorsomething.common.entity.TestEntity;
 import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
+import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import io.github.ocelot.window.input.MouseHandler;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 
@@ -23,6 +29,8 @@ public class TestWorld extends AbstractWorld
     private static final Logger LOGGER = LogUtils.getLogger();
 
     protected PlayerEntity player;
+
+    private ParticleEmitter emitter1, emitter2;
 
     public TestWorld()
     {
@@ -70,6 +78,17 @@ public class TestWorld extends AbstractWorld
         wanderer2.setShouldWander(false);
         wanderer2.getPosition().set(0, -5f);
         this.addEntity(wanderer2);
+
+        this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 10, origin -> {
+            Vector2f pos = origin.add(MatUtils.randomFloat(-.2f, .2f), MatUtils.randomFloat(-.2f, .2f), new Vector2f());
+            Vector2f vel = new Vector2f(MatUtils.randomFloat(-2f, 2f), MatUtils.randomFloat(-2f, 2f));
+            return new TestParticle(pos, vel, MatUtils.randomFloat(.7f, 1.5f));
+        });
+
+        this.emitter2 = new SimpleParticleEmitter(new Vector2f(5f, -5f), 40, origin -> {
+            Vector2f vel = new Vector2f(MatUtils.randomFloat(5f, 10f), MatUtils.randomFloat(5f, 10f));
+            return new TestParticle(origin, vel, MatUtils.randomFloat(1f, 2f)).spin();
+        });
         LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 
@@ -94,5 +113,16 @@ public class TestWorld extends AbstractWorld
             if (pos != TilePos.EMPTY && (this.canPlaceTileAt(pos.pos(), tile, TileSet.Level.FOREGROUND) || middleMouse))
                 this.setTile(pos.pos(), tile, TileSet.Level.FOREGROUND);
         }
+
+        this.emitter1.tick(delta, something);
+        this.emitter2.tick(delta, something);
+    }
+
+    @Override
+    public void render(AGameOrSomething something, BatchRenderer batch)
+    {
+        super.render(something, batch);
+        this.emitter1.render(something, batch);
+        this.emitter2.render(something, batch);
     }
 }

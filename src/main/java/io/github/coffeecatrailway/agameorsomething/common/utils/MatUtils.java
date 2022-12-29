@@ -22,4 +22,14 @@ public class MatUtils
         long least = random.nextLong() & 4611686018427387903L | Long.MIN_VALUE;
         return new UUID(most, least);
     }
+
+    public static float randomFloat(float min, float max)
+    {
+        return randomFloat(RANDOM, min, max);
+    }
+
+    public static float randomFloat(Random random, float min, float max)
+    {
+        return random.nextFloat() * (max - min) + min;
+    }
 }
