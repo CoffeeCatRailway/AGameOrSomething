@@ -118,9 +118,7 @@ public class TextureAtlas
             glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
             int k = glGetTexLevelParameteri(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_WIDTH);
             if (k != 0)
-            {
                 return size;
-            }
         }
 
         maxTextureSize = Math.max(maxTextureSize, 1024);
@@ -129,11 +127,6 @@ public class TextureAtlas
     }
 
     public void init()
-    {
-        this.init(extraTextures -> {});// TODO: Use for json file in namespace directory
-    }
-
-    public void init(Consumer<Map<ObjectLocation, ObjectLocation>> extraTextures)
     {
         try
         {
@@ -149,7 +142,7 @@ public class TextureAtlas
             if (!atlasFile.exists() || REGEN_ATLAS)
             {
                 Timer.start("atlasGen");
-                atlas = this.generateAtlas(atlasFile, extraTextures);
+                atlas = this.generateAtlas(atlasFile);
 
                 JsonArray jsonArray = new JsonArray();
                 this.entries.values().forEach(entry -> jsonArray.add(entry.serialize(new JsonObject())));
@@ -180,12 +173,12 @@ public class TextureAtlas
         }
     }
 
-    private BufferedImage generateAtlas(File atlasFile, Consumer<Map<ObjectLocation, ObjectLocation>> extraTextures) throws IOException
+    private BufferedImage generateAtlas(File atlasFile) throws IOException
     {
         // Generate texture ids & paths
         final Map<ObjectLocation, ObjectLocation> texturePaths = new HashMap<>();
         this.toLoad.accept(texturePaths);
-        extraTextures.accept(texturePaths);
+//        extraTextures.accept(texturePaths); TODO: Use json file 'extra.json' in directory with same name as filename
 
         // Load textures from registry
         final Map<ObjectLocation, BufferedImage> textures = new HashMap<>();

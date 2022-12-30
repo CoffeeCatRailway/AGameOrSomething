@@ -100,7 +100,7 @@ public class AGameOrSomething implements WindowEventListener
         this.camera = new Camera(this.window);
 
         TileRegistry.load();
-        TextureAtlas.TILE_ATLAS.init(extraTextures -> {});
+        TextureAtlas.TILE_ATLAS.init();
 
         EntityRegistry.load();
         TextureAtlas.ENTITY_ATLAS.init();
