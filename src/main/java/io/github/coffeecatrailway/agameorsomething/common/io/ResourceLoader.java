@@ -1,7 +1,12 @@
 package io.github.coffeecatrailway.agameorsomething.common.io;
 
+import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import org.slf4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 /**
@@ -10,6 +15,11 @@ import java.net.URL;
  */
 public final class ResourceLoader
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    private ResourceLoader()
+    {}
+
     public static URL getResource(ObjectLocation location)
     {
         return getResource(location.getNamespace() + "/" + location.getPath());
@@ -38,5 +48,26 @@ public final class ResourceLoader
 
         // Last ditch attempt. Get resource from the classpath
         return ClassLoader.getSystemResource(path);
+    }
+
+    public static String readToString(ObjectLocation location)
+    {
+        StringBuilder string = new StringBuilder();
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(ResourceLoader.getResource(location).openStream()));
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                string.append(line);
+                string.append("\n");
+            }
+            br.close();
+        } catch (IOException e)
+        {
+            LOGGER.error("Something went wrong reading file {}!", location, e);
+            e.printStackTrace();
+        }
+        return string.toString();
     }
 }

@@ -8,9 +8,6 @@ import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.util.List;
 
@@ -56,7 +53,7 @@ public class Shader
         this.fragmentLocation = fragmentLocation;
 
         this.vertex = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(this.vertex, this.readShaderFile(vertexLocation));
+        glShaderSource(this.vertex, ResourceLoader.readToString(vertexLocation));
         glCompileShader(this.vertex);
         if (glGetShaderi(this.vertex, GL_COMPILE_STATUS) != GL_TRUE)
         {
@@ -65,7 +62,7 @@ public class Shader
         }
 
         this.fragment = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(this.fragment, this.readShaderFile(fragmentLocation));
+        glShaderSource(this.fragment, ResourceLoader.readToString(fragmentLocation));
         glCompileShader(this.fragment);
         if (glGetShaderi(this.fragment, GL_COMPILE_STATUS) != GL_TRUE)
         {
@@ -144,27 +141,6 @@ public class Shader
         glDeleteShader(this.fragment);
         glDeleteProgram(this.program);
         LOGGER.debug("Deleted shader {} Vertex: {} Fragment: {}", this.program, this.vertexLocation, this.fragmentLocation);
-    }
-
-    private String readShaderFile(ObjectLocation location)
-    {
-        StringBuilder string = new StringBuilder();
-        try
-        {
-            BufferedReader br = new BufferedReader(new InputStreamReader(ResourceLoader.getResource(location).openStream()));
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                string.append(line);
-                string.append("\n");
-            }
-            br.close();
-        } catch (IOException e)
-        {
-            LOGGER.error("Something went wrong reading shader {}!", location, e);
-            e.printStackTrace();
-        }
-        return string.toString();
     }
 
     public static void deleteStaticShaders()
