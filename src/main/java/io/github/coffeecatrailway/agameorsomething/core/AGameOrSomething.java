@@ -105,6 +105,8 @@ public class AGameOrSomething implements WindowEventListener
         EntityRegistry.load();
         TextureAtlas.ENTITY_ATLAS.init();
 
+        TextureAtlas.PARTICLE_ATLAS.init();
+
         this.world = new TestWorld();
     }
 

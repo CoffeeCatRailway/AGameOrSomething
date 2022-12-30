@@ -1,6 +1,5 @@
 package io.github.coffeecatrailway.agameorsomething.client.particle;
 
-import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.joml.Math;
@@ -13,6 +12,8 @@ import org.joml.Vector2fc;
  */
 public class TestParticle implements Particle
 {
+    private static final ObjectLocation SMOKE_0 = new ObjectLocation("smoke0");
+    private static final ObjectLocation SMOKE_1 = new ObjectLocation("smoke1");
 
     private final Vector2f position = new Vector2f(0f);
     private final Vector2f velocity = new Vector2f(0f);
@@ -75,6 +76,6 @@ public class TestParticle implements Particle
     @Override
     public ObjectLocation getTextureLocation()
     {
-        return TextureAtlas.MISSING;
+        return this.size >= .5f ? SMOKE_0 : SMOKE_1;
     }
 }

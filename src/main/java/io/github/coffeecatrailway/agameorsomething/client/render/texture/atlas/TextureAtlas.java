@@ -6,8 +6,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.texture.Animati
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasAnimation;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
-import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
-import io.github.coffeecatrailway.agameorsomething.common.tile.Tile;
+import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
@@ -36,7 +35,7 @@ import static org.lwjgl.opengl.GL11C.*;
  * @author CoffeeCatRailway
  * Created: 16/11/2022
  */
-public class TextureAtlas<T extends RegistrableSomething & HasTexture>
+public class TextureAtlas
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -69,19 +68,42 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     private static final int MAX_TEXTURE_SIZE = getMaxTextureSize();
     public static final boolean REGEN_ATLAS = true;
 
-    public static final TextureAtlas<Tile> TILE_ATLAS = new TextureAtlas<>(TileRegistry.TILES, "tile");
-    public static final TextureAtlas<Entity> ENTITY_ATLAS = new TextureAtlas<>(EntityRegistry.ENTITIES, "entity");
+    public static final TextureAtlas TILE_ATLAS = new TextureAtlas(TileRegistry.TILES, "tile");
+    public static final TextureAtlas ENTITY_ATLAS = new TextureAtlas(EntityRegistry.ENTITIES, "entity");
+    public static final TextureAtlas PARTICLE_ATLAS = new TextureAtlas(new ObjectLocation("textures/particle/textures.json"), "particle");
 
-    private final SomethingRegistry<T> registry;
+    private final Consumer<Map<ObjectLocation, ObjectLocation>> toLoad;
     private final String filename;
     private final STBStitcher<ObjectLocation> stitcher;
     private final Object2ObjectHashMap<ObjectLocation, AtlasEntry> entries = new Object2ObjectHashMap<>();
 
     private Texture atlasTexture;
 
-    private TextureAtlas(SomethingRegistry<T> registry, String filename)
+    private <T extends RegistrableSomething & HasTexture> TextureAtlas(SomethingRegistry<T> registry, String filename)
     {
-        this.registry = registry;
+        this.toLoad = texturePaths -> registry.values().forEach(obj -> {
+            if (obj.hasTexture())
+            {
+                if (obj instanceof HasAnimation anim)
+                {
+                    for (Animation anim1 : anim.getAnimations())
+                        for (ObjectLocation path : anim1.getBaseFrames())
+                            texturePaths.put(path, path);
+                } else
+                    texturePaths.put(obj.getObjectId(), obj.getTextureLocation());
+            }
+        });
+        this.filename = filename;
+        this.stitcher = new STBStitcher<>(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0);
+    }
+
+    private TextureAtlas(ObjectLocation jsonPath, String filename)
+    {
+        this.toLoad = texturePaths -> {
+            JsonArray jsonArray = GSON.fromJson(ResourceLoader.readToString(jsonPath), JsonArray.class);
+            jsonArray.asList().stream().filter(JsonElement::isJsonObject).map(JsonElement::getAsJsonObject).forEach(obj ->
+                    texturePaths.put(new ObjectLocation(obj.get("id")), new ObjectLocation(obj.get("texture"))));
+        };
         this.filename = filename;
         this.stitcher = new STBStitcher<>(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0);
     }
@@ -162,24 +184,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
     {
         // Generate texture ids & paths
         final Map<ObjectLocation, ObjectLocation> texturePaths = new HashMap<>();
-        this.registry.values().forEach(obj -> {
-            if (obj.hasTexture())
-            {
-                if (obj instanceof HasAnimation anim)
-                {
-                    for (Animation anim1 : anim.getAnimations())
-                    {
-                        for (ObjectLocation path : anim1.getBaseFrames())
-                        {
-                            texturePaths.put(path, path);
-                        }
-                    }
-                } else
-                {
-                    texturePaths.put(obj.getObjectId(), obj.getTextureLocation());
-                }
-            }
-        });
+        this.toLoad.accept(texturePaths);
         extraTextures.accept(texturePaths);
 
         // Load textures from registry
@@ -260,6 +265,7 @@ public class TextureAtlas<T extends RegistrableSomething & HasTexture>
         MISSING_IMAGE.flush();
         TILE_ATLAS.delete();
         ENTITY_ATLAS.delete();
+        PARTICLE_ATLAS.delete();
         LOGGER.warn("Static atlases deleted!");
     }
 }

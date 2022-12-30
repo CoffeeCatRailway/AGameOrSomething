@@ -1,5 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.utils;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 
@@ -35,15 +36,15 @@ public class ObjectLocation
         this.path = path.toLowerCase(Locale.ROOT);
     }
 
-    public ObjectLocation(JsonObject json)
+    public ObjectLocation(JsonElement json)
     {
-        if (json.has("namespace"))
+        if (json.isJsonObject())
         {
-            this.namespace = json.get("namespace").getAsString().toLowerCase(Locale.ROOT);
-            this.path = json.get("path").getAsString().toLowerCase(Locale.ROOT);
+            this.namespace = json.getAsJsonObject().get("namespace").getAsString().toLowerCase(Locale.ROOT);
+            this.path = json.getAsJsonObject().get("path").getAsString().toLowerCase(Locale.ROOT);
         } else
         {
-            String[] parts = json.get("path").getAsString().toLowerCase(Locale.ROOT).split(":", 2);
+            String[] parts = json.getAsString().toLowerCase(Locale.ROOT).split(":", 2);
             this.namespace = parts[0];
             this.path = parts[1];
         }

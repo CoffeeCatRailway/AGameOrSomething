@@ -54,7 +54,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
     {
         Timer.start("particleRendering"); //TODO: Optimize
         batch.begin();
-        batch.setColor(1f, 1f, 1f, 1f);
+        batch.setColor(1f, 1f, 1f, .75f);
 
         this.particles.forEach((particle) -> batch.draw(TextureAtlas.PARTICLE_ATLAS.getEntry(particle.getTextureLocation()), particle.getPosition().x() - particle.getSize() / 2f, particle.getPosition().y() - particle.getSize() / 2f, particle.getSize(), particle.getSize()));
 

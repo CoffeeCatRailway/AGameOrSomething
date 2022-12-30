@@ -15,9 +15,9 @@ public class AtlasEntry
 
     private final ObjectLocation id;
     private final Vector4fc uvCoords;
-    private final TextureAtlas<?> atlas;
+    private final TextureAtlas atlas;
 
-    public AtlasEntry(ObjectLocation id, TextureAtlas<?> atlas, int x, int y, int width, int height)
+    public AtlasEntry(ObjectLocation id, TextureAtlas atlas, int x, int y, int width, int height)
     {
         this.id = id;
         this.atlas = atlas;
@@ -27,7 +27,7 @@ public class AtlasEntry
                 (float) height / (float) atlas.getHeight() - PADDING * 2f);
     }
 
-    public AtlasEntry(JsonObject json, TextureAtlas<?> atlas)
+    public AtlasEntry(JsonObject json, TextureAtlas atlas)
     {
         this.id = new ObjectLocation(json.getAsJsonObject("id"));
         this.atlas = atlas;
@@ -54,7 +54,7 @@ public class AtlasEntry
         return this.uvCoords;
     }
 
-    public TextureAtlas<?> getAtlas() {
+    public TextureAtlas getAtlas() {
         return atlas;
     }
 }

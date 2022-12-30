@@ -1,0 +1,10 @@
+[
+    {
+        "id": "agos:smoke0",
+        "texture": "agos:textures/particle/smoke0.png"
+    },
+    {
+        "id": "agos:smoke1",
+        "texture": "agos:textures/particle/smoke1.png"
+    }
+]
