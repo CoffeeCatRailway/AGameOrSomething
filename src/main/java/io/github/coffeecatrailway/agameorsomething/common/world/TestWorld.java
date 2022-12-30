@@ -81,14 +81,11 @@ public class TestWorld extends AbstractWorld
 
         this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 10, origin -> {
             Vector2f pos = origin.add(MatUtils.randomFloat(-.2f, .2f), MatUtils.randomFloat(-.2f, .2f), new Vector2f());
-            Vector2f vel = new Vector2f(MatUtils.randomFloat(-2f, 2f), MatUtils.randomFloat(-2f, 2f));
+            Vector2f vel = new Vector2f(MatUtils.randomFloat(-1f, 1f), MatUtils.randomFloat(.5f, 2f));
             return new TestParticle(pos, vel, MatUtils.randomFloat(.7f, 1.5f));
         });
 
-        this.emitter2 = new SimpleParticleEmitter(new Vector2f(5f, -5f), 40, origin -> {
-            Vector2f vel = new Vector2f(MatUtils.randomFloat(5f, 10f), MatUtils.randomFloat(5f, 10f));
-            return new TestParticle(origin, vel, MatUtils.randomFloat(1f, 2f)).spin();
-        });
+        this.emitter2 = new SimpleParticleEmitter(new Vector2f(5f, -5f), 20, origin -> new TestParticle(origin.add(1f, 1f, new Vector2f()), origin, MatUtils.randomFloat(1f, 2f)).spin());
         LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 

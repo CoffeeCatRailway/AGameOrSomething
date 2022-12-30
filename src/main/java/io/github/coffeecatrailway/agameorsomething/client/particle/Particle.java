@@ -14,4 +14,6 @@ public interface Particle extends HasTexture
     Vector2f getPosition();
 
     float getLifespan();
+
+    float getSize();
 }
