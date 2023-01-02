@@ -1,7 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.particle.ParticleEmitter;
 import io.github.coffeecatrailway.agameorsomething.client.particle.SimpleParticleEmitter;
 import io.github.coffeecatrailway.agameorsomething.client.particle.TestParticle;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
@@ -30,7 +29,7 @@ public class TestWorld extends AbstractWorld
 
     protected PlayerEntity player;
 
-    private ParticleEmitter emitter1, emitter2;
+    private SimpleParticleEmitter emitter1, emitter2;
 
     public TestWorld()
     {

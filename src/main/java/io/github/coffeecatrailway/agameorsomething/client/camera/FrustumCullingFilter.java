@@ -37,4 +37,9 @@ public class FrustumCullingFilter
         INSIDE_MAX.set(bounds.getPosition(), 0f).add(bounds.getBounds().x(), bounds.getBounds().y(), 0f);
         return this.frustum.intersectAab(INSIDE_MIN, INSIDE_MAX) < 0;
     }
+
+    public boolean isInside(Vector2fc point)
+    {
+        return this.frustum.testPoint(point.x(), point.y(), 0f);
+    }
 }

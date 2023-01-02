@@ -52,6 +52,8 @@ public class SimpleParticleEmitter implements ParticleEmitter
     @Override
     public void render(AGameOrSomething something, BatchRenderer batch)
     {
+        if (!something.getCamera().getCullingFilter().isInside(this.position))
+            return;
         Timer.start("particleRendering"); //TODO: Optimize
         batch.begin();
         batch.setColor(1f, 1f, 1f, .75f);
