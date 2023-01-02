@@ -96,7 +96,7 @@ public abstract class AbstractWorld implements World
             if (r == 0 && !entity1.equals(entity2))
                 r = Float.compare(entity1.getPosition().x(), entity2.getPosition().x());
             return r;
-        }).forEach(entity -> {
+        }).filter(entity -> something.getCamera().getCullingFilter().isInside(entity.getBoundingBox())).forEach(entity -> {
             entity.render(something, batch);
             if (AGameOrSomething.isDebugRender()) // Render entity bounds
             {

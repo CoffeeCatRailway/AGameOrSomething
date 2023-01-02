@@ -94,6 +94,11 @@ public abstract class Entity implements RegistrableSomething, HasTexture
         return this.position;
     }
 
+    public BoundingBox getBoundingBox()
+    {
+        return this.boundingBox;
+    }
+
     public Vector2fc getBounds()
     {
         return this.boundingBox.getBounds();
