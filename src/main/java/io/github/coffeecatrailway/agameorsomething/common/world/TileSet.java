@@ -51,7 +51,7 @@ public class TileSet
         if (this.boundsEnabled)
         {
             if (tile.isCollidable())
-                this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos.x(), pos.y()), tile.getBounds()));
+                this.boundingBoxes.put(pos, new BoundingBox(new Vector2f(pos), tile.getBounds()));
             else
                 this.boundingBoxes.put(pos, BoundingBox.EMPTY);
         }

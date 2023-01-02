@@ -11,7 +11,7 @@ import org.joml.Vector2ic;
 public class BoundingBox
 {
     public static final float COLLISION_PADDING = .001f;
-    public static final BoundingBox EMPTY = new BoundingBox(new Vector2f(0f), new Vector2f(0f));
+    public static final BoundingBox EMPTY = new BoundingBox(new Vector2f(0f), new Vector2f(COLLISION_PADDING));
 
     private final Vector2f center = new Vector2f();
 

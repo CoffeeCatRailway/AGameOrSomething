@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client;
+package io.github.coffeecatrailway.agameorsomething.client.camera;
 
 import io.github.coffeecatrailway.agameorsomething.client.render.MousePicker;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
@@ -28,9 +28,9 @@ public class Camera
     private final Vector2f position; // Camera position is double that of tile positions
     private final Matrix4f projectionMatrix;
     private final Matrix4f viewMatrix;
+    private final FrustumCullingFilter cullingFilter;
 
     private float zoom = ZOOM_MAX;
-//    private final Matrix4f scaleMatrix;
 
     public Camera(Window window)
     {
@@ -43,7 +43,7 @@ public class Camera
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
-//        this.scaleMatrix = new Matrix4f().setTranslation(new Vector3f(0f)).scale(this.scale);
+        this.cullingFilter = new FrustumCullingFilter();
         this.adjustProjection();
     }
 
@@ -59,11 +59,7 @@ public class Camera
     public void setPosition(Vector2fc position)
     {
         this.position.set(position);
-    }
-
-    public void addPosition(Vector2fc position)
-    {
-        this.position.add(position);
+        this.cullingFilter.updateFrustum(this);
     }
 
     public Vector2fc getPosition()
@@ -74,8 +70,8 @@ public class Camera
     public void adjustProjection()
     {
         GL11.glViewport(0, 0, this.window.getFramebufferWidth(), this.window.getFramebufferHeight());
-//        this.projectionMatrix.identity().ortho(-this.window.getWidth() / 2f, this.window.getWidth() / 2f, -this.window.getHeight() / 2f, this.window.getHeight() / 2f, Z_NEAR, Z_FAR);
-        this.projectionMatrix.identity().perspective(Math.toRadians(70), (float) this.window.getFramebufferWidth() / (float) this.window.getFramebufferHeight(), Z_NEAR, Z_FAR);
+        this.projectionMatrix.identity().perspective(Math.toRadians(70f), (float) this.window.getFramebufferWidth() / (float) this.window.getFramebufferHeight(), Z_NEAR, Z_FAR);
+        this.cullingFilter.updateFrustum(this);
     }
 
     public Matrix4fc getProjectionMatrix()
@@ -85,10 +81,12 @@ public class Camera
 
     public Matrix4f getViewMatrix()
     {
-//        Vector3f front = new Vector3f(0f, 0f, -1f);
-//        Vector3f up = new Vector3f(0f, 1f, 0f);
-//        this.viewMatrix.identity().lookAt(new Vector3f(this.position.x, this.position.y, -20f), front.add(this.position.x, this.position.y, 0f), up);
         return this.viewMatrix.identity().translate(-this.position.x, -this.position.y, -this.zoom);
+    }
+
+    public FrustumCullingFilter getCullingFilter()
+    {
+        return this.cullingFilter;
     }
 
     public TilePos trace(World world)
@@ -107,7 +105,7 @@ public class Camera
     public void incrementZoom(float zoomInc)
     {
         this.zoom = Math.clamp(ZOOM_MIN, ZOOM_MAX, this.zoom + zoomInc);
-//        this.scaleMatrix.identity().setTranslation(new Vector3f(0f)).scale(this.scale);
+        this.cullingFilter.updateFrustum(this);
     }
 
     public float getZoom()
@@ -119,9 +117,4 @@ public class Camera
     {
         return (this.zoom - ZOOM_MIN) * -1f + ZOOM_MAX;
     }
-
-//    public Matrix4f getScaleMatrix()
-//    {
-//        return this.scaleMatrix;
-//    }
 }

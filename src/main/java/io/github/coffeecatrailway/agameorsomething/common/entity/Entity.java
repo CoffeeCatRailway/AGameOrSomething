@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.entity;
 
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;

@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.core;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
@@ -39,7 +39,8 @@ public class AGameOrSomething implements WindowEventListener
 
     public static final double FPS_CAP = 1d / 60d; // Used as delta
 
-    private static boolean DEBUG_RENDER = false;
+    private static boolean DEBUG_RENDER = true;
+    private static boolean RENDER_UNFOCUSED = true;
     private static AGameOrSomething INSTANCE;
 
     private final WindowManager windowManager;
@@ -159,7 +160,7 @@ public class AGameOrSomething implements WindowEventListener
             }
 
             frameTime = System.currentTimeMillis();
-            if (this.window.isFocused())
+            if (this.window.isFocused() || RENDER_UNFOCUSED)
             {
                 // Debug keys code
                 if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))

@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.world;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
@@ -41,8 +41,8 @@ public abstract class AbstractWorld implements World
     private static final Vector2i IN_VIEW_POS = new Vector2i();
     private static final Vector2f CORRECT_CAMERA = new Vector2f();
 
-    private final TileSet background = new TileSet().disableBounds();
-//    private final TileSet midground = new TileSet();
+    private final TileSet background = new TileSet();
+    //    private final TileSet midground = new TileSet();
     private final TileSet foreground = new TileSet();
     private final Set<Entity> entities = new HashSet<>();
 
@@ -81,9 +81,9 @@ public abstract class AbstractWorld implements World
         batch.setColor(1f, 1f, 1f, 1f);
 
         // Render tiles
-        this.getViewableTiles(something, TileSet.Level.BACKGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
-//        this.getViewableTiles(something, TileSet.Level.MIDGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
-        this.getViewableTiles(something, TileSet.Level.FOREGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.getViewableTiles(something.getCamera(), TileSet.Level.BACKGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+//        this.getViewableTiles(something.getCamera(), TileSet.Level.MIDGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
+        this.getViewableTiles(something.getCamera(), TileSet.Level.FOREGROUND).forEach((entry) -> batch.draw(TextureAtlas.TILE_ATLAS.getEntry(entry.getValue().getObjectId()), entry.getKey().x(), entry.getKey().y(), entry.getValue().getBounds().x(), entry.getValue().getBounds().y()));
 
         batch.end();
         long millis = Timer.end("tileRendering");
@@ -131,25 +131,9 @@ public abstract class AbstractWorld implements World
         camera.setPosition(CORRECT_CAMERA);
     }
 
-    /**
-     * @param pos    {@link Vector2ic} - Tile based position
-     * @param window {@link Window} - Application window
-     * @param camera {@link Camera} - Main game camera
-     * @return True if intersect is within view on screen
-     */
-    public boolean isPosInView(Vector2ic pos, Window window, Camera camera)
+    public Stream<Map.Entry<Vector2ic, Tile>> getViewableTiles(Camera camera, TileSet.Level level)
     {
-        int viewWidth = (int) (window.getFramebufferWidth() / 4f / camera.getZoom()) + 5;
-        int viewHeight = (int) (window.getFramebufferHeight() / 4f / camera.getZoom()) + 5;
-        pos.add((int) -camera.getPosition().x(), (int) -camera.getPosition().y(), IN_VIEW_POS);
-        return IN_VIEW_POS.x() > -viewWidth && IN_VIEW_POS.x() < viewWidth && IN_VIEW_POS.y() > -viewHeight && IN_VIEW_POS.y() < viewHeight;
-//        Vector4f p = new Vector4f(1.0F).mul(camera.getProjectionMatrix()).mul(camera.getViewMatrix()).mul(pos.x(), pos.y(), 0.0F, 1.0F);
-//        return p.lengthSquared() < 1;
-    }
-
-    public Stream<Map.Entry<Vector2ic, Tile>> getViewableTiles(AGameOrSomething something, TileSet.Level level)
-    {
-        return this.getTileSet(level).entryStream().filter(entry -> entry.getValue().isVisible() && this.isPosInView(entry.getKey(), something.getWindow(), something.getCamera())).sorted(POS_COMPARATOR);
+        return this.getTileSet(level).entryStream().filter(entry -> entry.getValue().isVisible() && camera.getCullingFilter().isInside(this.getTileBounds(entry.getKey(), level))).sorted(POS_COMPARATOR);
     }
 
     @Override
