@@ -25,8 +25,8 @@ public class FrustumCullingFilter
     {
         // Calculate projection view matrix
         this.projectionView.set(camera.getProjectionMatrix());
-//        this.projectionView.mul(camera.getViewMatrix());
-        this.projectionView.mul(new Matrix4f().translate(0f, 0f, -12f)); // Used for debugging
+        this.projectionView.mul(camera.getViewMatrix());
+//        this.projectionView.mul(new Matrix4f().translate(0f, 0f, -12f)); // Used for debugging
         // Update frustum intersection
         this.frustum.set(this.projectionView, false);
     }
