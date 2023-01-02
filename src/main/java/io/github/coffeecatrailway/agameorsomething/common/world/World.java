@@ -50,13 +50,13 @@ public interface World
     /**
      * @return If tile can be placed at position
      */
-    default boolean canPlaceTileAt(Vector2ic pos, Tile tile, TileSet.Level level)
+    default boolean canPlaceTileAt(Vector2ic pos, Tile tile, TileSet.Level level) // TODO: Fix placing tiles 'inside' others
     {
         Vector2i tmp = new Vector2i();
         if (tile.getBounds().x() < 0 || tile.getBounds().y() < 0)
             return false;
-        for (int y = 0; y < tile.getBounds().y() - 1; y++)
-            for (int x = 0; x < tile.getBounds().x() - 1; x++)
+        for (int y = 0; y < tile.getBounds().y(); y++)
+            for (int x = 0; x < tile.getBounds().x(); x++)
                 if (!this.getTile(pos.add(x, y, tmp), level).isReplaceable())
                     return false;
         return this.getTile(pos, level).isReplaceable();
