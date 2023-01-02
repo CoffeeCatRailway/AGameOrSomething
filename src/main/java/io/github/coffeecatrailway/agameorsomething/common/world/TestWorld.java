@@ -78,9 +78,9 @@ public class TestWorld extends AbstractWorld
         wanderer2.getPosition().set(0, -5f);
         this.addEntity(wanderer2);
 
-        this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 20, origin -> {
+        this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 100, origin -> {
             Vector2f pos = origin.add(MatUtils.randomFloat(-.1f, .1f), MatUtils.randomFloat(0, .2f), new Vector2f());
-            Vector2f vel = new Vector2f(MatUtils.randomFloat(-1f, 1f), MatUtils.randomFloat(.5f, 2f));
+            Vector2f vel = new Vector2f(MatUtils.randomFloat(-1f, 1f), MatUtils.randomFloat(2f, 5f));
             return new TestParticle(pos, vel, MatUtils.randomFloat(.7f, 1.5f));
         });
 
