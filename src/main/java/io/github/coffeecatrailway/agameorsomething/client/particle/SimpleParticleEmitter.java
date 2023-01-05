@@ -40,7 +40,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
     {
         if (!something.getCamera().getCullingFilter().isInside(this.position))
             return;
-        Timer.start("particleTicking"); //TODO: Optimize
+        Timer.start("particleTicking");
         if (this.particles.size() < this.maxParticles)
             for (int i = 0; i < this.maxParticles - this.particles.size(); i++)
                 this.particles.add(this.factory.create(this.position));
@@ -57,7 +57,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
     {
         if (!something.getCamera().getCullingFilter().isInside(this.position))
             return;
-        Timer.start("particleRendering"); //TODO: Optimize
+        Timer.start("particleRendering");
         batch.begin();
         batch.setColor(0.8745098f, 0.8784314f, 0.9098039f, .75f);
 

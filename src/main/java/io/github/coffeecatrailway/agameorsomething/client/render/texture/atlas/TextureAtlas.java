@@ -185,6 +185,8 @@ public class TextureAtlas
         textures.put(MISSING, MISSING_IMAGE);
         this.stitcher.add(MISSING, MISSING_IMAGE.getWidth(), MISSING_IMAGE.getHeight());
         texturePaths.forEach((id, path) -> {
+            if (path == null || path.equals(MISSING))
+                return;
             try
             {
                 BufferedImage texture = Texture.loadImage(path);

@@ -2,6 +2,8 @@ package io.github.coffeecatrailway.agameorsomething.common.entity;
 
 import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
@@ -71,5 +73,11 @@ public class TestEntity extends Entity
     public void setShouldWander(boolean shouldWander)
     {
         this.shouldWander = shouldWander;
+    }
+
+    @Override
+    public ObjectLocation getTextureLocation()
+    {
+        return TextureAtlas.MISSING;
     }
 }
