@@ -17,10 +17,7 @@ import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.slf4j.Logger;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,12 +47,16 @@ public abstract class AbstractWorld implements World
     protected final int worldRadius; // Distance from 0,0 to each edge
     protected final int worldSize; // Width & height of the world
 
+    protected final Random random;
+
     public AbstractWorld(int worldRadius)
     {
         if (worldRadius < MIN_WORLD_RADIUS)
             worldRadius = MIN_WORLD_RADIUS;
         this.worldRadius = worldRadius;
         this.worldSize = this.worldRadius * 2 + 1;
+
+        this.random = new Random();
     }
 
     @Override

@@ -33,7 +33,7 @@ public class TestWorld extends AbstractWorld
 
     public TestWorld()
     {
-        super(40);
+        super(80);
         this.generate();
     }
 
@@ -42,9 +42,10 @@ public class TestWorld extends AbstractWorld
     {
         Timer.start("generateWorld");
         boolean borderFlag;
-        for (int y = -this.worldRadius; y < this.worldRadius + 1; y++)
+        int x, y;
+        for (y = -this.worldRadius; y <= this.worldRadius; y++)
         {
-            for (int x = -this.worldRadius; x < this.worldRadius + 1; x++)
+            for (x = -this.worldRadius; x <= this.worldRadius; x++)
             {
                 Vector2i pos = new Vector2i(x, y);
                 borderFlag = pos.x == this.worldRadius || pos.x == -this.worldRadius || pos.y == this.worldRadius || pos.y == -this.worldRadius;
@@ -54,6 +55,23 @@ public class TestWorld extends AbstractWorld
                     this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.FOREGROUND);
                 } else
                     this.setTile(pos, (pos.distance(0, 0) < 4 ? TileRegistry.DIRT.get() : TileRegistry.GRASS.get()), TileSet.Level.BACKGROUND);
+            }
+        }
+
+        int spotCount = 10;
+        int spotRadius = 4;
+        Vector2i spotPos = new Vector2i();
+        for (int i = 0; i < spotCount; i++)
+        {
+            spotPos.set(MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4), MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4));
+            for (y = -spotRadius; y <= spotRadius; y++)
+            {
+                for (x = -spotRadius; x <= spotRadius; x++)
+                {
+                    Vector2i pos = new Vector2i(x, y).add(spotPos);
+                    if (pos.distance(spotPos) < spotRadius)
+                        this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.BACKGROUND);
+                }
             }
         }
 
@@ -79,12 +97,12 @@ public class TestWorld extends AbstractWorld
         this.addEntity(wanderer2);
 
         this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 100, origin -> {
-            Vector2f pos = origin.add(MatUtils.randomFloat(-.1f, .1f), MatUtils.randomFloat(0, .2f), new Vector2f());
-            Vector2f vel = new Vector2f(MatUtils.randomFloat(-1f, 1f), MatUtils.randomFloat(2f, 5f));
-            return new TestParticle(pos, vel, MatUtils.randomFloat(.7f, 1.5f));
+            Vector2f pos = origin.add(MatUtils.randomFloat(this.random, -.1f, .1f), MatUtils.randomFloat(this.random, 0, .2f), new Vector2f());
+            Vector2f vel = new Vector2f(MatUtils.randomFloat(this.random, -1f, 1f), MatUtils.randomFloat(this.random, 2f, 5f));
+            return new TestParticle(pos, vel, MatUtils.randomFloat(this.random, .7f, 1.5f));
         });
 
-        this.emitter2 = new SimpleParticleEmitter(new Vector2f(5f, -5f), 20, origin -> new TestParticle(origin.add(2f, 0f, new Vector2f()), origin, MatUtils.randomFloat(1f, 2f)).spin());
+        this.emitter2 = new SimpleParticleEmitter(new Vector2f(5f, -5f), 20, origin -> new TestParticle(origin.add(2f, 0f, new Vector2f()), origin, MatUtils.randomFloat(this.random, 1f, 2f)).spin());
         LOGGER.debug("World generated in {}ms", Timer.end("generateWorld"));
     }
 

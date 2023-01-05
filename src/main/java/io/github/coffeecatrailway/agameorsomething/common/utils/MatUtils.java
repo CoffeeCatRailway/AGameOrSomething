@@ -18,7 +18,14 @@ public class MatUtils
         return new UUID(most, least);
     }
 
+    public static int randomInt(int min, int max)
     {
+        return randomInt(RANDOM, min, max);
+    }
+
+    public static int randomInt(Random random, int min, int max)
+    {
+        return random.nextInt((max - min) + 1)  + min;
     }
 
     public static float randomFloat(float min, float max)
