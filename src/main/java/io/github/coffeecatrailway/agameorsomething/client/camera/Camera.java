@@ -22,7 +22,7 @@ public class Camera
 {
     public static final float Z_NEAR = 0f, Z_FAR = 1000f;
 
-    public static final float ZOOM_MIN = 8f, ZOOM_MAX = 16f, ZOOM_SPEED = 1f / 4f;
+    public static final float ZOOM_MIN = 8f, ZOOM_MAX = 32f, ZOOM_SPEED = 1f / 4f;
 
     private final Window window;
     private final Vector2f position; // Camera position is double that of tile positions
