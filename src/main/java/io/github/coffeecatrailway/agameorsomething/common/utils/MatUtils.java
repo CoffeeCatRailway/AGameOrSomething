@@ -13,14 +13,12 @@ public class MatUtils
 
     public static UUID insecureUUID()
     {
-        return insecureUUID(RANDOM);
+        long most = RANDOM.nextLong() & -61441L | 16384L;
+        long least = RANDOM.nextLong() & 4611686018427387903L | Long.MIN_VALUE;
+        return new UUID(most, least);
     }
 
-    public static UUID insecureUUID(Random random)
     {
-        long most = random.nextLong() & -61441L | 16384L;
-        long least = random.nextLong() & 4611686018427387903L | Long.MIN_VALUE;
-        return new UUID(most, least);
     }
 
     public static float randomFloat(float min, float max)
