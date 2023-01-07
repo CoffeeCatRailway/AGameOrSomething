@@ -16,5 +16,5 @@ public abstract class Task
         this.entity = entity;
     }
 
-    abstract void tick(float delta, World world);
+    public abstract void tick(float delta, World world);
 }

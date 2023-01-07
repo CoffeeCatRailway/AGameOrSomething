@@ -42,7 +42,7 @@ public class TestWorld extends AbstractWorld
     {
         Timer.start("generateWorld");
         boolean borderFlag;
-        int x, y;
+        int x, y, i;
         for (y = -this.worldRadius; y <= this.worldRadius; y++)
         {
             for (x = -this.worldRadius; x <= this.worldRadius; x++)
@@ -61,7 +61,7 @@ public class TestWorld extends AbstractWorld
         int spotCount = 10;
         int spotRadius = 4;
         Vector2i spotPos = new Vector2i();
-        for (int i = 0; i < spotCount; i++)
+        for (i = 0; i < spotCount; i++)
         {
             spotPos.set(MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4), MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4));
             for (y = -spotRadius; y <= spotRadius; y++)
@@ -84,16 +84,19 @@ public class TestWorld extends AbstractWorld
         this.player = new PlayerEntity();
         this.addEntity(this.player);
 
-        TestEntity wanderer = new TestEntity(true);
+        TestEntity wanderer = new TestEntity(true, false);
         wanderer.getPosition().set(-10f, 5f);
         this.addEntity(wanderer);
 
-        TestEntity wanderer1 = new TestEntity(true);
+        TestEntity wanderer1 = new TestEntity(true, false);
         wanderer1.getPosition().set(10f, 5f);
         this.addEntity(wanderer1);
 
-        TestEntity wanderer2 = new TestEntity(false);
-        wanderer2.getPosition().set(0, -5f);
+        for (i = 0; i < 4; i++)
+            this.setTile(new Vector2i(-2 + i, -5), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+
+        TestEntity wanderer2 = new TestEntity(false, true);
+        wanderer2.getPosition().set(0, -10f);
         this.addEntity(wanderer2);
 
         this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 100, origin -> {

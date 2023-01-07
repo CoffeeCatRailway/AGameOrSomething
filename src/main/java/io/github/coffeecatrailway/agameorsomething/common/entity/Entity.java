@@ -41,6 +41,8 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     protected boolean hasTasks = false;
     protected final Set<Task> tasks = new HashSet<>();
 
+    protected World world;
+
     public Entity(EntityData entityData)
     {
         this.entityData = entityData;
@@ -129,6 +131,16 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     {
         this.hasTasks = true;
         this.tasks.add(task);
+    }
+
+    public World getWorld()
+    {
+        return this.world;
+    }
+
+    public void setWorld(World world)
+    {
+        this.world = world;
     }
 
     @Override
