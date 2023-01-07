@@ -70,7 +70,10 @@ public class TestWorld extends AbstractWorld
                 {
                     Vector2i pos = new Vector2i(x, y).add(spotPos);
                     if (pos.distance(spotPos) < spotRadius)
-                        this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.BACKGROUND);
+                    {
+                        this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.BACKGROUND);
+                        this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+                    }
                 }
             }
         }
