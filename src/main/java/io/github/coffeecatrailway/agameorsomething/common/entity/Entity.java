@@ -5,6 +5,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
+import io.github.coffeecatrailway.agameorsomething.common.entity.ai.Task;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.common.world.TileSet;
@@ -15,7 +16,9 @@ import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector2i;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -35,6 +38,9 @@ public abstract class Entity implements RegistrableSomething, HasTexture
 
     protected float health;
 
+    protected boolean hasTasks = false;
+    protected final Set<Task> tasks = new HashSet<>();
+
     public Entity(EntityData entityData)
     {
         this.entityData = entityData;
@@ -48,6 +54,8 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public void tick(float delta, AGameOrSomething something, Camera camera, World world)
     {
         this.boundingBox.setPosition(this.position);
+        if (this.hasTasks)
+            this.tasks.forEach(task -> task.tick(delta, world));
     }
 
     public void render(AGameOrSomething something, BatchRenderer batch)
@@ -115,6 +123,12 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public void setHealth(float health)
     {
         this.health = health;
+    }
+
+    protected void addTask(Task task)
+    {
+        this.hasTasks = true;
+        this.tasks.add(task);
     }
 
     @Override

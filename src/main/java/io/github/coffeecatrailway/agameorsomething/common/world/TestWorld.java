@@ -84,18 +84,15 @@ public class TestWorld extends AbstractWorld
         this.player = new PlayerEntity();
         this.addEntity(this.player);
 
-        TestEntity wanderer = new TestEntity();
-        wanderer.nextPos.set(2f, 5f);
+        TestEntity wanderer = new TestEntity(true);
         wanderer.getPosition().set(-10f, 5f);
         this.addEntity(wanderer);
 
-        TestEntity wanderer1 = new TestEntity();
-        wanderer1.nextPos.set(-2f, 5f);
+        TestEntity wanderer1 = new TestEntity(true);
         wanderer1.getPosition().set(10f, 5f);
         this.addEntity(wanderer1);
 
-        TestEntity wanderer2 = new TestEntity();
-        wanderer2.setShouldWander(false);
+        TestEntity wanderer2 = new TestEntity(false);
         wanderer2.getPosition().set(0, -5f);
         this.addEntity(wanderer2);
 

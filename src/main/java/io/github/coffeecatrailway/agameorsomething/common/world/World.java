@@ -10,6 +10,7 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
 import org.joml.*;
 
 import java.lang.Math;
+import java.util.Random;
 
 /**
  * @author CoffeeCatRailway
@@ -96,4 +97,6 @@ public interface World
     int getWorldRadius();
 
     int getWorldSize();
+
+    Random random();
 }

@@ -185,4 +185,10 @@ public abstract class AbstractWorld implements World
     {
         return this.worldSize;
     }
+
+    @Override
+    public Random random()
+    {
+        return this.random;
+    }
 }
