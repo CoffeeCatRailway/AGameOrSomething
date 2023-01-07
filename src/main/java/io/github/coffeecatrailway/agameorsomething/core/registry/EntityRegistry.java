@@ -20,7 +20,7 @@ public class EntityRegistry
 
     public static final Supplier<PlayerEntity> PLAYER = ENTITIES.register("player", () -> new PlayerEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 1.5f)).build()));
 
-    public static final Supplier<TestEntity> TEST = ENTITIES.register("wanderer", () -> new TestEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 2f)).build()));
+    public static final Supplier<TestEntity> TEST = ENTITIES.register("test", () -> new TestEntity(new Entity.EntityData().setDrop(null).setBounds(new Vector2f(1f, 2f)).build()));
 
     public static void load()
     {
