@@ -24,28 +24,22 @@ public class PlayerEntity extends Entity implements HasAnimation
 
     private static final float WALK_SPED = 10f;
 
-    private Animation idleAnimation;
-    private Animation walkUpAnimation;
-    private Animation walkDownAnimation;
-    private Animation walkSideAnimation;
+    private final Animation idleAnimation;
+    private final Animation walkUpAnimation;
+    private final Animation walkDownAnimation;
+    private final Animation walkSideAnimation;
     private Animation currentAnimation;
     private boolean flipHorizontal = false;
 
     public PlayerEntity()
     {
-        super(EntityRegistry.PLAYER.get().entityData);
+        this(EntityRegistry.PLAYER.get().entityData);
         this.setId(EntityRegistry.PLAYER.get());
     }
 
     public PlayerEntity(EntityData data)
     {
         super(data);
-    }
-
-    @Override
-    public void init()
-    {
-        super.init();
         this.idleAnimation = new Animation("player_idle", "entity", 4);//.frameOrder(0, 1, 2, 3, 0, 2);
         this.walkUpAnimation = new Animation("player_walk_up", "entity", 3).speed(.75f).frameOrder(0, 1, 0, 2);
         this.walkDownAnimation = new Animation("player_walk_down", "entity", 3).speed(.75f).frameOrder(0, 1, 0, 2);

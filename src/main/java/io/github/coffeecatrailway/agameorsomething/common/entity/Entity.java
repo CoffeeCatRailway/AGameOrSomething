@@ -38,14 +38,12 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public Entity(EntityData entityData)
     {
         this.entityData = entityData;
-        this.init();
-    }
-
-    public void init()
-    {
         this.boundingBox = new BoundingBox(this.position, this.entityData.bounds);
         this.health = this.entityData.maxHealth;
     }
+
+    public void init()
+    {}
 
     public void tick(float delta, AGameOrSomething something, Camera camera, World world)
     {
