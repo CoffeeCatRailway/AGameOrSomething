@@ -4,11 +4,11 @@ import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.entity.ai.PathFinderTask;
-import io.github.coffeecatrailway.agameorsomething.common.entity.ai.TestWanderTask;
+import io.github.coffeecatrailway.agameorsomething.common.entity.ai.SimpleWanderTask;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
-import org.joml.Vector2fc;
+import org.joml.Vector2ic;
 
 /**
  * @author CoffeeCatRailway
@@ -38,9 +38,9 @@ public class TestEntity extends Entity
     public void init()
     {
         if (this.shouldWander)
-            this.addTask(new TestWanderTask(this, 20f, 5f));
+            this.addTask(new SimpleWanderTask(this, 20f, 5f));
         if (this.aStar)
-            this.addTask(this.pathFinderTask = new PathFinderTask(this));
+            this.addTask(this.pathFinderTask = new PathFinderTask(this, 20));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TestEntity extends Entity
         {
             float[] verticies = new float[this.pathFinderTask.path.size() * 2];
             int i = 0;
-            for (Vector2fc spot : this.pathFinderTask.path)
+            for (Vector2ic spot : this.pathFinderTask.path)
             {
                 verticies[i] = spot.x() + .5f;
                 verticies[i + 1] = spot.y() + .5f;

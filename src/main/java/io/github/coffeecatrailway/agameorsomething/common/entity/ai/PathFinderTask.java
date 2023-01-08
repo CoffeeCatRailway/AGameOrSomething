@@ -8,12 +8,11 @@ import io.github.coffeecatrailway.agameorsomething.common.world.TileSet;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
-import org.joml.Vector2i;
+import org.joml.*;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
+import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,57 +25,61 @@ import java.util.Set;
 public class PathFinderTask extends Task
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Set<Vector2fc> ADJACENT_POSITIONS = Set.of(new Vector2f(0f, -1f), new Vector2f(0f, 1f), new Vector2f(-1f, 0f), new Vector2f(1f, 0f), new Vector2f(-1f, -1f), new Vector2f(-1f, 1f), new Vector2f(1f, -1f), new Vector2f(1f, 1f));
+    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0));
+//    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
+    private static final int MAX_CHECKS = 2000;
 
-    private final Vector2f nextPos = new Vector2f(0f);
-    public List<Vector2fc> path;
+    private final Vector2i destination = new Vector2i(0);
+    public List<Vector2ic> path = new ArrayList<>();
 
-    public PathFinderTask(Entity entity)
+    private final int wanderRadius;
+
+    public PathFinderTask(Entity entity, int wanderRadius)
     {
         super(entity);
-        this.path = this.aStar();
+        this.wanderRadius = wanderRadius;
     }
 
     @Override
     public void tick(float delta, World world)
     {
-        if (this.entity.getPosition().distance(this.nextPos) < .5f || AGameOrSomething.getInstance().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_Q))
+        if (this.entity.getPosition().distance(this.destination.x, this.destination.y) < .5f || AGameOrSomething.getInstance().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_Q))
         {
-//            this.pickNextPos(world);
-            this.path = this.aStar();
+            this.chooseDestination(world);
+            this.aStar(this.path);
         }
     }
 
-    private void pickNextPos(World world) // TODO: Check if position is reachable and/or path-findable
+    private void chooseDestination(World world) // TODO: Check if position is reachable, walkable
     {
-        float x = MatUtils.randomFloat(world.random(), -world.getWorldRadius() + 2, world.getWorldRadius() - 2);
-        float y = MatUtils.randomFloat(world.random(), -world.getWorldRadius() + 2, world.getWorldRadius() - 2);
-        this.nextPos.set(x, y);
+        int x = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
+        int y = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
+        this.entity.getPosition().get(RoundingMode.FLOOR, this.destination).add(x, y);
     }
 
     /**
      * Returns a path generated with the A* algorithm <br/>
      * Based on <a href="https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2">Easy A*</a>
      */
-    private List<Vector2fc> aStar()
+    private void aStar(List<Vector2ic> path)
     {
         if (this.entity.getWorld() == null)
-            return new ArrayList<>();
+        {
+            LOGGER.warn("Entity {} does not have a world!", this.entity.getUUID());
+            return;
+        }
 
         List<Node> openNodes = new ArrayList<>();
         List<Node> closedNodes = new ArrayList<>();
+        List<Node> children = new ArrayList<>();
 
-        Node start = new Node(0, 0, this.entity.getPosition());
-        Node end = new Node(0, 0, this.nextPos);
+        Node start = new Node(0, 0, new Vector2i(this.entity.getPosition(), RoundingMode.FLOOR));
+        Node end = new Node(0, 0, this.destination);
         openNodes.add(start); // Add 'start' to 'openNodes'
 
-        int timeLast = (int) Timer.getTimeInSeconds();
+        double timeStart = Timer.getTimeInSeconds();
         while (openNodes.size() > 0) // Loop through until 'end' is found
         {
-            int time = (int) Timer.getTimeInSeconds();
-            int timePassed = Math.abs(time - timeLast);
-            timeLast = time;
-
             // Find node with lowest f value
             Node current = openNodes.get(0);
             int currentIndex = 0;
@@ -94,9 +97,9 @@ public class PathFinderTask extends Task
             closedNodes.add(current);
 
             // Found end node
-            if (current.equals(end))
+            if (current.equals(end) || currentIndex > MAX_CHECKS)
             {
-                List<Vector2fc> path = new ArrayList<>();
+                path.clear();
                 Node pathCurrent = current;
                 while (pathCurrent != null)
                 {
@@ -104,17 +107,18 @@ public class PathFinderTask extends Task
                     pathCurrent = pathCurrent.parent;
                 }
                 Collections.reverse(path);
-                LOGGER.debug("Entity {} took {} seconds to find path to {}", this.entity.getUUID(), timePassed, end.position);
-                return path;
+                double timeEnd = Timer.getTimeInSeconds();
+                LOGGER.debug("Entity {} took {} seconds to find path to {}", this.entity.getUUID(), (timeEnd - timeStart), end.position);
+                return;
             }
 
             // Generate 'children'
-            List<Node> children = new ArrayList<>();
-            for (Vector2fc newPosition : ADJACENT_POSITIONS)
+            children.clear();
+            for (Vector2ic newPosition : ADJACENT_POSITIONS) // TODO: Check if entity fits, diagonals
             {
                 boolean skip = false;
                 // Get node position
-                Vector2f nodePosition = current.position.add(newPosition, new Vector2f());
+                Vector2i nodePosition = new Vector2i(current.position).add(newPosition);
 
                 // Make sure 'nodePosition' is inside the world
                 if (nodePosition.x < -this.entity.getWorld().getWorldRadius() || nodePosition.x > this.entity.getWorld().getWorldRadius() ||
@@ -123,7 +127,7 @@ public class PathFinderTask extends Task
 
                 // Make sure position is walkable
 //                if (!this.entity.getWorld().isPathfindable(nodePosition))
-                if (!this.entity.getWorld().getTile(new Vector2i((int) nodePosition.x, (int) nodePosition.y), TileSet.Level.FOREGROUND).equals(TileRegistry.AIR.get()))
+                if (!this.entity.getWorld().getTile(nodePosition, TileSet.Level.FOREGROUND).equals(TileRegistry.AIR.get()))
                     skip = true;
 
                 if (skip)
@@ -170,7 +174,6 @@ public class PathFinderTask extends Task
         }
 
         LOGGER.warn("Entity {} failed to find path to {}", this.entity.getUUID(), end.position);
-        return new ArrayList<>();
     }
 
     /**
@@ -183,9 +186,9 @@ public class PathFinderTask extends Task
         private float g;
         private float h;
         private final Node parent;
-        private final Vector2fc position;
+        private final Vector2ic position;
 
-        private Node(Node parent, Vector2fc position)
+        private Node(Node parent, Vector2ic position)
         {
             this.g = parent.g;
             this.h = parent.h;
@@ -193,7 +196,7 @@ public class PathFinderTask extends Task
             this.position = position;
         }
 
-        private Node(float g, float h, Vector2fc position)
+        private Node(float g, float h, Vector2ic position)
         {
             this.g = g;
             this.h = h;
