@@ -10,12 +10,12 @@ import org.joml.Vector2f;
  * @author CoffeeCatRailway
  * Created: 07/01/2023
  */
-public class TestWanderTask extends Task
+public class SimpleWanderTask extends Task
 {
     private final Vector2f destination = new Vector2f(0f);
     private final float wanderRadius, speed;
 
-    public TestWanderTask(Entity entity, float wanderRadius, float speed)
+    public SimpleWanderTask(Entity entity, float wanderRadius, float speed)
     {
         super(entity);
         this.wanderRadius = wanderRadius;
