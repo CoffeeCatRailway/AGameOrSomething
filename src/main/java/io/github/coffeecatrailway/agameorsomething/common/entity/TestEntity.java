@@ -38,7 +38,7 @@ public class TestEntity extends Entity
     public void init()
     {
         if (this.shouldWander)
-            this.addTask(new TestWanderTask(this, 20f));
+            this.addTask(new TestWanderTask(this, 20f, 5f));
         if (this.aStar)
             this.addTask(this.pathFinderTask = new PathFinderTask(this));
     }

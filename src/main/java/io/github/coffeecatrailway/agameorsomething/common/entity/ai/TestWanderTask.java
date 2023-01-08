@@ -13,12 +13,13 @@ import org.joml.Vector2f;
 public class TestWanderTask extends Task
 {
     private final Vector2f destination = new Vector2f(0f);
-    private final float wanderRadius;
+    private final float wanderRadius, speed;
 
-    public TestWanderTask(Entity entity, float wanderRadius)
+    public TestWanderTask(Entity entity, float wanderRadius, float speed)
     {
         super(entity);
         this.wanderRadius = wanderRadius;
+        this.speed = speed;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class TestWanderTask extends Task
         float x = this.destination.x - this.entity.getPosition().x;
         float y = this.destination.y - this.entity.getPosition().y;
         float dist = Math.sqrt(x * x + y * y);
-        float mult = 5f / dist;
+        float mult = this.speed / dist;
         this.entity.getPosition().add(x * mult * delta, y * mult * delta);
     }
 
