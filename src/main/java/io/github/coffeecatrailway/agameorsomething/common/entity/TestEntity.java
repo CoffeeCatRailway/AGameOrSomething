@@ -4,7 +4,7 @@ import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.entity.ai.PathFinderTask;
-import io.github.coffeecatrailway.agameorsomething.common.entity.ai.SimpleWanderTask;
+import io.github.coffeecatrailway.agameorsomething.common.entity.ai.TestWanderTask;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
@@ -38,7 +38,7 @@ public class TestEntity extends Entity
     public void init()
     {
         if (this.shouldWander)
-            this.addTask(new SimpleWanderTask(this));
+            this.addTask(new TestWanderTask(this, 20f));
         if (this.aStar)
             this.addTask(this.pathFinderTask = new PathFinderTask(this));
     }

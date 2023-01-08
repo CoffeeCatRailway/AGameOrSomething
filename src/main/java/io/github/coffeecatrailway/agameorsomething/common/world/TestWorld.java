@@ -96,7 +96,7 @@ public class TestWorld extends AbstractWorld
             this.setTile(new Vector2i(-2 + i, -5), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
 
         TestEntity wanderer2 = new TestEntity(false, true);
-        wanderer2.getPosition().set(0, -10f);
+        wanderer2.getPosition().set(0f, -10f);
         this.addEntity(wanderer2);
 
         this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 100, origin -> {
