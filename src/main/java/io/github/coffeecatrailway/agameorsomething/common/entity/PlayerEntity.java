@@ -19,9 +19,6 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class PlayerEntity extends Entity implements HasAnimation
 {
-    private static final Vector2f LERP_CAMERA = new Vector2f();
-    private static final float CAMERA_SMOOTHNESS = .15f;
-
     private static final float WALK_SPED = 10f;
 
     private final Animation idleAnimation;
@@ -82,8 +79,6 @@ public class PlayerEntity extends Entity implements HasAnimation
 
         if (keyboardHandler.isKeyPressed(GLFW_KEY_C))
             this.position.set(0f);
-
-        camera.setPosition(camera.getPosition().lerp(this.position.add(.5f, 0f, LERP_CAMERA), CAMERA_SMOOTHNESS, LERP_CAMERA));
     }
 
     @Override

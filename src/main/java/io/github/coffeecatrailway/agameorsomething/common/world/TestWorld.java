@@ -26,8 +26,11 @@ import static org.lwjgl.glfw.GLFW.*;
 public class TestWorld extends AbstractWorld
 {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Vector2f LERP_CAMERA = new Vector2f();
+    private static final float CAMERA_SMOOTHNESS = .15f;
 
-    protected PlayerEntity player;
+    private PlayerEntity player;
+    private TestEntity pathFinder;
 
     private SimpleParticleEmitter emitter1, emitter2;
 
@@ -58,8 +61,8 @@ public class TestWorld extends AbstractWorld
             }
         }
 
-        int spotCount = 10;
-        int spotRadius = 4;
+        int spotCount = 40;
+        int spotRadius = 5;
         Vector2i spotPos = new Vector2i();
         for (i = 0; i < spotCount; i++)
         {
@@ -95,9 +98,9 @@ public class TestWorld extends AbstractWorld
         for (i = 0; i < 4; i++)
             this.setTile(new Vector2i(-2 + i, -5), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
 
-        TestEntity wanderer2 = new TestEntity(false, true);
-        wanderer2.getPosition().set(0f, -10f);
-        this.addEntity(wanderer2);
+        this.pathFinder = new TestEntity(false, true);
+        this.pathFinder.getPosition().set(0f, -10f);
+        this.addEntity(this.pathFinder);
 
         this.emitter1 = new SimpleParticleEmitter(new Vector2f(-5f, -5f), 100, origin -> {
             Vector2f pos = origin.add(MatUtils.randomFloat(this.random, -.1f, .1f), MatUtils.randomFloat(this.random, 0, .2f), new Vector2f());
@@ -133,6 +136,8 @@ public class TestWorld extends AbstractWorld
 
         this.emitter1.tick(delta, something);
         this.emitter2.tick(delta, something);
+
+        something.getCamera().setPosition(something.getCamera().getPosition().lerp(this.pathFinder.getPosition().add(.5f, 0f, LERP_CAMERA), CAMERA_SMOOTHNESS, LERP_CAMERA));
     }
 
     @Override

@@ -40,7 +40,7 @@ public class TestEntity extends Entity
         if (this.shouldWander)
             this.addTask(new SimpleWanderTask(this, 20f, 5f));
         if (this.aStar)
-            this.addTask(this.pathFinderTask = new PathFinderTask(this, 20));
+            this.addTask(this.pathFinderTask = new PathFinderTask(this, 10, 1f));
     }
 
     @Override
