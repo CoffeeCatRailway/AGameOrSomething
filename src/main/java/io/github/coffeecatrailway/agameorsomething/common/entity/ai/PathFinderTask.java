@@ -6,13 +6,12 @@ import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TileSet;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
-import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
-import org.joml.*;
-import org.lwjgl.glfw.GLFW;
+import org.joml.RoundingMode;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 import org.slf4j.Logger;
 
-import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,35 +25,56 @@ public class PathFinderTask extends Task
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0));
-//    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
+    //    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
     private static final int MAX_CHECKS = 2000;
 
     private final Vector2i destination = new Vector2i(0);
     public List<Vector2ic> path = new ArrayList<>();
 
     private final int wanderRadius;
+    private final float speed, minWaitTime, maxWaitTime;
+    private float waitTime;
 
-    public PathFinderTask(Entity entity, int wanderRadius)
+    public PathFinderTask(Entity entity, int wanderRadius, float speed, float minWaitTime, float maxWaitTime)
     {
         super(entity);
         this.wanderRadius = wanderRadius;
+        this.speed = speed;
+        this.minWaitTime = minWaitTime;
+        this.maxWaitTime = maxWaitTime;
+        this.waitTime = MatUtils.randomFloat(this.minWaitTime, this.maxWaitTime);
+        this.entity.getPosition().get(RoundingMode.HALF_DOWN, this.destination);
     }
 
     @Override
     public void tick(float delta, World world)
     {
-        if (this.entity.getPosition().distance(this.destination.x, this.destination.y) < .5f || AGameOrSomething.getInstance().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_Q))
+        if (this.path.size() > 0)
+        {
+            float x = this.path.get(0).x() - this.entity.getPosition().x + .00001f;
+            float y = this.path.get(0).y() - this.entity.getPosition().y + .00001f;
+            float dist = org.joml.Math.sqrt(x * x + y * y);
+            float mult = this.speed / dist;
+            this.entity.getPosition().add(x * mult * delta, y * mult * delta);
+
+            if (this.entity.getPosition().distance(this.path.get(0).x(), this.path.get(0).y()) < .25f)
+                this.path.remove(0);
+        } else if ((this.entity.getPosition().distance(this.destination.x, this.destination.y) < 1f && this.waitTime <= 0f) || (world.random().nextFloat() < .01f && this.waitTime <= 0f))
         {
             this.chooseDestination(world);
-            this.aStar(this.path);
-        }
+            this.waitTime = MatUtils.randomFloat(world.random(), this.minWaitTime, this.maxWaitTime);
+        } else
+            this.waitTime -= .1f;
+
+        // TODO: Add check if path node has become obstructed
     }
 
     private void chooseDestination(World world) // TODO: Check if position is reachable, walkable
     {
         int x = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
         int y = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
-        this.entity.getPosition().get(RoundingMode.FLOOR, this.destination).add(x, y);
+        this.entity.getPosition().get(RoundingMode.HALF_DOWN, this.destination).add(x, y);
+        this.aStar(this.path);
     }
 
     /**
@@ -73,7 +93,7 @@ public class PathFinderTask extends Task
         List<Node> closedNodes = new ArrayList<>();
         List<Node> children = new ArrayList<>();
 
-        Node start = new Node(0, 0, new Vector2i(this.entity.getPosition(), RoundingMode.FLOOR));
+        Node start = new Node(0, 0, new Vector2i(this.entity.getPosition(), RoundingMode.HALF_DOWN));
         Node end = new Node(0, 0, this.destination);
         openNodes.add(start); // Add 'start' to 'openNodes'
 
@@ -96,7 +116,7 @@ public class PathFinderTask extends Task
             openNodes.remove(currentIndex);
             closedNodes.add(current);
 
-            // Found end node
+            // Found end node or took to long
             if (current.equals(end) || currentIndex > MAX_CHECKS)
             {
                 path.clear();
