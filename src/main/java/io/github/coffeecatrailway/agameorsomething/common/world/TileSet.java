@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  */
 public class TileSet
 {
-    private final Map<Vector2ic, Tile> tileSet; // TODO: Convert to chunk based system
+    private final Map<Vector2ic, Tile> tileSet; // TODO: Convert to chunk based system, Use arrays[] instead of Maps
     private final Map<Vector2ic, BoundingBox> boundingBoxes = new HashMap<>();
     private boolean boundsEnabled = true;
 

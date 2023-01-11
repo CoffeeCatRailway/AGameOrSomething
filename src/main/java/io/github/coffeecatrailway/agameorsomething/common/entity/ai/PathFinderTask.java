@@ -4,12 +4,12 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
-import io.github.coffeecatrailway.agameorsomething.common.world.TileSet;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
-import io.github.coffeecatrailway.agameorsomething.core.registry.TileRegistry;
+import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import org.joml.RoundingMode;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class PathFinderTask extends Task
     @Override
     public void tick(float delta, World world)
     {
-        if (this.path.size() > 0)
+        if (this.path.size() > 0) // Walk along path
         {
             float x = this.path.get(0).x() - this.entity.getPosition().x + .00001f;
             float y = this.path.get(0).y() - this.entity.getPosition().y + .00001f;
@@ -59,14 +59,16 @@ public class PathFinderTask extends Task
 
             if (this.entity.getPosition().distance(this.path.get(0).x(), this.path.get(0).y()) < .25f)
                 this.path.remove(0);
-        } else if ((this.entity.getPosition().distance(this.destination.x, this.destination.y) < 1f && this.waitTime <= 0f) || (world.random().nextFloat() < .01f && this.waitTime <= 0f))
-        {
+        } else if ((this.entity.getPosition().distance(this.destination.x, this.destination.y) < 1f && this.waitTime <= 0f) || (world.random().nextFloat() < .01f && this.waitTime <= 0f) || AGameOrSomething.getInstance().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_Q))
+        { // Choose new path if arrived at destination and/or waited long enough
             this.chooseDestination(world);
             this.waitTime = MatUtils.randomFloat(world.random(), this.minWaitTime, this.maxWaitTime);
-        } else
+        } else // Decrease wait time
             this.waitTime -= .1f;
 
-        // TODO: Add check if path node has become obstructed
+        // Recalculate path if obstructed
+        if (this.path.stream().anyMatch(pos -> !world.isPathfindable(pos)))
+            this.aStar(this.path);
     }
 
     private void chooseDestination(World world) // TODO: Check if position is reachable, walkable
@@ -128,7 +130,7 @@ public class PathFinderTask extends Task
                 }
                 Collections.reverse(path);
                 double timeEnd = Timer.getTimeInSeconds();
-                LOGGER.debug("Entity {} took {} seconds to find path to {}", this.entity.getUUID(), (timeEnd - timeStart), end.position);
+//                LOGGER.debug("Entity {} took {} seconds to find path to {}", this.entity.getUUID(), (timeEnd - timeStart), end.position);
                 return;
             }
 
@@ -146,8 +148,7 @@ public class PathFinderTask extends Task
                     skip = true;
 
                 // Make sure position is walkable
-//                if (!this.entity.getWorld().isPathfindable(nodePosition))
-                if (!this.entity.getWorld().getTile(nodePosition, TileSet.Level.FOREGROUND).equals(TileRegistry.AIR.get()))
+                if (!this.entity.getWorld().isPathfindable(nodePosition))
                     skip = true;
 
                 if (skip)

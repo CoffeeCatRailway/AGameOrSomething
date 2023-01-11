@@ -63,6 +63,11 @@ public interface World
         return this.getTile(pos, level).isReplaceable();
     }
 
+    default boolean isPathfindable(Vector2ic pos)
+    {
+        return this.getTile(pos, TileSet.Level.MIDGROUND).equals(TileRegistry.AIR.get()) && this.getTile(pos, TileSet.Level.FOREGROUND).equals(TileRegistry.AIR.get());
+    }
+
     default TilePos trace(Vector3fc start, Vector3fc end)
     {
         Vector3f ray = end.sub(start, new Vector3f()).normalize();

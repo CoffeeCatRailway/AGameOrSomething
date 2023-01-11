@@ -143,7 +143,7 @@ public abstract class AbstractWorld implements World
         return switch (level)
                 {
                     case BACKGROUND -> this.background;
-                    case MIDGROUND -> this.background;
+                    case MIDGROUND -> this.foreground;
                     case FOREGROUND -> this.foreground;
                 };
     }
