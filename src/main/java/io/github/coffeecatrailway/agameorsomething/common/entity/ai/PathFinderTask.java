@@ -3,7 +3,6 @@ package io.github.coffeecatrailway.agameorsomething.common.entity.ai;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
-import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import org.joml.RoundingMode;
@@ -104,7 +103,7 @@ public class PathFinderTask extends Task
         Node end = new Node(0, 0, this.destination);
         openNodes.add(start); // Add 'start' to 'openNodes'
 
-        double timeStart = Timer.getTimeInSeconds();
+//        double timeStart = Timer.getTimeInSeconds();
         while (openNodes.size() > 0) // Loop through until 'end' is found
         {
             // Find node with lowest f value
@@ -134,14 +133,14 @@ public class PathFinderTask extends Task
                     pathCurrent = pathCurrent.parent;
                 }
                 Collections.reverse(path);
-                double timeEnd = Timer.getTimeInSeconds();
+//                double timeEnd = Timer.getTimeInSeconds();
 //                LOGGER.debug("Entity {} took {} seconds to find path to {}", this.entity.getUUID(), (timeEnd - timeStart), end.position);
                 return;
             }
 
             // Generate 'children'
             children.clear();
-            for (Vector2ic newPosition : ADJACENT_POSITIONS) // TODO: Check if entity fits, diagonals
+            for (Vector2ic newPosition : ADJACENT_POSITIONS) // TODO: Check diagonals
             {
                 boolean skip = false;
                 // Get node position
@@ -152,9 +151,11 @@ public class PathFinderTask extends Task
                         nodePosition.y < -this.entity.getWorld().getWorldRadius() || nodePosition.y > this.entity.getWorld().getWorldRadius())
                     skip = true;
 
-                // Make sure position is walkable
-                if (!this.entity.getWorld().isPathfindable(nodePosition))
-                    skip = true;
+                // Make sure position is walkable;
+                for (int y = 0; y < this.entity.getBounds().y(); y++)
+                    for (int x = 0; x < this.entity.getBounds().x(); x++)
+                        if (!this.entity.getWorld().isPathfindable(nodePosition.add(x, y, new Vector2i())))
+                            skip = true;
 
                 if (skip)
                     continue;
