@@ -26,7 +26,7 @@ public class PathFinderTask extends Task
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0));
     //    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
-    private static final int MAX_CHECKS = 2000;
+    private static final int MAX_CHECKS = 2000, DESTINATION_CHECKS = 5;
 
     private final Vector2i destination = new Vector2i(0);
     public List<Vector2ic> path = new ArrayList<>();
@@ -71,11 +71,16 @@ public class PathFinderTask extends Task
             this.aStar(this.path);
     }
 
-    private void chooseDestination(World world) // TODO: Check if position is reachable, walkable
+    private void chooseDestination(World world)
     {
-        int x = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
-        int y = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
-        this.entity.getPosition().get(RoundingMode.HALF_DOWN, this.destination).add(x, y);
+        for (int i = 0; i < DESTINATION_CHECKS; i++)
+        {
+            int x = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
+            int y = MatUtils.randomInt(world.random(), -this.wanderRadius, this.wanderRadius);
+            this.entity.getPosition().get(RoundingMode.HALF_DOWN, this.destination).add(x, y);
+            if (world.isPathfindable(this.destination))
+                break;
+        }
         this.aStar(this.path);
     }
 
