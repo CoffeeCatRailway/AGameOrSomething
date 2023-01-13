@@ -23,8 +23,7 @@ import java.util.Set;
 public class PathFinderTask extends Task
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0));
-    //    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
+    private static final Set<Vector2ic> ADJACENT_POSITIONS = Set.of(new Vector2i(0, -1), new Vector2i(0, 1), new Vector2i(-1, 0), new Vector2i(1, 0), new Vector2i(-1, -1), new Vector2i(-1, 1), new Vector2i(1, -1), new Vector2i(1, 1));
     private static final int MAX_CHECKS = 2000, DESTINATION_CHECKS = 5;
 
     private final Vector2i destination = new Vector2i(0);
@@ -140,7 +139,7 @@ public class PathFinderTask extends Task
 
             // Generate 'children'
             children.clear();
-            for (Vector2ic newPosition : ADJACENT_POSITIONS) // TODO: Check diagonals
+            for (Vector2ic newPosition : ADJACENT_POSITIONS)
             {
                 boolean skip = false;
                 // Get node position
