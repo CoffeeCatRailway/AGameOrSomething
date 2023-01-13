@@ -217,7 +217,7 @@ public class PathFinderTask extends Task
             }
         }
 
-        LOGGER.warn("Entity {} failed to find path to {}", this.entity.getUUID(), end.position);
+        LOGGER.debug("Entity {} failed to find path to {}", this.entity.getUUID(), end.position);
     }
 
     /**
