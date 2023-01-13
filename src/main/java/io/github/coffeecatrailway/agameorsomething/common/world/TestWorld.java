@@ -87,18 +87,18 @@ public class TestWorld extends AbstractWorld
         this.player = new PlayerEntity();
         this.addEntity(this.player);
 
-        TestEntity wanderer = new TestEntity(true, false);
+        TestEntity wanderer = new TestEntity(TestEntity.AI.WANDER);
         wanderer.getPosition().set(-10f, 5f);
         this.addEntity(wanderer);
 
-        TestEntity wanderer1 = new TestEntity(true, false);
+        TestEntity wanderer1 = new TestEntity(TestEntity.AI.WANDER);
         wanderer1.getPosition().set(10f, 5f);
         this.addEntity(wanderer1);
 
         for (i = 0; i < 4; i++)
             this.setTile(new Vector2i(-2 + i, -5), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
 
-        this.pathFinder = new TestEntity(false, true);
+        this.pathFinder = new TestEntity(TestEntity.AI.A_STAR);
         this.pathFinder.getPosition().set(0f, -10f);
         this.addEntity(this.pathFinder);
 

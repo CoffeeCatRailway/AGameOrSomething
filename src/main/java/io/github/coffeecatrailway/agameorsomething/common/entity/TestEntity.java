@@ -14,17 +14,14 @@ import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
  */
 public class TestEntity extends Entity
 {
-    private boolean shouldWander = true;
-    private boolean aStar = false;
+    private AI ai = AI.NONE;
+    private PathFinderTask pathFinderTask;
 
-    public PathFinderTask pathFinderTask;
-
-    public TestEntity(boolean shouldWander, boolean aStar)
+    public TestEntity(AI ai)
     {
         this(EntityRegistry.TEST.get().entityData);
         this.setId(EntityRegistry.TEST.get());
-        this.shouldWander = shouldWander;
-        this.aStar = aStar;
+        this.ai = ai;
     }
 
     public TestEntity(EntityData entityData)
@@ -35,17 +32,19 @@ public class TestEntity extends Entity
     @Override
     public void init()
     {
-        if (this.shouldWander)
-            this.addTask(new SimpleWanderTask(this, 20f, 5f));
-        if (this.aStar)
-            this.addTask(this.pathFinderTask = new PathFinderTask(this, 20, 15f, 10f, 15f));
+        switch (this.ai)
+        {
+            case WANDER -> this.addTask(new SimpleWanderTask(this, 20f, 5f));
+            case A_STAR -> this.addTask(this.pathFinderTask = new PathFinderTask(this, 20, 15f, 10f, 15f));
+            case NONE -> {}
+        }
     }
 
     @Override
     public void render(AGameOrSomething something, BatchRenderer batch)
     {
         super.render(something, batch);
-        if (this.pathFinderTask != null)
+        if (this.ai == AI.A_STAR)
             this.pathFinderTask.renderDebug();
     }
 
@@ -53,5 +52,10 @@ public class TestEntity extends Entity
     public ObjectLocation getTextureLocation()
     {
         return TextureAtlas.MISSING;
+    }
+
+    public enum AI
+    {
+        WANDER, A_STAR, NONE
     }
 }
