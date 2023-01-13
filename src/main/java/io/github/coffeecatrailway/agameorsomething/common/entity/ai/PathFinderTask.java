@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.agameorsomething.common.entity.ai;
 
 import com.mojang.logging.LogUtils;
+import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.common.entity.Entity;
 import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
@@ -27,7 +28,7 @@ public class PathFinderTask extends Task
     private static final int MAX_CHECKS = 2000, DESTINATION_CHECKS = 5;
 
     private final Vector2i destination = new Vector2i(0);
-    public List<Vector2ic> path = new ArrayList<>();
+    private final List<Vector2ic> path = new ArrayList<>();
 
     private final int wanderRadius;
     private final float speed, minWaitTime, maxWaitTime;
@@ -67,6 +68,23 @@ public class PathFinderTask extends Task
         // Recalculate path if obstructed
         if (this.path.stream().anyMatch(pos -> !world.isPathfindable(pos)))
             this.aStar(this.path);
+    }
+
+    public void renderDebug()
+    {
+        if (AGameOrSomething.isDebugRender() && this.path.size() > 1)
+        {
+            float[] verticies = new float[this.path.size() * 2];
+            int i = 0;
+            for (Vector2ic spot : this.path)
+            {
+                verticies[i] = spot.x() + .5f;
+                verticies[i + 1] = spot.y() + .5f;
+                i += 2;
+            }
+            LineRenderer.setLineColor(1f, 1f, 0f);
+            LineRenderer.drawLineStrip(verticies);
+        }
     }
 
     private void chooseDestination(World world)
