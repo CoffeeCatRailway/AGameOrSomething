@@ -170,6 +170,12 @@ public abstract class AbstractWorld implements World
         this.entities.add(entity);
     }
 
+    @Override
+    public Entity getEntityByUUID(UUID uuid)
+    {
+        return this.entities.stream().filter(entity -> entity.getUUID().equals(uuid)).findFirst().orElseThrow(() -> new IllegalStateException("Entity with uuid '" + uuid.toString() + "' doesn't exists!"));
+    }
+
     public Set<Entity> getEntitiesWithin(Vector2fc origin, float radius)
     {
         return this.entities.stream().filter(entity -> entity.getPosition().distance(origin) <= radius).collect(Collectors.toSet());

@@ -11,6 +11,7 @@ import org.joml.*;
 
 import java.lang.Math;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author CoffeeCatRailway
@@ -98,6 +99,8 @@ public interface World
     }
 
     void addEntity(Entity entity);
+
+    Entity getEntityByUUID(UUID uuid);
 
     int getWorldRadius();
 

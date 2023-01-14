@@ -22,7 +22,9 @@ public class Camera
 {
     public static final float Z_NEAR = 0f, Z_FAR = 1000f;
 
+    // Zoom
     public static final float ZOOM_MIN = 8f, ZOOM_MAX = 32f, ZOOM_SPEED = 1f / 4f;
+    private float zoom = ZOOM_MAX;
 
     private final Window window;
     private final Vector2f position; // Camera position is double that of tile positions
@@ -30,7 +32,11 @@ public class Camera
     private final Matrix4f viewMatrix;
     private final FrustumCullingFilter cullingFilter;
 
-    private float zoom = ZOOM_MAX;
+    // Following
+    private static final Vector2f FOLLOW_POSITION = new Vector2f();
+    private static final float FOLLOW_SMOOTHNESS = .15f;
+    private final Vector2f followPosition = new Vector2f();
+    private boolean keepFollowing = true;
 
     public Camera(Window window)
     {
@@ -54,6 +60,9 @@ public class Camera
             this.incrementZoom(-ZOOM_SPEED);
         if (keyboardHandler.isKeyPressed(GLFW_KEY_DOWN))
             this.incrementZoom(ZOOM_SPEED);
+
+        if (this.keepFollowing)
+            this.setPosition(this.position.lerp(this.followPosition.add(.5f, 0f, FOLLOW_POSITION), FOLLOW_SMOOTHNESS, FOLLOW_POSITION));
     }
 
     public void setPosition(Vector2fc position)
@@ -100,6 +109,21 @@ public class Camera
     {
         MouseHandler mouseHandler = AGameOrSomething.getInstance().getMouseHandler();
         return MousePicker.getRay(this.projectionMatrix, this.getViewMatrix(), (float) (mouseHandler.getMouseX() / this.window.getFramebufferWidth() * 2f - 1f), (float) (mouseHandler.getMouseY() / this.window.getFramebufferHeight() * 2f - 1f));
+    }
+
+//    public void follow(UUID uuid, World world)
+//    {
+//        this.followPosition.set(world.getEntityByUUID(uuid).getPosition());
+//    }
+
+    public void follow(Vector2fc position)
+    {
+        this.followPosition.set(position);
+    }
+
+    public void setKeepFollowing(boolean keepFollowing)
+    {
+        this.keepFollowing = keepFollowing;
     }
 
     public void incrementZoom(float zoomInc)

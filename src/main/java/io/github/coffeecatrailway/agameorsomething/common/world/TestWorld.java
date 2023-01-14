@@ -26,8 +26,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class TestWorld extends AbstractWorld
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Vector2f LERP_CAMERA = new Vector2f();
-    private static final float CAMERA_SMOOTHNESS = .15f;
 
     private PlayerEntity player;
     private TestEntity pathFinder;
@@ -137,7 +135,8 @@ public class TestWorld extends AbstractWorld
         this.emitter1.tick(delta, something);
         this.emitter2.tick(delta, something);
 
-        something.getCamera().setPosition(something.getCamera().getPosition().lerp(this.pathFinder.getPosition().add(.5f, 0f, LERP_CAMERA), CAMERA_SMOOTHNESS, LERP_CAMERA));
+//        something.getCamera().follow(this.pathFinder.getPosition());
+        something.getCamera().follow(this.player.getPosition());
     }
 
     @Override
