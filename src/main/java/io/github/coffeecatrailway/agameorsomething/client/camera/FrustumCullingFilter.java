@@ -7,7 +7,7 @@ import org.joml.*;
  * @author CoffeeCatRailway
  * Created: 02/01/2023
  */
-public class FrustumCullingFilter
+public class FrustumCullingFilter // TODO: Consider changing to use shaders
 {
     private static final Vector3f INSIDE_MIN = new Vector3f();
     private static final Vector3f INSIDE_MAX = new Vector3f();
