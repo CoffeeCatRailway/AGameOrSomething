@@ -24,7 +24,7 @@ public class Camera
 
     // Zoom
     public static final float ZOOM_MIN = 8f, ZOOM_MAX = 32f, ZOOM_SPEED = 1f / 4f;
-    private float zoom = ZOOM_MAX;
+    private float zoom = (ZOOM_MAX - ZOOM_MIN) / 2f + ZOOM_MIN;
 
     private final Window window;
     private final Vector2f position; // Camera position is double that of tile positions
@@ -110,11 +110,6 @@ public class Camera
         MouseHandler mouseHandler = AGameOrSomething.getInstance().getMouseHandler();
         return MousePicker.getRay(this.projectionMatrix, this.getViewMatrix(), (float) (mouseHandler.getMouseX() / this.window.getFramebufferWidth() * 2f - 1f), (float) (mouseHandler.getMouseY() / this.window.getFramebufferHeight() * 2f - 1f));
     }
-
-//    public void follow(UUID uuid, World world)
-//    {
-//        this.followPosition.set(world.getEntityByUUID(uuid).getPosition());
-//    }
 
     public void follow(Vector2fc position)
     {
