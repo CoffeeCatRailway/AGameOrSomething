@@ -149,7 +149,7 @@ public class AGameOrSomething implements WindowEventListener
                 if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
                     DEBUG_RENDER = !DEBUG_RENDER;
 
-                this.camera.tick();
+                this.camera.tick(this.keyboardHandler);
                 this.world.tick((float) deltaTime, this);
 
                 if (fpsPassed >= 1d)

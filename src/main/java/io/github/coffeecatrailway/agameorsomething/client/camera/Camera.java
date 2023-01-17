@@ -3,7 +3,6 @@ package io.github.coffeecatrailway.agameorsomething.client.camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.MousePicker;
 import io.github.coffeecatrailway.agameorsomething.common.utils.TilePos;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
-import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.input.KeyboardHandler;
 import io.github.ocelot.window.input.MouseHandler;
@@ -53,9 +52,8 @@ public class Camera
         this.adjustProjection();
     }
 
-    public void tick()
+    public void tick(KeyboardHandler keyboardHandler)
     {
-        KeyboardHandler keyboardHandler = AGameOrSomething.getInstance().getKeyboardHandler();
         if (keyboardHandler.isKeyPressed(GLFW_KEY_UP))
             this.incrementZoom(-ZOOM_SPEED);
         if (keyboardHandler.isKeyPressed(GLFW_KEY_DOWN))
@@ -98,16 +96,15 @@ public class Camera
         return this.cullingFilter;
     }
 
-    public TilePos trace(World world)
+    public TilePos trace(World world, MouseHandler mouseHandler)
     {
         Vector3f startPos = new Vector3f(this.position, this.zoom);
-        Vector3f endPos = startPos.add(this.getLook().mul(100), new Vector3f());
+        Vector3f endPos = startPos.add(this.getLook(mouseHandler).mul(100), new Vector3f());
         return world.trace(startPos, endPos);
     }
 
-    public Vector3f getLook()
+    public Vector3f getLook(MouseHandler mouseHandler)
     {
-        MouseHandler mouseHandler = AGameOrSomething.getInstance().getMouseHandler();
         return MousePicker.getRay(this.projectionMatrix, this.getViewMatrix(), (float) (mouseHandler.getMouseX() / this.window.getFramebufferWidth() * 2f - 1f), (float) (mouseHandler.getMouseY() / this.window.getFramebufferHeight() * 2f - 1f));
     }
 

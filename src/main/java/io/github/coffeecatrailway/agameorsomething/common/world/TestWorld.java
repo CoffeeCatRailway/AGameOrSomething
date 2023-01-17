@@ -127,7 +127,7 @@ public class TestWorld extends AbstractWorld
 
         if (tile != null)
         {
-            TilePos pos = something.getCamera().trace(this);
+            TilePos pos = something.getCamera().trace(this, something.getMouseHandler());
             if (pos != TilePos.EMPTY && (this.canPlaceTileAt(pos.pos(), tile, TileSet.Level.FOREGROUND) || middleMouse))
                 this.setTile(pos.pos(), tile, TileSet.Level.FOREGROUND);
         }
