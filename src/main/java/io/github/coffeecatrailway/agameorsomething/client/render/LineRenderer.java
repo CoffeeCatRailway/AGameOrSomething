@@ -1,84 +1,133 @@
 package io.github.coffeecatrailway.agameorsomething.client.render;
 
+import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.ShaderAttribute;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
-import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.joml.Vector3f;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
 
 /**
  * @author CoffeeCatRailway
- * Created: 16/12/2022
- *
- * Used for debuging
+ * Created: 17/01/2023
  */
-public final class LineRenderer
+public class LineRenderer
 {
-    private static final float[] MATRIX_FLOAT_ARRAY = new float[16];
-    private static float WIDTH = 2f;
-    private static final Vector3f COLOR = new Vector3f(1f, 0f, 0f);
+    public static final LineRenderer INSTANCE = new LineRenderer();
+    public static final Shader SHADER = new Shader("line_render");
+    public static int renderCalls = 0;
 
-    private LineRenderer()
-    {}
+    private final VAO vao;
 
-    public static void drawBoundingBox(BoundingBox box)
+    private int index;
+    private final int maxIndex;
+    private boolean drawing = false;
+
+    public LineRenderer()
+    {
+        this(1000);
+    }
+
+    public LineRenderer(int size)
+    {
+        this.vao = new VAO(size, new ShaderAttribute("position", 2, GL_FLOAT));
+        this.maxIndex = size;
+    }
+
+    /**
+     * Updates uniforms for projection, view matrices
+     *
+     * @param camera {@link Camera} - Main camera
+     */
+    public void updateUniforms(Camera camera)
+    {
+        SHADER.bind();
+        SHADER.setUniformMatrix4f("uProjection", camera.getProjectionMatrix());
+        SHADER.setUniformMatrix4f("uView", camera.getViewMatrix());
+    }
+
+    public void begin(float r, float g, float b)
+    {
+        if (this.drawing)
+            throw new IllegalStateException("Must not be drawing before `begin()` is called!");
+        this.drawing = true;
+        SHADER.bind();
+        SHADER.setUniformVector3f("uColor", r, g, b);
+        this.vao.bind();
+        this.vao.bindWrite();
+        this.index = 0;
+        renderCalls = 0;
+    }
+
+    public void end()
+    {
+        if (!this.drawing)
+            throw new IllegalStateException("Must be drawing before `end()` is called!");
+        this.drawing = false;
+        this.flush();
+        this.vao.unbind();
+        SHADER.unbind();
+    }
+
+    /**
+     * Renders data if any was entered
+     */
+    public void flush()
+    {
+        if (this.index > 0)
+        {
+            this.render();
+            this.index = 0;
+        }
+    }
+
+    public void drawBox(BoundingBox box)
     {
         drawBox(box.getPosition(), box.getPosition().add(box.getBounds(), new Vector2f()));
     }
 
-    public static void drawBox(Vector2fc bottomLeft, Vector2fc topRight)
+    public void drawBox(Vector2fc bottomLeft, Vector2fc topRight)
     {
-        drawLineStrip(bottomLeft.x(), bottomLeft.y(),
+        draw(bottomLeft.x(), bottomLeft.y(),
                 topRight.x(), bottomLeft.y(),
                 topRight.x(), topRight.y(),
                 bottomLeft.x(), topRight.y(),
                 bottomLeft.x(), bottomLeft.y());
     }
 
-    public static void drawBox(float x1, float y1, float x2, float y2)
+    public void drawBox(float x1, float y1, float x2, float y2)
     {
-        drawLineStrip(x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
+        draw(x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
     }
 
-    public static void drawLine(Vector2fc start, Vector2fc end)
+    public void drawLine(Vector2fc start, Vector2fc end)
     {
-        drawLineStrip(start.x(), start.y(), end.x(), end.y());
+        draw(start.x(), start.y(), end.x(), end.y());
     }
 
-    public static void drawLineStrip(float... vertices)
+    public void draw(float... vertices)
     {
-        assert vertices.length % 2 == 0;
-        assert vertices.length >= 4;
+        // Check flush
+        if (this.index >= this.maxIndex)
+            this.flush();
 
-        glEnable(GL_LINE_SMOOTH);
-        glDisable(GL_TEXTURE_2D);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glMultMatrixf(AGameOrSomething.getInstance().getCamera().getProjectionMatrix().get(MATRIX_FLOAT_ARRAY));
-        glMultMatrixf(AGameOrSomething.getInstance().getCamera().getViewMatrix().get(MATRIX_FLOAT_ARRAY));
-
-        glColor3f(COLOR.x, COLOR.y, COLOR.z);
-        glLineWidth(WIDTH);
-
-        glBegin(GL_LINE_STRIP);
+        // Add vertices to vao
         for (int i = 0; i < vertices.length; i += 2)
-            glVertex2f(vertices[i], vertices[i + 1]);
-        glEnd();
-
-        glDisable(GL_LINE_SMOOTH);
-        glEnable(GL_TEXTURE_2D);
+            this.vertex(vertices[i], vertices[i + 1]);
     }
 
-    public static void setLineWidth(float width)
+    private void vertex(float x, float y)
     {
-        WIDTH = width;
+        this.vao.put(this.index, buffer -> buffer.putFloat(x).putFloat(y));
+        this.index++;
     }
 
-    public static void setLineColor(float r, float g, float b)
+    private void render()
     {
-        COLOR.set(r, g, b);
+        this.vao.draw(GL_LINE_STRIP, 0, this.index);
+        renderCalls++;
     }
 }

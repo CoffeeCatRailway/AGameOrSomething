@@ -101,8 +101,9 @@ public abstract class AbstractWorld implements World
             entity.render(something, batch);
             if (AGameOrSomething.isDebugRender()) // Render entity bounds
             {
-                LineRenderer.setLineColor(1f, 0f, 0f);
-                LineRenderer.drawBox(entity.getPosition(), entity.getBounds().add(entity.getPosition(), new Vector2f()));
+                LineRenderer.INSTANCE.begin(1f, 0f, 0f);
+                LineRenderer.INSTANCE.drawBox(entity.getBoundingBox());
+                LineRenderer.INSTANCE.end();
             }
         });
     }

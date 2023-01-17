@@ -66,8 +66,10 @@ public class AGameOrSomething implements WindowEventListener
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
         glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
         // Create the window
         this.window.create("AGameOrSomething");
@@ -143,6 +145,10 @@ public class AGameOrSomething implements WindowEventListener
 
             while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
+                // Debug keys code
+                if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
+                    DEBUG_RENDER = !DEBUG_RENDER;
+
                 this.camera.tick();
                 this.world.tick((float) deltaTime, this);
 
@@ -159,14 +165,16 @@ public class AGameOrSomething implements WindowEventListener
             frameTime = System.currentTimeMillis();
             if (this.window.isFocused() || RENDER_UNFOCUSED)
             {
-                // Debug keys code
-                if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
-                    DEBUG_RENDER = !DEBUG_RENDER;
-
                 // Render code
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+                // Update batch renderer uniforms
                 batch.updateUniforms(this.camera);
                 batch.setColor(0f, 0f, 0f, 0f);
+
+                // Update debug uniforms
+                if (DEBUG_RENDER)
+                    LineRenderer.INSTANCE.updateUniforms(this.getCamera());
 
                 this.world.render(this, batch);
 
@@ -180,6 +188,7 @@ public class AGameOrSomething implements WindowEventListener
     {
         TextureAtlas.deleteStaticAtlases();
         BatchRenderer.SHADER.delete();
+        LineRenderer.SHADER.delete();
 
         this.windowManager.free();
     }

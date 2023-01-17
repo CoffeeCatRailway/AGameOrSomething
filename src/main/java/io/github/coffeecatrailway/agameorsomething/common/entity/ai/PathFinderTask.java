@@ -82,8 +82,9 @@ public class PathFinderTask extends Task
                 verticies[i + 1] = spot.y() + .5f;
                 i += 2;
             }
-            LineRenderer.setLineColor(1f, 1f, 0f);
-            LineRenderer.drawLineStrip(verticies);
+            LineRenderer.INSTANCE.begin(1f, 1f, 0f);
+            LineRenderer.INSTANCE.draw(verticies);
+            LineRenderer.INSTANCE.end();
         }
     }
 

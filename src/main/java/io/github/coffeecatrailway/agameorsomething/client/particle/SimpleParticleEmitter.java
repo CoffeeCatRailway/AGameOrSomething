@@ -70,8 +70,9 @@ public class SimpleParticleEmitter implements ParticleEmitter
 
         if (AGameOrSomething.isDebugRender())
         {
-            LineRenderer.setLineColor(1f, 0f, 1f);
-            LineRenderer.drawBox(this.position.x - .5f, this.position.y - .5f, this.position.x + .5f, this.position.y + .5f);
+            LineRenderer.INSTANCE.begin(1f, 0f, 1f);
+            LineRenderer.INSTANCE.drawBox(this.position.x - .5f, this.position.y - .5f, this.position.x + .5f, this.position.y + .5f);
+            LineRenderer.INSTANCE.end();
         }
     }
 
