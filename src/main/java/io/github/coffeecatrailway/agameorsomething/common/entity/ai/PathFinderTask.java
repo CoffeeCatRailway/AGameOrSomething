@@ -9,7 +9,6 @@ import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import org.joml.RoundingMode;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class PathFinderTask extends Task
 
             if (this.entity.getPosition().distance(this.path.get(0).x(), this.path.get(0).y()) < .25f)
                 this.path.remove(0);
-        } else if ((this.entity.getPosition().distance(this.destination.x, this.destination.y) < 1f && this.waitTime <= 0f) || (world.random().nextFloat() < .01f && this.waitTime <= 0f) || AGameOrSomething.getInstance().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_Q))
+        } else if ((this.entity.getPosition().distance(this.destination.x, this.destination.y) < 1f && this.waitTime <= 0f) || (world.random().nextFloat() < .01f && this.waitTime <= 0f))
         { // Choose new path if arrived at destination and/or waited long enough
             this.chooseDestination(world);
             this.waitTime = MatUtils.randomFloat(world.random(), this.minWaitTime, this.maxWaitTime);
