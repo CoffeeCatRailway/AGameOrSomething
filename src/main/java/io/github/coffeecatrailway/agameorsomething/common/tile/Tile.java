@@ -1,8 +1,6 @@
 package io.github.coffeecatrailway.agameorsomething.common.tile;
 
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.HasTexture;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModel;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import io.github.coffeecatrailway.agameorsomething.core.registry.RegistrableSomething;
 import org.joml.Math;
@@ -80,14 +78,6 @@ public class Tile implements RegistrableSomething, HasTexture
         return this.tileData.customTexture != null ? this.tileData.customTexture : new ObjectLocation(this.getObjectId().getNamespace(), "textures/tile/" + this.getObjectId().getPath());
     }
 
-    /**
-     * No longer used but left in-case
-     */
-    public VBOModel getModel()
-    {
-        return this.tileData.model;
-    }
-
     public Vector2ic getBounds()
     {
         return this.tileData.bounds;
@@ -149,20 +139,18 @@ public class Tile implements RegistrableSomething, HasTexture
         private RegistrableSomething drop = null;
         private boolean hasTexture = true;
         private ObjectLocation customTexture = null;
-        private VBOModel model = VBOModels.SIMPLE_1X1;
         private Vector2i bounds = new Vector2i(1);
 
         public TileData()
         {
         }
 
-        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, VBOModel model, Vector2i bounds)
+        private TileData(int harvestLevel, RegistrableSomething drop, boolean hasTexture, ObjectLocation customTexture, Vector2i bounds)
         {
             this.harvestLevel = harvestLevel;
             this.drop = drop;
             this.hasTexture = hasTexture;
             this.customTexture = customTexture;
-            this.model = model;
             this.bounds = bounds;
         }
 
@@ -206,12 +194,6 @@ public class Tile implements RegistrableSomething, HasTexture
             return this.setHasTexture(true);
         }
 
-        public TileData setModel(VBOModel model)
-        {
-            this.model = model;
-            return this;
-        }
-
         public TileData setBounds(Vector2i bounds)
         {
             this.bounds = bounds.absolute();
@@ -220,7 +202,7 @@ public class Tile implements RegistrableSomething, HasTexture
 
         public TileData build()
         {
-            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.model, this.bounds);
+            return new TileData(this.harvestLevel, this.drop, this.hasTexture, this.customTexture, this.bounds);
         }
     }
 }

@@ -3,7 +3,7 @@ package linerenderer;
 import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.ShaderAttribute;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VAO;
+import io.github.coffeecatrailway.agameorsomething.client.render.VAO;
 import io.github.coffeecatrailway.agameorsomething.common.collision.BoundingBox;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.joml.Vector2f;

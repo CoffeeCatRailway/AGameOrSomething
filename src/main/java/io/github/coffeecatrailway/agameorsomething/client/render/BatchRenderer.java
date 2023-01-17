@@ -4,7 +4,6 @@ import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.AtlasEntry;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.Texture;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VAO;
 import org.joml.Math;
 import org.joml.Vector4fc;
 
@@ -16,6 +15,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
  */
 public class BatchRenderer
 {
+    public static final Shader SHADER = new Shader("simple");
     public static int renderCalls = 0;
 
     private Texture texture;
@@ -39,7 +39,7 @@ public class BatchRenderer
 
     public BatchRenderer(int size)
     {
-        this(Shader.SIMPLE, size);
+        this(SHADER, size);
     }
 
     public BatchRenderer(Shader shader)
@@ -134,10 +134,10 @@ public class BatchRenderer
     public void updateUniforms(Camera camera, Shader shader)
     {
         shader.bind();
-        shader.setUniformi("tex", 0);
-//        shader.setUniform("time", (float) glfwGetTime());
-        shader.setUniformMatrix4f("projection", camera.getProjectionMatrix());
-        shader.setUniformMatrix4f("view", camera.getViewMatrix());
+        shader.setUniformi("uTexture", 0);
+//        shader.setUniform("uTime", (float) glfwGetTime());
+        shader.setUniformMatrix4f("uProjection", camera.getProjectionMatrix());
+        shader.setUniformMatrix4f("uView", camera.getViewMatrix());
     }
 
     public Shader getShader()

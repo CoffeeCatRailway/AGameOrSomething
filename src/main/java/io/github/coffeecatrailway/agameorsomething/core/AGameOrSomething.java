@@ -3,9 +3,8 @@ package io.github.coffeecatrailway.agameorsomething.core;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
-import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.agameorsomething.client.render.vbo.VBOModels;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
@@ -113,9 +112,6 @@ public class AGameOrSomething implements WindowEventListener
 
     private void loop()
     {
-        glClearColor(0f, 0f, 0f, 0f); // Set clear color
-        glEnable(GL_TEXTURE_2D);
-
         double fpsPassed = 0;
         int fps = 0;
         long frameTime = 0;
@@ -125,6 +121,7 @@ public class AGameOrSomething implements WindowEventListener
 
         BatchRenderer batch = new BatchRenderer();
 
+        glEnable(GL_TEXTURE_2D);
         glDisable(GL_DEPTH_TEST);
 
         glEnable(GL_BLEND);
@@ -182,8 +179,7 @@ public class AGameOrSomething implements WindowEventListener
     private void destroy()
     {
         TextureAtlas.deleteStaticAtlases();
-        Shader.deleteStaticShaders();
-        VBOModels.deleteStaticModels();
+        BatchRenderer.SHADER.delete();
 
         this.windowManager.free();
     }

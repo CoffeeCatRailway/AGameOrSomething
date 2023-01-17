@@ -21,13 +21,10 @@ public class Shader
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1, ATTRIB_COLOR = 2;
+    public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
     public static final List<ShaderAttribute> DEFAULT_ATTRIBUTES = List.of(new ShaderAttribute("position", 3, GL_FLOAT),
             new ShaderAttribute("texCoords", 2, GL_FLOAT),
             new ShaderAttribute("texColor", 4, GL_FLOAT));
-
-    public static final Shader SIMPLE = new Shader("simple");
-    public static final Shader SPRITE = new Shader("sprite");
 
     private final int program;
     private final int vertex;
@@ -143,12 +140,5 @@ public class Shader
         glDeleteShader(this.fragment);
         glDeleteProgram(this.program);
         LOGGER.debug("Deleted shader {} Vertex: {} Fragment: {}", this.program, this.vertexLocation, this.fragmentLocation);
-    }
-
-    public static void deleteStaticShaders()
-    {
-        SIMPLE.delete();
-        SPRITE.delete();
-        LOGGER.warn("Static shaders deleted!");
     }
 }

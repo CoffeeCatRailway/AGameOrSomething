@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.agameorsomething.client.render.vbo;
+package io.github.coffeecatrailway.agameorsomething.client.render;
 
 import io.github.coffeecatrailway.agameorsomething.client.render.shader.ShaderAttribute;
 import org.lwjgl.system.MemoryStack;

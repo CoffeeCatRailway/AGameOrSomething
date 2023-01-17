@@ -1,7 +1,7 @@
 #version 330 core
 
-uniform mat4 projection;
-uniform mat4 view;
+uniform mat4 uProjection;
+uniform mat4 uView;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
@@ -14,5 +14,5 @@ void main()
 {
     vTexCoords = texCoords;
     vTexColor = texColor;
-    gl_Position = projection * view * vec4(position, 1);
+    gl_Position = uProjection * uView * vec4(position, 1);
 }
