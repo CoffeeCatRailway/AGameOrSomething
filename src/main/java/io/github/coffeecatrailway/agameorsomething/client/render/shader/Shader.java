@@ -26,8 +26,8 @@ public class Shader
             new ShaderAttribute("texCoords", 2, GL_FLOAT),
             new ShaderAttribute("texColor", 4, GL_FLOAT));
 
-    public static final Shader SIMPLE = new Shader("simple", DEFAULT_ATTRIBUTES);
-    public static final Shader SPRITE = new Shader("sprite", DEFAULT_ATTRIBUTES);
+    public static final Shader SIMPLE = new Shader("simple");
+    public static final Shader SPRITE = new Shader("sprite");
 
     private final int program;
     private final int vertex;
@@ -36,17 +36,12 @@ public class Shader
     private final ObjectLocation vertexLocation;
     private final ObjectLocation fragmentLocation;
 
-    public Shader(String shader, List<ShaderAttribute> attributes)
+    public Shader(String shader)
     {
-        this(shader, attributes.toArray(ShaderAttribute[]::new));
+        this(new ObjectLocation("shaders/" + shader + ".vert"), new ObjectLocation("shaders/" + shader + ".frag"));
     }
 
-    public Shader(String shader, ShaderAttribute... attributes)
-    {
-        this(new ObjectLocation("shaders/" + shader + ".vert"), new ObjectLocation("shaders/" + shader + ".frag"), attributes);
-    }
-
-    public Shader(ObjectLocation vertexLocation, ObjectLocation fragmentLocation, ShaderAttribute... attributes)
+    public Shader(ObjectLocation vertexLocation, ObjectLocation fragmentLocation)
     {
         this.program = glCreateProgram();
         this.vertexLocation = vertexLocation;
@@ -112,6 +107,13 @@ public class Shader
         value.get(buffer);
         if (location != -1)
             glUniformMatrix4fv(location, false, buffer);
+    }
+
+    public void setUniformVector3f(String name, float x, float y, float z)
+    {
+        int location = glGetUniformLocation(this.program, name);
+        if (location != -1)
+            glUniform3f(location, x, y, z);
     }
 
     public void setUniformVector4f(String name, Vector4fc value)
