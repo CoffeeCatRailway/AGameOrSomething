@@ -147,6 +147,7 @@ public class AGameOrSomething implements WindowEventListener
 
             while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
+                Timer.start("gameTick");
                 // Debug keys code
                 if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
                     DEBUG_RENDER = !DEBUG_RENDER;
@@ -162,6 +163,9 @@ public class AGameOrSomething implements WindowEventListener
                 }
 
                 deltaTime = 0d;
+                long millis = Timer.end("gameTick");
+                if (millis >= 30L)
+                    LOGGER.warn("A single game tick took {}ms", millis);
             }
 
             frameTime = System.currentTimeMillis();
