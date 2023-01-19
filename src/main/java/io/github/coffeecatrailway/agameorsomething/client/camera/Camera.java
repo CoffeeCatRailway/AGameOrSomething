@@ -60,7 +60,7 @@ public class Camera
             this.incrementZoom(ZOOM_SPEED);
 
         if (this.keepFollowing)
-            this.setPosition(this.position.lerp(this.followPosition.add(.5f, 0f, FOLLOW_POSITION), FOLLOW_SMOOTHNESS, FOLLOW_POSITION));
+            this.setPosition(this.position.lerp(this.followPosition.add(.5f, .5f, FOLLOW_POSITION), FOLLOW_SMOOTHNESS, FOLLOW_POSITION));
     }
 
     public void setPosition(Vector2fc position)
