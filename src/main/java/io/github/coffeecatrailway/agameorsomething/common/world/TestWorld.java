@@ -65,6 +65,11 @@ public class TestWorld extends AbstractWorld
         for (i = 0; i < spotCount; i++)
         {
             spotPos.set(MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4), MatUtils.randomInt(this.random, (-this.worldRadius) + 4, this.worldRadius - 4));
+            boolean hollow = this.random.nextBoolean();
+
+            if (spotPos.distance(0, 0) <= spotRadius * 2)
+                continue;
+
             for (y = -spotRadius; y <= spotRadius; y++)
             {
                 for (x = -spotRadius; x <= spotRadius; x++)
@@ -73,7 +78,12 @@ public class TestWorld extends AbstractWorld
                     if (pos.distance(spotPos) < spotRadius)
                     {
                         this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.BACKGROUND);
-                        this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+                        if (hollow)
+                        {
+                            if (pos.distance(spotPos) > spotRadius - 1.5f)
+                                this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+                        } else
+                            this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
                     }
                 }
             }
