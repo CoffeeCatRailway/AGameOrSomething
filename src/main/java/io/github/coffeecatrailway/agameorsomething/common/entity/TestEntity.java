@@ -3,10 +3,16 @@ package io.github.coffeecatrailway.agameorsomething.common.entity;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.agameorsomething.common.entity.ai.PathFinderTask;
-import io.github.coffeecatrailway.agameorsomething.common.entity.ai.SimpleWanderTask;
+import io.github.coffeecatrailway.agameorsomething.common.entity.ai.Task;
+import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
+import io.github.coffeecatrailway.agameorsomething.common.world.World;
 import io.github.coffeecatrailway.agameorsomething.core.AGameOrSomething;
 import io.github.coffeecatrailway.agameorsomething.core.registry.EntityRegistry;
+import org.joml.Math;
+import org.joml.Vector2f;
+
+import java.util.Random;
 
 /**
  * @author CoffeeCatRailway
@@ -34,7 +40,7 @@ public class TestEntity extends Entity
     {
         switch (this.ai)
         {
-            case WANDER -> this.addTask(new SimpleWanderTask(this, 20f, 5f));
+            case WANDER -> this.addTask(new WanderTask(this, 20f, 5f));
             case A_STAR -> this.addTask(this.pathFinderTask = new PathFinderTask(this, 20, 15f, 10f, 15f));
             case NONE -> {}
         }
@@ -57,5 +63,43 @@ public class TestEntity extends Entity
     public enum AI
     {
         WANDER, A_STAR, NONE
+    }
+
+    /**
+     * @author CoffeeCatRailway
+     * Created: 07/01/2023
+     */
+    static class WanderTask extends Task
+    {
+        private final Vector2f destination = new Vector2f(0f);
+        private final float wanderRadius, speed;
+
+        public WanderTask(Entity entity, float wanderRadius, float speed)
+        {
+            super(entity);
+            this.wanderRadius = wanderRadius;
+            this.speed = speed;
+            this.chooseDestination(entity.getWorld().random());
+        }
+
+        @Override
+        public void tick(float delta, World world)
+        {
+            if (this.entity.getPosition().distance(this.destination) < .5f)
+                this.chooseDestination(world.random());
+
+            float x = this.destination.x - this.entity.getPosition().x;
+            float y = this.destination.y - this.entity.getPosition().y;
+            float dist = Math.sqrt(x * x + y * y);
+            float mult = this.speed / dist;
+            this.entity.getPosition().add(x * mult * delta, y * mult * delta);
+        }
+
+        private void chooseDestination(Random random)
+        {
+            float x = MatUtils.randomFloat(random, -this.wanderRadius, this.wanderRadius);
+            float y = MatUtils.randomFloat(random, -this.wanderRadius, this.wanderRadius);
+            this.destination.set(entity.getPosition()).add(x, y);
+        }
     }
 }
