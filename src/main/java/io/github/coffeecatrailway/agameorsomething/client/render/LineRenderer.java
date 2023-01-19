@@ -110,6 +110,9 @@ public class LineRenderer
 
     public void draw(float... vertices)
     {
+        if (!this.drawing)
+            throw new IllegalStateException("Must be drawing before `draw()` is called!");
+
         // Check flush
         if (this.index >= this.maxIndex)
             this.flush();
