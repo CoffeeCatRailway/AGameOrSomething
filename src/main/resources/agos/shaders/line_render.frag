@@ -1,4 +1,4 @@
-#version 420 core
+#version 330 core
 
 uniform vec3 uColor = vec3(1., 0., 0.);
 

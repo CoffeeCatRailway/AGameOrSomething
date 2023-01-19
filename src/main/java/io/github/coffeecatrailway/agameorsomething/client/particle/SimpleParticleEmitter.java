@@ -61,7 +61,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
         batch.begin();
         batch.setColor(0.8745098f, 0.8784314f, 0.9098039f, .75f);
 
-        this.particles.stream().filter(particle -> something.getCamera().getCullingFilter().isInside(particle.getPosition())).forEach((particle) -> batch.draw(TextureAtlas.PARTICLE_ATLAS.getEntry(particle.getTextureLocation()), particle.getPosition().x() - particle.getSize() / 2f, particle.getPosition().y() - particle.getSize() / 2f, particle.getSize(), particle.getSize()));
+        this.particles.stream().filter(particle -> something.getCamera().getCullingFilter().isInside(particle.getPosition())).forEach(particle -> batch.draw(TextureAtlas.PARTICLE_ATLAS.getEntry(particle.getTextureLocation()), particle.getPosition().x() - particle.getSize() / 2f, particle.getPosition().y() - particle.getSize() / 2f, particle.getSize(), particle.getSize()));
 
         batch.end();
         long millis = Timer.end("particleRendering");
