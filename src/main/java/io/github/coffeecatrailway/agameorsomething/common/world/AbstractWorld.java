@@ -116,20 +116,20 @@ public abstract class AbstractWorld implements World
      */
     public void correctCamera(Window window, Camera camera)
     {
-        camera.getPosition().get(CORRECT_CAMERA);
-//        float borderX = this.worldRadius - ((window.getWidth() / (float) this.worldRadius) / 2f) / camera.getZoom();
-        float borderX = this.worldRadius - 4f;
-        float borderY = this.worldRadius - 4f;
+        CORRECT_CAMERA.set(camera.getPosition());
 
-//        System.out.println("Camera Position (" + CORRECT_CAMERA.x + ", " + CORRECT_CAMERA.y + ") - Border X/Y (" + borderX + ", " + borderY + ")");
-        if (CORRECT_CAMERA.x > borderX)
-            CORRECT_CAMERA.x = borderX;
-        if (CORRECT_CAMERA.x < -borderX)
-            CORRECT_CAMERA.x = -borderX;
-        if (CORRECT_CAMERA.y > borderY)
-            CORRECT_CAMERA.y = borderY;
-        if (CORRECT_CAMERA.y < -borderY)
-            CORRECT_CAMERA.y = -borderY;
+        float bx = this.worldRadius;
+        float by = this.worldRadius;
+
+        if (CORRECT_CAMERA.x > bx)
+            CORRECT_CAMERA.x = bx;
+        if (CORRECT_CAMERA.x < -bx)
+            CORRECT_CAMERA.x = -bx;
+        if (CORRECT_CAMERA.y > by)
+            CORRECT_CAMERA.y = by;
+        if (CORRECT_CAMERA.y < -by)
+            CORRECT_CAMERA.y = -by;
+
         camera.setPosition(CORRECT_CAMERA);
     }
 
