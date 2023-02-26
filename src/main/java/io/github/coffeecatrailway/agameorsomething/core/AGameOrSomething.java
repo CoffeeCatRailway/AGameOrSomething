@@ -54,6 +54,7 @@ public class AGameOrSomething implements WindowEventListener
     {
         this.windowManager = new WindowManager();
         this.window = this.windowManager.create(width, height, false);
+        this.window.setVsync(true);
         this.window.setFullscreen(fullscreen);
         this.window.addListener(this);
         this.keyboardHandler = this.window.createKeyboardHandler();
@@ -70,7 +71,7 @@ public class AGameOrSomething implements WindowEventListener
 //        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 //        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 //        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
         // Create the window
@@ -114,7 +115,7 @@ public class AGameOrSomething implements WindowEventListener
         this.world = new TestWorld();
     }
 
-    private void loop()
+    private void run()
     {
         double fpsPassed = 0;
         int fps = 0;
@@ -148,12 +149,8 @@ public class AGameOrSomething implements WindowEventListener
             while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
                 Timer.start("gameTick");
-                // Debug keys code
-                if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
-                    DEBUG_RENDER = !DEBUG_RENDER;
+                this.tick((float) deltaTime, this);
 
-                this.camera.tick(this.keyboardHandler);
-                this.world.tick((float) deltaTime, this);
 
                 if (fpsPassed >= 1d)
                 {
@@ -171,23 +168,42 @@ public class AGameOrSomething implements WindowEventListener
             frameTime = System.currentTimeMillis();
             if (this.window.isFocused() || RENDER_UNFOCUSED)
             {
-                // Render code
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+                this.render(this, batch);
 
-                // Update batch renderer uniforms
-                batch.updateUniforms(this.camera);
-                batch.setColor(0f, 0f, 0f, 0f);
 
-                // Update debug uniforms
-                if (DEBUG_RENDER)
-                    LineRenderer.INSTANCE.updateUniforms(this.getCamera());
 
-                this.world.render(this, batch);
 
                 fps++;
             }
             frameTime = System.currentTimeMillis() - frameTime;
         }
+    }
+
+    private void tick(float deltaTime, AGameOrSomething something)
+    {
+        // Debug keys code
+        if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
+            DEBUG_RENDER = !DEBUG_RENDER;
+
+        this.camera.tick(this.keyboardHandler);
+        this.world.tick(deltaTime, something);
+    }
+
+    private void render(AGameOrSomething something, BatchRenderer batch)
+    {
+        // Render code
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Update batch renderer uniforms
+        batch.updateUniforms(this.camera);
+        batch.setColor(0f, 0f, 0f, 0f);
+
+        // Update debug uniforms
+        if (DEBUG_RENDER)
+            LineRenderer.INSTANCE.updateUniforms(something.getCamera());
+
+        this.world.render(something, batch);
     }
 
     private void destroy()
@@ -251,10 +267,10 @@ public class AGameOrSomething implements WindowEventListener
     {
         LOGGER.info("LWJGL version: " + Version.getVersion());
 
-        INSTANCE = new AGameOrSomething(800, 600, false);
+        INSTANCE = new AGameOrSomething(1600, 900, false);
 
         INSTANCE.init();
-        INSTANCE.loop();
+        INSTANCE.run();
         INSTANCE.destroy();
 
         // Terminate GLFW & free
