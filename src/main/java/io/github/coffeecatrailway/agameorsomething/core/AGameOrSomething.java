@@ -4,7 +4,11 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
 import io.github.coffeecatrailway.agameorsomething.client.render.BatchRenderer;
 import io.github.coffeecatrailway.agameorsomething.client.render.LineRenderer;
+import io.github.coffeecatrailway.agameorsomething.client.render.VAO;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.Shader;
+import io.github.coffeecatrailway.agameorsomething.client.render.shader.ShaderAttribute;
 import io.github.coffeecatrailway.agameorsomething.client.render.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.agameorsomething.common.utils.MatUtils;
 import io.github.coffeecatrailway.agameorsomething.common.utils.Timer;
 import io.github.coffeecatrailway.agameorsomething.common.world.TestWorld;
 import io.github.coffeecatrailway.agameorsomething.common.world.World;
@@ -16,6 +20,8 @@ import io.github.ocelot.window.WindowManager;
 import io.github.ocelot.window.input.KeyMods;
 import io.github.ocelot.window.input.KeyboardHandler;
 import io.github.ocelot.window.input.MouseHandler;
+import org.joml.Math;
+import org.joml.*;
 import org.lwjgl.Version;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
@@ -23,6 +29,8 @@ import org.slf4j.Logger;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -36,7 +44,7 @@ public class AGameOrSomething implements WindowEventListener
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String NAMESPACE = "agos";
 
-    public static final double FPS_CAP = 1d / 60d; // Used as delta
+    public static final double FPS_CAP = 1d / 60d;
 
     private static boolean DEBUG_RENDER = true;
     private static boolean RENDER_UNFOCUSED = true;
@@ -115,6 +123,7 @@ public class AGameOrSomething implements WindowEventListener
         this.world = new TestWorld();
     }
 
+    Shader lightShader;
     private void run()
     {
         double fpsPassed = 0;
@@ -130,9 +139,55 @@ public class AGameOrSomething implements WindowEventListener
         glDisable(GL_DEPTH_TEST);
 
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glClearColor(0f, 0f, 0f, 0f);
+
+        VAO vao = new VAO(6, new ShaderAttribute("position", 3, GL_FLOAT));
+        vao.bind();
+        vao.bindWrite();
+        vao.put(0, buffer -> buffer.putFloat(-1f).putFloat(1f).putFloat(0f));
+        vao.put(1, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
+        vao.put(2, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
+        vao.put(3, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
+        vao.put(4, buffer -> buffer.putFloat(1f).putFloat(-1f).putFloat(0f));
+        vao.put(5, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
+        vao.unbind();
+
+        lightShader = new Shader("light", "light");
+        lightShader.bind();
+        float ambient = .1f;
+        lightShader.setUniformVector4f("uAmbient", ambient, ambient, ambient, 1f);
+        lightShader.setUniformVector2f("uResolution", this.window.getWindowWidth(), this.window.getWindowHeight());
+
+        lightShader.setUniformVector2f("uBoxes[0].start", .45f, .45f);
+        lightShader.setUniformVector2f("uBoxes[0].end", .55f, .55f);
+        lightShader.setUniformVector2f("uBoxes[1].start", .1f, .1f);
+        lightShader.setUniformVector2f("uBoxes[1].end", .2f, .9f);
+        lightShader.unbind();
+
+        final class Light
+                {
+                    private final Vector2f position = new Vector2f();
+                    private final Vector3f color = new Vector3f(1f);
+                    private float min;
+                    private float max;
+                    private float brightness;
+
+                    Light(Vector2fc position, Vector3fc color, float min, float max, float brightness)
+                    {
+                        this.position.set(position);
+                        this.color.set(color);
+                        this.min = min;
+                        this.max = max;
+                        this.brightness = Math.clamp(0f, 1f, brightness);
+                    }
+                }
+        List<Light> lights = new ArrayList<>();
+        Light redLight;
+
+        lights.add(redLight = new Light(new Vector2f(0.875f, 0.7777778f), new Vector3f(1f, 0f, 0f), 0f, 1f, 1f));
+        lights.add(new Light(new Vector2f(0.875f, 0.22222222f), new Vector3f(1f), 0f, .75f, .75f));
 
         // Run until window is closed or 'ESCAPE' is pressed
         while (!this.window.isClosed())
@@ -149,8 +204,15 @@ public class AGameOrSomething implements WindowEventListener
             while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
                 Timer.start("gameTick");
-                this.tick((float) deltaTime, this);
+//                this.tick((float) deltaTime, this);
 
+                float dx = .5f * (Math.sin((float) glfwGetTime()) * .5f + .5f);
+                redLight.position.x = 0.875f - dx;
+
+                Vector2f mousePos = new Vector2f((float) this.mouseHandler.getMouseX(), (float) (-this.mouseHandler.getMouseY() + this.window.getWindowHeight())).div(AGameOrSomething.this.window.getWindowWidth(), AGameOrSomething.this.window.getWindowHeight());
+                if (this.mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_1) && lights.stream().map(light1 -> light1.position).noneMatch(position -> position.distance(mousePos) <= .05f))
+                    lights.add(new Light(mousePos, new Vector3f(MatUtils.randomFloat(.1f, 1f), MatUtils.randomFloat(.1f, 1f), MatUtils.randomFloat(.1f, 1f)),
+                            0f, MatUtils.randomFloat(.1f, 1f), MatUtils.randomFloat(.2f, 1f)));
 
                 if (fpsPassed >= 1d)
                 {
@@ -168,10 +230,33 @@ public class AGameOrSomething implements WindowEventListener
             frameTime = System.currentTimeMillis();
             if (this.window.isFocused() || RENDER_UNFOCUSED)
             {
-                this.render(this, batch);
+//                this.render(this, batch);
 
+                // Render code
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+                lightShader.bind();
 
+                TextureAtlas.TILE_ATLAS.getAtlasTexture().bind(0);
+                lightShader.setUniformi("uTexture", 0);
+
+//                lightShader.setUniformMatrix4f("uProjection", this.camera.getProjectionMatrix());
+//                lightShader.setUniformMatrix4f("uView", this.camera.getViewMatrix());
+
+                for (int i = 0; i < lights.size(); i++)
+                {
+                    Light l = lights.get(i);
+                    lightShader.setUniformVector2f("uLights[" + i + "].position", l.position.x, l.position.y);
+                    lightShader.setUniformVector3f("uLights[" + i + "].color", l.color.x, l.color.y, l.color.z);
+                    lightShader.setUniformf("uLights[" + i + "].min", l.min);
+                    lightShader.setUniformf("uLights[" + i + "].max", l.max);
+                    lightShader.setUniformf("uLights[" + i + "].brightness", l.brightness);
+                }
+
+                glBlendFunc(GL_ONE, GL_ONE);
+                vao.bind();
+                vao.draw(GL_TRIANGLES);
+                lightShader.unbind();
 
                 fps++;
             }
@@ -211,6 +296,7 @@ public class AGameOrSomething implements WindowEventListener
         TextureAtlas.deleteStaticAtlases();
         BatchRenderer.SHADER.delete();
         LineRenderer.SHADER.delete();
+        lightShader.delete();
 
         this.windowManager.free();
     }
@@ -219,6 +305,8 @@ public class AGameOrSomething implements WindowEventListener
     public void framebufferResized(Window window, int width, int height)
     {
         this.camera.adjustProjection();
+        lightShader.bind();
+        lightShader.setUniformVector2f("uResolution", width, height);
     }
 
     @Override

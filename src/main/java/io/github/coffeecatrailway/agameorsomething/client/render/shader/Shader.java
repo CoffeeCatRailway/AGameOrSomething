@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.agameorsomething.common.io.ResourceLoader;
 import io.github.coffeecatrailway.agameorsomething.common.utils.ObjectLocation;
 import org.joml.Matrix4fc;
-import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 
@@ -12,6 +11,7 @@ import java.nio.FloatBuffer;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL31.*;
 
 /**
  * @author CoffeeCatRailway
@@ -21,7 +21,6 @@ public class Shader
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final int ATTRIB_POSITION = 0, ATTRIB_TEX_COORDS = 1;
     public static final List<ShaderAttribute> DEFAULT_ATTRIBUTES = List.of(new ShaderAttribute("position", 3, GL_FLOAT),
             new ShaderAttribute("texCoords", 2, GL_FLOAT),
             new ShaderAttribute("texColor", 4, GL_FLOAT));
@@ -36,6 +35,11 @@ public class Shader
     public Shader(String shader)
     {
         this(new ObjectLocation("shaders/" + shader + ".vert"), new ObjectLocation("shaders/" + shader + ".frag"));
+    }
+
+    public Shader(String vert, String frag)
+    {
+        this(new ObjectLocation("shaders/" + vert + ".vert"), new ObjectLocation("shaders/" + frag + ".frag"));
     }
 
     public Shader(ObjectLocation vertexLocation, ObjectLocation fragmentLocation)
@@ -83,6 +87,22 @@ public class Shader
         }
     }
 
+    public void setUniformBlockf(String name, final int binding, float[] data)
+    {
+        int index = glGetUniformBlockIndex(this.program, name);
+        if (index != GL_INVALID_INDEX)
+        {
+            glUniformBlockBinding(this.program, index, binding);
+
+            int buffer = glGenBuffers();
+            glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+
+            glBufferData(GL_UNIFORM_BUFFER, (long) data.length * GL_FLOAT, GL_DYNAMIC_DRAW);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, data);
+            glBindBufferBase(GL_UNIFORM_BUFFER, binding, buffer);
+        }
+    }
+
     public void setUniformi(String name, int value)
     {
         int location = glGetUniformLocation(this.program, name);
@@ -106,6 +126,13 @@ public class Shader
             glUniformMatrix4fv(location, false, buffer);
     }
 
+    public void setUniformVector2f(String name, float x, float y)
+    {
+        int location = glGetUniformLocation(this.program, name);
+        if (location != -1)
+            glUniform2f(location, x, y);
+    }
+
     public void setUniformVector3f(String name, float x, float y, float z)
     {
         int location = glGetUniformLocation(this.program, name);
@@ -113,11 +140,11 @@ public class Shader
             glUniform3f(location, x, y, z);
     }
 
-    public void setUniformVector4f(String name, Vector4fc value)
+    public void setUniformVector4f(String name, float x, float y, float z, float w)
     {
         int location = glGetUniformLocation(this.program, name);
         if (location != -1)
-            glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+            glUniform4f(location, x, y, z, w);
     }
 
     public void bind()
