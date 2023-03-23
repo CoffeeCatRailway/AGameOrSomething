@@ -165,9 +165,9 @@ void main() {
         color = sampleLights(color, pixel);
 
     //box color
-//    for (int i = 0; i < uBoxes.length(); i++)
-//        if (inside(uBoxes[i], pixel))
-//            color = vec3(.25, .4, 0.);
+    for (int i = 0; i < uBoxes.length(); i++)
+        if (inside(uBoxes[i], pixel))
+            color = vec3(.25, .4, 0.);
 
-    outColor = vec4(color, 1.) * (texture(uTexture, pixel) + uAmbient);
+    outColor = vec4(color, 1.);// * (texture(uTexture, pixel) + uAmbient);
 }
