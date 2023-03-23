@@ -116,7 +116,7 @@ vec3 calculateLighting(vec2 pixel, Light light)
             return vec3(0.);
     }
 
-    return hyperstep(light.min, light.max,  distance(pixel, light.position)) * light.brightness * light.color;
+    return hyperstep(light.min, light.max, distance(pixel, light.position)) * light.brightness * light.color;
 }
 
 vec3 sampleLights(vec3 color, vec2 pixel)
