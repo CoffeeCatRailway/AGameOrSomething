@@ -8,7 +8,7 @@ import io.github.coffeecatrailway.orsomething.agame.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.orsomething.agame.common.entity.TestEntity;
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.TilePos;
+import io.github.coffeecatrailway.orsomething.anengine.common.world.TilePos;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;

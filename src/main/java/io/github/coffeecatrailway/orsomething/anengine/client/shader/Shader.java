@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.orsomething.anengine.client.shader;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Matrix4fc;
 import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;

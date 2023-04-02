@@ -7,7 +7,7 @@ import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimati
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.Texture;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.anengine.core.registry.RegistrableSomething;
 import io.github.coffeecatrailway.orsomething.anengine.core.registry.SomethingRegistry;

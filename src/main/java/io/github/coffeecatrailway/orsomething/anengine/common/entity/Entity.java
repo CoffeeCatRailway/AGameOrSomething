@@ -5,7 +5,7 @@ import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.Task;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;

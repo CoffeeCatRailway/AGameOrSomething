@@ -7,7 +7,7 @@ import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.PathFinderTask;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.Task;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;

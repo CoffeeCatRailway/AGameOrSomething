@@ -5,7 +5,7 @@ import io.github.coffeecatrailway.orsomething.anengine.client.shader.Shader;
 import io.github.coffeecatrailway.orsomething.anengine.client.shader.ShaderAttribute;
 import io.github.coffeecatrailway.orsomething.anengine.client.VAO;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 

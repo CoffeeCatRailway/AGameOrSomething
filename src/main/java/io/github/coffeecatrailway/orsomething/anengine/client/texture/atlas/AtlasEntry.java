@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas;
 
 import com.google.gson.JsonObject;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Vector4f;
 import org.joml.Vector4fc;
 

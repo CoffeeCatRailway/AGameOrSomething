@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.texture;
 
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Math;
 
 /**

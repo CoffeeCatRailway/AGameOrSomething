@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.orsomething.anengine.common;
+package io.github.coffeecatrailway.orsomething.anengine.core.io;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

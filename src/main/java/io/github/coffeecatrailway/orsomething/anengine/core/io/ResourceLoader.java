@@ -1,7 +1,6 @@
 package io.github.coffeecatrailway.orsomething.anengine.core.io;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;

@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.orsomething.anengine.client.texture;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 

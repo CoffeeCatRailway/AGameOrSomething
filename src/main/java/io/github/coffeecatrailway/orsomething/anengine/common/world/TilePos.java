@@ -1,6 +1,5 @@
-package io.github.coffeecatrailway.orsomething.anengine.common;
+package io.github.coffeecatrailway.orsomething.anengine.common.world;
 
-import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 

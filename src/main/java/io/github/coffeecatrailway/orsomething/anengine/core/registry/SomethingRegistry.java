@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.core.registry;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.agrona.collections.Int2ObjectHashMap;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;

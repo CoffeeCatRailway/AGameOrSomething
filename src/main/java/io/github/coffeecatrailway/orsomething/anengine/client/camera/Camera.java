@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.camera;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.MousePicker;
-import io.github.coffeecatrailway.orsomething.anengine.common.TilePos;
+import io.github.coffeecatrailway.orsomething.anengine.common.world.TilePos;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.input.KeyboardHandler;

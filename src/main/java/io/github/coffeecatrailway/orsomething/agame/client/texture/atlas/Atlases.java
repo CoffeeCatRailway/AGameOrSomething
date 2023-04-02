@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.slf4j.Logger;
 
 /**

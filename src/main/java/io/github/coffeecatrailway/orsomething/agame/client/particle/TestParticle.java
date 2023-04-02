@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.agame.client.particle;
 
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.client.particle.Particle;
 import org.joml.Math;
 import org.joml.Vector2f;
