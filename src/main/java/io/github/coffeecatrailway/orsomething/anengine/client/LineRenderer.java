@@ -1,11 +1,9 @@
-package linerenderer;
+package io.github.coffeecatrailway.orsomething.anengine.client;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
 import io.github.coffeecatrailway.orsomething.anengine.client.shader.Shader;
 import io.github.coffeecatrailway.orsomething.anengine.client.shader.ShaderAttribute;
-import io.github.coffeecatrailway.orsomething.anengine.client.VAO;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
-import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
@@ -19,7 +17,7 @@ import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
 public class LineRenderer
 {
     public static final LineRenderer INSTANCE = new LineRenderer();
-    public static final Shader SHADER = new Shader(new ObjectLocation("test", "line_render.vert"), new ObjectLocation("test", "line_render.frag"));
+    public static final Shader SHADER = new Shader("line_render");
     public static int renderCalls = 0;
 
     private final VAO vao;
@@ -86,7 +84,7 @@ public class LineRenderer
         }
     }
 
-    public void drawBoundingBox(BoundingBox box)
+    public void drawBox(BoundingBox box)
     {
         drawBox(box.getPosition(), box.getPosition().add(box.getBounds(), new Vector2f()));
     }
@@ -112,6 +110,9 @@ public class LineRenderer
 
     public void draw(float... vertices)
     {
+        if (!this.drawing)
+            throw new IllegalStateException("Must be drawing before `draw()` is called!");
+
         // Check flush
         if (this.index >= this.maxIndex)
             this.flush();

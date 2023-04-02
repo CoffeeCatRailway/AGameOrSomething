@@ -1,15 +1,16 @@
 package io.github.coffeecatrailway.orsomething.agame.common.entity;
 
-import io.github.coffeecatrailway.orsomething.aengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.aengine.client.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.orsomething.aengine.common.entity.Entity;
-import io.github.coffeecatrailway.orsomething.aengine.common.entity.ai.PathFinderTask;
-import io.github.coffeecatrailway.orsomething.aengine.common.entity.ai.Task;
-import io.github.coffeecatrailway.orsomething.aengine.MatUtils;
-import io.github.coffeecatrailway.orsomething.aengine.ObjectLocation;
-import io.github.coffeecatrailway.orsomething.aengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.common.AGameOrSomething;
-import io.github.coffeecatrailway.orsomething.agame.common.registry.EntityRegistry;
+import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
+import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.PathFinderTask;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.Task;
+import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
+import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
+import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import org.joml.Math;
 import org.joml.Vector2f;
 
@@ -50,7 +51,7 @@ public class TestEntity extends Entity
     @Override
     public void render(AGameOrSomething something, BatchRenderer batch)
     {
-        super.render(something, batch);
+        super.render(something, batch, Atlases.ENTITY_ATLAS);
         if (this.ai == AI.A_STAR)
             this.pathFinderTask.renderDebug();
     }

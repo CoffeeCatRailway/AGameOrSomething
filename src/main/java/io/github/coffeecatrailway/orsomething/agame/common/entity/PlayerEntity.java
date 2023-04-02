@@ -1,14 +1,14 @@
 package io.github.coffeecatrailway.orsomething.agame.common.entity;
 
-import io.github.coffeecatrailway.orsomething.aengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.aengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.aengine.client.texture.Animation;
-import io.github.coffeecatrailway.orsomething.aengine.client.texture.HasAnimation;
-import io.github.coffeecatrailway.orsomething.aengine.client.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.orsomething.aengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.common.AGameOrSomething;
-import io.github.coffeecatrailway.orsomething.agame.common.registry.EntityRegistry;
-import io.github.coffeecatrailway.orsomething.aengine.common.entity.Entity;
+import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
+import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.texture.Animation;
+import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimation;
+import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
+import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.ocelot.window.input.KeyboardHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -86,7 +86,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
-        batch.draw(TextureAtlas.ENTITY_ATLAS.getEntry(this.currentAnimation.getCurrentFrame()), this.position.x + (this.flipHorizontal ? 1f : 0f), this.position.y, this.flipHorizontal ? -1f : 1f, 2f);
+        batch.draw(Atlases.ENTITY_ATLAS.getEntry(this.currentAnimation.getCurrentFrame()), this.position.x + (this.flipHorizontal ? 1f : 0f), this.position.y, this.flipHorizontal ? -1f : 1f, 2f);
         batch.end();
 //        LineRenderer.drawBoundingBox(this.boundingBox);
     }
