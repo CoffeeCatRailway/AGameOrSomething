@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
  *
  * Implemented in the registry 'class'
  */
-public interface SomethingRegistry
+public interface SomethingRegistry<T extends RegistrableSomething>
 {
     @Nullable
-    <T extends RegistrableSomething> T getDefault();
+    Supplier<? extends T> getDefault();
 
     void load();
 

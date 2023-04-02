@@ -1,8 +1,8 @@
-package io.github.coffeecatrailway.orsomething.aengine.common.world;
+package io.github.coffeecatrailway.orsomething.anengine.common.world;
 
-import io.github.coffeecatrailway.orsomething.aengine.common.collision.BoundingBox;
-import io.github.coffeecatrailway.orsomething.aengine.common.tile.Tile;
-import io.github.coffeecatrailway.orsomething.agame.common.registry.TileRegistry;
+import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
+import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
+import io.github.coffeecatrailway.orsomething.anengine.core.registry.TileRegistry;
 import org.joml.Vector2f;
 import org.joml.Vector2ic;
 

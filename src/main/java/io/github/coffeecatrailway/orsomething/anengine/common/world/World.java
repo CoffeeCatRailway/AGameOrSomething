@@ -1,12 +1,11 @@
-package io.github.coffeecatrailway.orsomething.aengine.common.world;
+package io.github.coffeecatrailway.orsomething.anengine.common.world;
 
-import io.github.coffeecatrailway.orsomething.aengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.aengine.common.collision.BoundingBox;
-import io.github.coffeecatrailway.orsomething.aengine.common.entity.Entity;
-import io.github.coffeecatrailway.orsomething.aengine.common.tile.Tile;
-import io.github.coffeecatrailway.orsomething.aengine.TilePos;
-import io.github.coffeecatrailway.orsomething.agame.common.AGameOrSomething;
-import io.github.coffeecatrailway.orsomething.agame.common.registry.TileRegistry;
+import io.github.coffeecatrailway.orsomething.anengine.core.registry.TileRegistry;
+import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
+import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import org.joml.*;
 
 import java.lang.Math;
@@ -21,9 +20,9 @@ public interface World
 {
     void generate();
 
-    void tick(float delta, AGameOrSomething something);
+    void tick(float delta, AnEngineOrSomething something);
 
-    void render(AGameOrSomething something, BatchRenderer batch);
+    void render(AnEngineOrSomething something, BatchRenderer batch);
 
     TileSet getTileSet(TileSet.Level level);
 

@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.orsomething.agame.common.tile;
+package io.github.coffeecatrailway.orsomething.anengine.common.tile;
 
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import org.joml.Vector2i;

@@ -2,16 +2,16 @@ package io.github.coffeecatrailway.orsomething.agame.core;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
-import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
-import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.agame.common.world.TestWorld;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
 import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
-import io.github.coffeecatrailway.orsomething.agame.common.world.TestWorld;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
-import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.WindowEventListener;
 import io.github.ocelot.window.WindowManager;
@@ -105,10 +105,10 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
         // Initialize game objects & registries
         this.camera = new Camera(this.window);
 
-        TileRegistry.load();
+        AGameTiles.TILES.load();
         Atlases.TILE_ATLAS.init();
 
-        EntityRegistry.load();
+        EntityRegistry.ENTITIES.load();
         Atlases.ENTITY_ATLAS.init();
 
         Atlases.PARTICLE_ATLAS.init();

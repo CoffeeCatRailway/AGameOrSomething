@@ -6,9 +6,9 @@ import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.Animation;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimation;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.ocelot.window.input.KeyboardHandler;
 
 import static org.lwjgl.glfw.GLFW.*;

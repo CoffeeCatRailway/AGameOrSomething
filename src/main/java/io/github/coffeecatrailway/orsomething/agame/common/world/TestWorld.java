@@ -3,6 +3,7 @@ package io.github.coffeecatrailway.orsomething.agame.common.world;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.particle.SimpleParticleEmitter;
 import io.github.coffeecatrailway.orsomething.agame.client.particle.TestParticle;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
 import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.agame.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.orsomething.agame.common.entity.TestEntity;
@@ -10,7 +11,6 @@ import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TilePos;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
-import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.ocelot.window.input.MouseHandler;
@@ -53,10 +53,10 @@ public class TestWorld extends AbstractWorld
                 borderFlag = pos.x == this.worldRadius || pos.x == -this.worldRadius || pos.y == this.worldRadius || pos.y == -this.worldRadius;
                 if (borderFlag)
                 {
-                    this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.BACKGROUND);
-                    this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.FOREGROUND);
+                    this.setTile(pos, AGameTiles.SAND.get(), TileSet.Level.BACKGROUND);
+                    this.setTile(pos, AGameTiles.DIRT.get(), TileSet.Level.FOREGROUND);
                 } else
-                    this.setTile(pos, (pos.distance(0, 0) < 4 ? TileRegistry.DIRT.get() : TileRegistry.GRASS.get()), TileSet.Level.BACKGROUND);
+                    this.setTile(pos, (pos.distance(0, 0) < 4 ? AGameTiles.DIRT.get() : AGameTiles.GRASS.get()), TileSet.Level.BACKGROUND);
             }
         }
 
@@ -78,20 +78,20 @@ public class TestWorld extends AbstractWorld
                     Vector2i pos = new Vector2i(x, y).add(spotPos);
                     if (pos.distance(spotPos) < spotRadius)
                     {
-                        this.setTile(pos, TileRegistry.DIRT.get(), TileSet.Level.BACKGROUND);
+                        this.setTile(pos, AGameTiles.DIRT.get(), TileSet.Level.BACKGROUND);
                         if (hollow)
                         {
                             if (pos.distance(spotPos) > spotRadius - 1.5f)
-                                this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+                                this.setTile(pos, AGameTiles.SAND.get(), TileSet.Level.FOREGROUND);
                         } else
-                            this.setTile(pos, TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+                            this.setTile(pos, AGameTiles.SAND.get(), TileSet.Level.FOREGROUND);
                     }
                 }
             }
         }
 
-        this.setTile(new Vector2i(1, 0), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
-        this.setTile(new Vector2i(-1, 0), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+        this.setTile(new Vector2i(1, 0), AGameTiles.SAND.get(), TileSet.Level.FOREGROUND);
+        this.setTile(new Vector2i(-1, 0), AGameTiles.SAND.get(), TileSet.Level.FOREGROUND);
 
         this.player = new PlayerEntity();
         this.addEntity(this.player);
@@ -105,7 +105,7 @@ public class TestWorld extends AbstractWorld
         this.addEntity(wanderer1);
 
         for (i = 0; i < 4; i++)
-            this.setTile(new Vector2i(-2 + i, -5), TileRegistry.SAND.get(), TileSet.Level.FOREGROUND);
+            this.setTile(new Vector2i(-2 + i, -5), AGameTiles.SAND.get(), TileSet.Level.FOREGROUND);
 
         this.pathFinder = new TestEntity(TestEntity.AI.A_STAR);
         this.pathFinder.getPosition().set(0f, -10f);
@@ -130,11 +130,11 @@ public class TestWorld extends AbstractWorld
         Tile tile = null;
         boolean middleMouse = mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE);
         if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
-            tile = TileRegistry.SAND.get();
+            tile = AGameTiles.SAND.get();
         else if (mouseHandler.isButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
-            tile = TileRegistry.DIRT.get();
+            tile = AGameTiles.DIRT.get();
         else if (middleMouse)
-            tile = TileRegistry.AIR.get();
+            tile = AGameTiles.AIR.get();
 
         if (tile != null)
         {

@@ -3,11 +3,11 @@ package io.github.coffeecatrailway.orsomething.agame.common.world;
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
 import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
-import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
-import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
 import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
@@ -158,7 +158,7 @@ public abstract class AbstractWorld implements World
         if (pos.x() > this.worldRadius || pos.x() < -this.worldRadius || pos.y() > this.worldRadius || pos.y() < -this.worldRadius)
         {
             LOGGER.warn("Tile {} was placed outside of world at position {}", tile.getObjectId(), pos);
-            return TileRegistry.AIR.get();
+            return AGameTiles.AIR.get();
         }
         return World.super.setTile(pos, tile, level);
     }
