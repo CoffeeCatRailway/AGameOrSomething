@@ -8,6 +8,7 @@ import io.github.coffeecatrailway.orsomething.anengine.client.particle.Particle;
 import io.github.coffeecatrailway.orsomething.anengine.client.particle.ParticleEmitter;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something)
+    public void tick(float delta, AnEngineOrSomething something)
     {
         if (!something.getCamera().getCullingFilter().isInside(this.position))
             return;
@@ -55,7 +56,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch)
+    public void render(AnEngineOrSomething something, BatchRenderer batch)
     {
         if (!something.getCamera().getCullingFilter().isInside(this.position))
             return;
@@ -70,7 +71,7 @@ public class SimpleParticleEmitter implements ParticleEmitter
         if (millis >= 30L)
             LOGGER.warn("Particle rendering took {}ms", millis);
 
-        if (AGameOrSomething.isDebugRender())
+        if (AGameOrSomething.DEBUG_RENDER.get())
         {
             LineRenderer.INSTANCE.begin(1f, 0f, 1f);
             LineRenderer.INSTANCE.drawBox(this.position.x - .5f, this.position.y - .5f, this.position.x + .5f, this.position.y + .5f);

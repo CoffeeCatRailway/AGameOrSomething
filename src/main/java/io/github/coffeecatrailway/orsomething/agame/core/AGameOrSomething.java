@@ -36,11 +36,9 @@ import static org.lwjgl.opengl.GL11.*;
 public class AGameOrSomething implements AnEngineOrSomething, WindowEventListener
 {
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final String NAMESPACE = "agos";
 
     public static final double FPS_CAP = 1d / 60d; // Used as delta
 
-    private static boolean DEBUG_RENDER = true;
     private static boolean RENDER_UNFOCUSED = true;
     private static AGameOrSomething INSTANCE;
 
@@ -187,7 +185,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
     {
         // Debug keys code
         if (this.keyboardHandler.isKeyPressed(GLFW_KEY_F1))
-            DEBUG_RENDER = !DEBUG_RENDER;
+            DEBUG_RENDER.set(!DEBUG_RENDER.get());
 
         this.camera.tick(this.keyboardHandler);
         this.world.tick(deltaTime, something);
@@ -204,7 +202,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
         batch.setColor(0f, 0f, 0f, 0f);
 
         // Update debug uniforms
-        if (DEBUG_RENDER)
+        if (DEBUG_RENDER.get())
             LineRenderer.INSTANCE.updateUniforms(something.getCamera());
 
         this.world.render(something, batch);
@@ -267,11 +265,6 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
     public static AGameOrSomething getInstance()
     {
         return INSTANCE;
-    }
-
-    public static boolean isDebugRender()
-    {
-        return DEBUG_RENDER;
     }
 
     public static void main(String[] args)

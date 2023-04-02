@@ -1,6 +1,5 @@
 package io.github.coffeecatrailway.orsomething.anengine.common.entity;
 
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
 import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
@@ -11,6 +10,7 @@ import io.github.coffeecatrailway.orsomething.anengine.common.collision.Bounding
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.Task;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.coffeecatrailway.orsomething.anengine.core.registry.RegistrableSomething;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
@@ -53,16 +53,16 @@ public abstract class Entity implements RegistrableSomething, HasTexture
     public void init()
     {}
 
-    public void tick(float delta, AGameOrSomething something, Camera camera, World world)
+    public void tick(float delta, AnEngineOrSomething something, Camera camera, World world)
     {
         this.boundingBox.setPosition(this.position);
         if (this.hasTasks)
             this.tasks.forEach(task -> task.tick(delta, world));
     }
 
-    public abstract void render(AGameOrSomething something, BatchRenderer batch);
+    public abstract void render(AnEngineOrSomething something, BatchRenderer batch);
 
-    protected void render(AGameOrSomething something, BatchRenderer batch, TextureAtlas atlas)
+    protected void render(AnEngineOrSomething something, BatchRenderer batch, TextureAtlas atlas)
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);

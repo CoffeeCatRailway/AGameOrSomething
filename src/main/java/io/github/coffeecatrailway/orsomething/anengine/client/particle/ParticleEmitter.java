@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.particle;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 
 /**
  * @author CoffeeCatRailway
@@ -9,7 +9,7 @@ import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
  */
 public interface ParticleEmitter
 {
-    void tick(float delta, AGameOrSomething something);
+    void tick(float delta, AnEngineOrSomething something);
 
-    void render(AGameOrSomething something, BatchRenderer batch);
+    void render(AnEngineOrSomething something, BatchRenderer batch);
 }

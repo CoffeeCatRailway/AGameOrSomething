@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.orsomething.anengine.common;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -25,7 +25,7 @@ public class ObjectLocation
             this.path = parts[1];
         } else
         {
-            this.namespace = AGameOrSomething.NAMESPACE;
+            this.namespace = AnEngineOrSomething.NAMESPACE;
             this.path = location;
         }
     }

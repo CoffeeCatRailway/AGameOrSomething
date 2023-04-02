@@ -9,8 +9,8 @@ import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.Task;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import org.joml.Math;
 import org.joml.Vector2f;
 
@@ -49,7 +49,7 @@ public class TestEntity extends Entity
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch)
+    public void render(AnEngineOrSomething something, BatchRenderer batch)
     {
         super.render(something, batch, Atlases.ENTITY_ATLAS);
         if (this.ai == AI.A_STAR)

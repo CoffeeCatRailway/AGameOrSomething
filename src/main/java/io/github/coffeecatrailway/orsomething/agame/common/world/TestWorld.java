@@ -10,9 +10,9 @@ import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.TilePos;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.TileRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.ocelot.window.input.MouseHandler;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -122,7 +122,7 @@ public class TestWorld extends AbstractWorld
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something)
+    public void tick(float delta, AnEngineOrSomething something)
     {
         super.tick(delta, something);
 
@@ -151,7 +151,7 @@ public class TestWorld extends AbstractWorld
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch)
+    public void render(AnEngineOrSomething something, BatchRenderer batch)
     {
         super.render(something, batch);
         this.emitter1.render(something, batch);

@@ -1,6 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.core;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.anengine.common.MutableBoolean;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.input.KeyboardHandler;
@@ -12,6 +13,10 @@ import io.github.ocelot.window.input.MouseHandler;
  */
 public interface AnEngineOrSomething
 {
+    String NAMESPACE = "agos";
+
+    MutableBoolean DEBUG_RENDER = new MutableBoolean(false);
+
     void init();
 
     void run();

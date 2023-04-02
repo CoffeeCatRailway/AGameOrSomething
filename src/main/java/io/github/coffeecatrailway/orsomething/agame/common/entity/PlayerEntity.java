@@ -6,9 +6,9 @@ import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.Animation;
 import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimation;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.ocelot.window.input.KeyboardHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -45,7 +45,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something, Camera camera, World world)
+    public void tick(float delta, AnEngineOrSomething something, Camera camera, World world)
     {
         super.tick(delta, something, camera, world);
 
@@ -82,7 +82,7 @@ public class PlayerEntity extends Entity implements HasAnimation
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch)
+    public void render(AnEngineOrSomething something, BatchRenderer batch)
     {
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);

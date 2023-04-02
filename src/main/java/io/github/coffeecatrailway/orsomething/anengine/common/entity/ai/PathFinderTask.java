@@ -2,10 +2,10 @@ package io.github.coffeecatrailway.orsomething.anengine.common.entity.ai;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
-import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
+import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
-import io.github.coffeecatrailway.orsomething.agame.core.AGameOrSomething;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import org.joml.RoundingMode;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -71,7 +71,7 @@ public class PathFinderTask extends Task
 
     public void renderDebug()
     {
-        if (AGameOrSomething.isDebugRender() && this.path.size() > 1)
+        if (AnEngineOrSomething.DEBUG_RENDER.get() && this.path.size() > 1)
         {
             float[] verticies = new float[this.path.size() * 2];
             int i = 0;

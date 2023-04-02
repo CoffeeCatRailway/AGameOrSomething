@@ -12,6 +12,7 @@ import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.TileSet;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
+import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
 import io.github.ocelot.window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
@@ -62,7 +63,7 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public void tick(float delta, AGameOrSomething something)
+    public void tick(float delta, AnEngineOrSomething something)
     {
         for (Entity entity : this.entities)
         {
@@ -77,7 +78,7 @@ public abstract class AbstractWorld implements World
     }
 
     @Override
-    public void render(AGameOrSomething something, BatchRenderer batch)
+    public void render(AnEngineOrSomething something, BatchRenderer batch)
     {
         Timer.start("tileRendering"); //TODO: Optimize, check if background tile is visible
         batch.begin();
@@ -101,7 +102,7 @@ public abstract class AbstractWorld implements World
             return r;
         }).filter(entity -> something.getCamera().getCullingFilter().isInside(entity.getBoundingBox())).forEach(entity -> {
             entity.render(something, batch);
-            if (AGameOrSomething.isDebugRender()) // Render entity bounds
+            if (AGameOrSomething.DEBUG_RENDER.get()) // Render entity bounds
             {
                 LineRenderer.INSTANCE.begin(1f, 0f, 0f);
                 LineRenderer.INSTANCE.drawBox(entity.getBoundingBox());
