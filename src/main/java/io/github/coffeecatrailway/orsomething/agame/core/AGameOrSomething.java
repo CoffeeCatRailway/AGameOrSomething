@@ -54,7 +54,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
     {
         this.windowManager = new WindowManager();
         this.window = this.windowManager.create(width, height, fullscreen);
-        this.window.setVsync(true);
+        this.window.setVsync(false);
         this.window.setFullscreen(fullscreen);
         this.window.addListener(this);
         this.keyboardHandler = this.window.createKeyboardHandler();
@@ -262,16 +262,17 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
         return this.world;
     }
 
-    public static AGameOrSomething getInstance()
-    {
-        return INSTANCE;
-    }
+//    public static AGameOrSomething getInstance()
+//    {
+//        return INSTANCE;
+//    }
 
     public static void main(String[] args)
     {
         LOGGER.info("LWJGL version: " + Version.getVersion());
 
         INSTANCE = new AGameOrSomething(1600, 900, false);
+        AnEngineOrSomething.DEBUG_RENDER.set(true);
 
         INSTANCE.init();
         INSTANCE.run();

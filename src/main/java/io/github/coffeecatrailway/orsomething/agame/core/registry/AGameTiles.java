@@ -19,7 +19,7 @@ public class AGameTiles extends TileRegistry
     public static final Supplier<Tile> GRASS = AGameTiles.REGISTRY.register("grass", () -> new Tile(new Tile.TileData().setHarvestLevel(1).setDrop(null).build()));
     public static final Supplier<Tile> DIRT = AGameTiles.REGISTRY.register("dirt", () -> new Tile(new Tile.TileData().setHarvestLevel(1).setDrop(null).build()));
     public static final Supplier<Tile> SAND = AGameTiles.REGISTRY.register("sand", () -> new Tile(new Tile.TileData().setHarvestLevel(1).setDrop(null).build()));
-    //    public static final Supplier<Tile> TEST = TILES.register("test", () -> new Tile(new Tile.TileData().setHarvestLevel(100).setCustomTexture(new ObjectLocation("missing.png")).setModel(VBOModels.SIMPLE_1X2).build()));
+//    public static final Supplier<Tile> TEST = TILES.register("test", () -> new Tile(new Tile.TileData().setHarvestLevel(100).setCustomTexture(new ObjectLocation("missing.png")).setModel(VBOModels.SIMPLE_1X2).build()));
 
     @Override
     public void load()

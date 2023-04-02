@@ -27,7 +27,7 @@ public class EntityRegistry implements SomethingRegistry<Entity>
     @Override
     public @Nullable Supplier<? extends Entity> getDefault()
     {
-        return null;
+        return TEST;
     }
 
     @Override
