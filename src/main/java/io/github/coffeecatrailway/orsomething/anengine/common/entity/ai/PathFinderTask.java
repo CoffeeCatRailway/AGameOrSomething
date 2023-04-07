@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.common.entity.ai;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.LineRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;

@@ -2,7 +2,7 @@ package io.github.coffeecatrailway.orsomething.agame.client.texture.atlas;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import org.slf4j.Logger;

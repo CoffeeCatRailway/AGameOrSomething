@@ -1,9 +1,9 @@
-package io.github.coffeecatrailway.orsomething.anengine.client;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.Shader;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.AtlasEntry;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.Texture;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.Shader;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas.AtlasEntry;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.Texture;
 import org.joml.Math;
 import org.joml.Vector4fc;
 
@@ -308,7 +308,7 @@ public class BatchRenderer
     private void render()
     {
         if (this.texture != null)
-            this.texture.bind(0);
+            this.texture.bind(true, 0);
         this.vao.draw(GL_TRIANGLES, 0, this.index);
         renderCalls++;
     }

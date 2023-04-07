@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.orsomething.anengine.client.texture;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture;
 
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Math;

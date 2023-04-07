@@ -1,8 +1,8 @@
-package io.github.coffeecatrailway.orsomething.anengine.client;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.Shader;
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.ShaderAttribute;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.Shader;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.ShaderAttribute;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;

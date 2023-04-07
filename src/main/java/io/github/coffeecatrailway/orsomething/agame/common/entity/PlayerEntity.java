@@ -2,9 +2,9 @@ package io.github.coffeecatrailway.orsomething.agame.common.entity;
 
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.Animation;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimation;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.Animation;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.HasAnimation;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;

@@ -1,7 +1,7 @@
 package io.github.coffeecatrailway.orsomething.anengine.common.world;
 
 import io.github.coffeecatrailway.orsomething.anengine.core.registry.TileRegistry;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;

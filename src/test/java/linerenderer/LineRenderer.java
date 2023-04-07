@@ -1,9 +1,9 @@
 package linerenderer;
 
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.Shader;
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.ShaderAttribute;
-import io.github.coffeecatrailway.orsomething.anengine.client.VAO;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.Shader;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.ShaderAttribute;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.VAO;
 import io.github.coffeecatrailway.orsomething.anengine.common.collision.BoundingBox;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import org.joml.Vector2f;

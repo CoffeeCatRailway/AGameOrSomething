@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.orsomething.anengine.common.tile;
 
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.HasTexture;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.core.registry.RegistrableSomething;
 import org.joml.Math;

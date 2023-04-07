@@ -1,6 +1,6 @@
-package io.github.coffeecatrailway.orsomething.anengine.client;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics;
 
-import io.github.coffeecatrailway.orsomething.anengine.client.shader.ShaderAttribute;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.ShaderAttribute;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;

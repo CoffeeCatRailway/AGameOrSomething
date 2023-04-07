@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.particle.SimpleParticleEmitter;
 import io.github.coffeecatrailway.orsomething.agame.client.particle.TestParticle;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
 import io.github.coffeecatrailway.orsomething.agame.common.entity.PlayerEntity;
 import io.github.coffeecatrailway.orsomething.agame.common.entity.TestEntity;
 import io.github.coffeecatrailway.orsomething.anengine.common.tile.Tile;

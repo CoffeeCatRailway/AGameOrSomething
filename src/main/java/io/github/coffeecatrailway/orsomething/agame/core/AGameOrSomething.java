@@ -4,14 +4,14 @@ import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
 import io.github.coffeecatrailway.orsomething.agame.common.world.TestWorld;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
+import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.LineRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
-import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.WindowEventListener;
 import io.github.ocelot.window.WindowManager;
@@ -172,9 +172,6 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
             {
                 this.render(this, batch);
 
-
-
-
                 fps++;
             }
             frameTime = System.currentTimeMillis() - frameTime;
@@ -199,7 +196,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
 
         // Update batch renderer uniforms
         batch.updateUniforms(this.camera);
-        batch.setColor(0f, 0f, 0f, 0f);
+        batch.setColor(0f, 0f, 0f, 1f);
 
         // Update debug uniforms
         if (DEBUG_RENDER.get())

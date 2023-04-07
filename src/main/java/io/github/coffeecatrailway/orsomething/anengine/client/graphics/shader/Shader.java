@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.orsomething.anengine.client.shader;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;

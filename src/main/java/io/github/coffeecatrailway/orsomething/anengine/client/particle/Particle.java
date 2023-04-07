@@ -1,6 +1,6 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.particle;
 
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.HasTexture;
 import org.joml.Vector2f;
 
 /**

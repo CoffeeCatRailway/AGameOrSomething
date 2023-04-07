@@ -2,8 +2,8 @@ package io.github.coffeecatrailway.orsomething.agame.client.particle;
 
 import com.mojang.logging.LogUtils;
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.anengine.client.LineRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.LineRenderer;
 import io.github.coffeecatrailway.orsomething.anengine.client.particle.Particle;
 import io.github.coffeecatrailway.orsomething.anengine.client.particle.ParticleEmitter;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;

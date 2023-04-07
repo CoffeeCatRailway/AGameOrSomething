@@ -1,11 +1,11 @@
-package io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas;
 
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.Animation;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasAnimation;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.HasTexture;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.Texture;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.Animation;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.HasAnimation;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.HasTexture;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.Texture;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;

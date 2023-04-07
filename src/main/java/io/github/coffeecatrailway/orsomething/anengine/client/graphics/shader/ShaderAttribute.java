@@ -1,4 +1,4 @@
-package io.github.coffeecatrailway.orsomething.anengine.client.shader;
+package io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader;
 
 import static org.lwjgl.opengl.GL11C.*;
 

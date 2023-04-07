@@ -1,8 +1,8 @@
 package io.github.coffeecatrailway.orsomething.agame.common.entity;
 
 import io.github.coffeecatrailway.orsomething.agame.client.texture.atlas.Atlases;
-import io.github.coffeecatrailway.orsomething.anengine.client.BatchRenderer;
-import io.github.coffeecatrailway.orsomething.anengine.client.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas.TextureAtlas;
 import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.Entity;
 import io.github.coffeecatrailway.orsomething.anengine.common.entity.ai.PathFinderTask;
