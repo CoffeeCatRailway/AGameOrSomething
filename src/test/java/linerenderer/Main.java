@@ -1,7 +1,7 @@
 package linerenderer;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.agameorsomething.client.camera.Camera;
+import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
 import io.github.ocelot.window.Window;
 import io.github.ocelot.window.WindowEventListener;
 import io.github.ocelot.window.WindowManager;
