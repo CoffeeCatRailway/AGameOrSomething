@@ -7,8 +7,11 @@ import io.github.coffeecatrailway.orsomething.agame.core.registry.AGameTiles;
 import io.github.coffeecatrailway.orsomething.agame.core.registry.EntityRegistry;
 import io.github.coffeecatrailway.orsomething.anengine.client.camera.Camera;
 import io.github.coffeecatrailway.orsomething.anengine.client.graphics.BatchRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.FBO;
 import io.github.coffeecatrailway.orsomething.anengine.client.graphics.LineRenderer;
+import io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader.Shader;
 import io.github.coffeecatrailway.orsomething.anengine.client.graphics.texture.atlas.TextureAtlas;
+import io.github.coffeecatrailway.orsomething.anengine.common.MatUtils;
 import io.github.coffeecatrailway.orsomething.anengine.common.Timer;
 import io.github.coffeecatrailway.orsomething.anengine.common.world.World;
 import io.github.coffeecatrailway.orsomething.anengine.core.AnEngineOrSomething;
@@ -141,22 +144,23 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
 
         glClearColor(0f, 0f, 0f, 0f);
 
-        VAO vao = new VAO(6, new ShaderAttribute("position", 3, GL_FLOAT));
-        vao.bind();
-        vao.bindWrite();
-        vao.put(0, buffer -> buffer.putFloat(-1f).putFloat(1f).putFloat(0f));
-        vao.put(1, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
-        vao.put(2, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
-        vao.put(3, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
-        vao.put(4, buffer -> buffer.putFloat(1f).putFloat(-1f).putFloat(0f));
-        vao.put(5, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
-        vao.unbind();
+//        VAO vao = new VAO(6, new ShaderAttribute("position", 3, GL_FLOAT));
+//        vao.bind();
+//        vao.bindWrite();
+//        vao.put(0, buffer -> buffer.putFloat(-1f).putFloat(1f).putFloat(0f));
+//        vao.put(1, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
+//        vao.put(2, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
+//        vao.put(3, buffer -> buffer.putFloat(1f).putFloat(1f).putFloat(0f));
+//        vao.put(4, buffer -> buffer.putFloat(1f).putFloat(-1f).putFloat(0f));
+//        vao.put(5, buffer -> buffer.putFloat(-1f).putFloat(-1f).putFloat(0f));
+//        vao.unbind();
+        FBO fbo = new FBO(this.window.getFramebufferWidth(), this.window.getFramebufferHeight());
 
         lightShader = new Shader("light", "light");
         lightShader.bind();
         float ambient = .1f;
         lightShader.setUniformVector4f("uAmbient", ambient, ambient, ambient, 1f);
-        lightShader.setUniformVector2f("uResolution", this.window.getWindowWidth(), this.window.getWindowHeight());
+        lightShader.setUniformVector2f("uResolution", this.window.getFramebufferWidth(), this.window.getFramebufferHeight());
 
         lightShader.setUniformVector2f("uBoxes[0].start", .45f, .45f);
         lightShader.setUniformVector2f("uBoxes[0].end", .55f, .55f);
@@ -202,7 +206,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
             while (deltaTime >= FPS_CAP) // Update logic (tick)
             {
                 Timer.start("gameTick");
-//                this.tick((float) deltaTime, this);
+                this.tick((float) deltaTime, this);
 
                 float dx = .5f * (Math.sin((float) glfwGetTime()) * .5f + .5f);
                 redLight.position.x = 0.875f - dx;
@@ -228,14 +232,19 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
             frameTime = System.currentTimeMillis();
             if (this.window.isFocused() || RENDER_UNFOCUSED)
             {
-//                this.render(this, batch);
+                batch.setShader(BatchRenderer.SHADER, false, this.camera);
+                fbo.begin();
+                this.render(this, batch);
+                fbo.end(this.window);
 
                 // Render code
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-                lightShader.bind();
+//                lightShader.bind();
+                batch.setShader(lightShader, false, this.camera);
+                batch.begin();
 
-                TextureAtlas.TILE_ATLAS.getAtlasTexture().bind(0);
+                Atlases.TILE_ATLAS.getAtlasTexture().bind(true, 0);
                 lightShader.setUniformi("uTexture", 0);
 
 //                lightShader.setUniformMatrix4f("uProjection", this.camera.getProjectionMatrix());
@@ -251,10 +260,12 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
                     lightShader.setUniformf("uLights[" + i + "].brightness", l.brightness);
                 }
 
-                glBlendFunc(GL_ONE, GL_ONE);
-                vao.bind();
-                vao.draw(GL_TRIANGLES);
-                lightShader.unbind();
+//                glBlendFunc(GL_ONE, GL_ONE);
+//                vao.bind();
+//                vao.draw(GL_TRIANGLES);
+//                lightShader.unbind();
+                batch.draw(fbo.getTexture(), -1f, -1f, 2f, 2f, 0f, 0f, 1f, 1f);
+                batch.end();
 				
                 fps++;
             }
