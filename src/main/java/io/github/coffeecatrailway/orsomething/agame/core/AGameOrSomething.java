@@ -158,7 +158,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
 
         lightShader = new Shader("light", "light");
         lightShader.bind();
-        float ambient = .1f;
+        float ambient = 0f;
         lightShader.setUniformVector4f("uAmbient", ambient, ambient, ambient, 1f);
         lightShader.setUniformVector2f("uResolution", this.window.getFramebufferWidth(), this.window.getFramebufferHeight());
 
@@ -166,6 +166,7 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
         lightShader.setUniformVector2f("uBoxes[0].end", .55f, .55f);
         lightShader.setUniformVector2f("uBoxes[1].start", .1f, .1f);
         lightShader.setUniformVector2f("uBoxes[1].end", .2f, .9f);
+        lightShader.setUniformi("uBoxCount", 2);
         lightShader.unbind();
 
         final class Light
@@ -240,30 +241,23 @@ public class AGameOrSomething implements AnEngineOrSomething, WindowEventListene
                 // Render code
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-//                lightShader.bind();
                 batch.setShader(lightShader, false, this.camera);
                 batch.begin();
 
                 Atlases.TILE_ATLAS.getAtlasTexture().bind(true, 0);
                 lightShader.setUniformi("uTexture", 0);
 
-//                lightShader.setUniformMatrix4f("uProjection", this.camera.getProjectionMatrix());
-//                lightShader.setUniformMatrix4f("uView", this.camera.getViewMatrix());
-
+                lightShader.setUniformi("uLightCount", lights.size());
                 for (int i = 0; i < lights.size(); i++)
                 {
                     Light l = lights.get(i);
-                    lightShader.setUniformVector2f("uLights[" + i + "].position", l.position.x, l.position.y);
-                    lightShader.setUniformVector3f("uLights[" + i + "].color", l.color.x, l.color.y, l.color.z);
-                    lightShader.setUniformf("uLights[" + i + "].min", l.min);
-                    lightShader.setUniformf("uLights[" + i + "].max", l.max);
-                    lightShader.setUniformf("uLights[" + i + "].brightness", l.brightness);
+                    lightShader.setUniformVector2f("uLights[" + i + "].position", l.getPosition());
+                    lightShader.setUniformVector3f("uLights[" + i + "].color", l.getColor());
+                    lightShader.setUniformf("uLights[" + i + "].min", l.getMin());
+                    lightShader.setUniformf("uLights[" + i + "].max", l.getMax());
+                    lightShader.setUniformf("uLights[" + i + "].brightness", l.getBrightness());
                 }
 
-//                glBlendFunc(GL_ONE, GL_ONE);
-//                vao.bind();
-//                vao.draw(GL_TRIANGLES);
-//                lightShader.unbind();
                 batch.draw(fbo.getTexture(), -1f, -1f, 2f, 2f, 0f, 0f, 1f, 1f);
                 batch.end();
 				

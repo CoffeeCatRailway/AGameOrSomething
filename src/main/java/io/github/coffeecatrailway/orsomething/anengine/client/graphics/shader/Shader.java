@@ -1,9 +1,12 @@
 package io.github.coffeecatrailway.orsomething.anengine.client.graphics.shader;
 
 import com.mojang.logging.LogUtils;
-import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
 import io.github.coffeecatrailway.orsomething.anengine.core.io.ObjectLocation;
+import io.github.coffeecatrailway.orsomething.anengine.core.io.ResourceLoader;
 import org.joml.Matrix4fc;
+import org.joml.Vector2fc;
+import org.joml.Vector3fc;
+import org.joml.Vector4fc;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 
@@ -126,6 +129,11 @@ public class Shader
             glUniformMatrix4fv(location, false, buffer);
     }
 
+    public void setUniformVector2f(String name, Vector2fc vec)
+    {
+        setUniformVector2f(name, vec.x(), vec.y());
+    }
+
     public void setUniformVector2f(String name, float x, float y)
     {
         int location = glGetUniformLocation(this.program, name);
@@ -133,11 +141,21 @@ public class Shader
             glUniform2f(location, x, y);
     }
 
+    public void setUniformVector3f(String name, Vector3fc vec)
+    {
+        setUniformVector3f(name, vec.x(), vec.y(), vec.z());
+    }
+
     public void setUniformVector3f(String name, float x, float y, float z)
     {
         int location = glGetUniformLocation(this.program, name);
         if (location != -1)
             glUniform3f(location, x, y, z);
+    }
+
+    public void setUniformVector4f(String name, Vector4fc vec)
+    {
+        setUniformVector4f(name, vec.x(), vec.y(), vec.z(), vec.w());
     }
 
     public void setUniformVector4f(String name, float x, float y, float z, float w)

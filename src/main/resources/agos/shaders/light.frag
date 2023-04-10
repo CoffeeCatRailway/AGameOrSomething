@@ -24,7 +24,9 @@ struct Line {
 uniform vec4 uAmbient = vec4(0.);
 uniform vec2 uResolution;
 uniform Light uLights[MAX_LIGHTS];
+uniform int uLightCount;
 uniform Line uBoxes[MAX_BOXES];
+uniform int uBoxCount;
 uniform sampler2D uTexture;
 out vec4 outColor;
 
@@ -106,7 +108,7 @@ vec3 calculateLighting(vec2 pixel, Light light)
 {
     Line LoS = Line(pixel, light.position);
 
-    for (int i = 0; i < uBoxes.length(); i++)
+    for (int i = 0; i < uBoxCount; i++)
     {
         Line box = uBoxes[i];
         if (intersects(LoS, Line(box.start, vec2(box.end.x, box.start.y))) ||
@@ -121,7 +123,7 @@ vec3 calculateLighting(vec2 pixel, Light light)
 
 vec3 sampleLights(vec3 color, vec2 pixel)
 {
-    for (int i = 0; i < uLights.length(); i++)
+    for (int i = 0; i < uLightCount; i++)
         if (uLights[i].color != vec3(0.))
             color += calculateLighting(pixel, uLights[i]);
     return color;
@@ -165,9 +167,9 @@ void main() {
         color = sampleLights(color, pixel);
 
     //box color
-    for (int i = 0; i < uBoxes.length(); i++)
-        if (inside(uBoxes[i], pixel))
+    for (int i = 0; i < uBoxCount; i++)
+        if (inside(boxes[i], pixel))
             color = vec3(.25, .4, 0.);
 
-    outColor = vec4(color, 1.) * (texture(uTexture, pixel) + uAmbient);
+    outColor = texture(uTexture, pixel) * vec4(color, 1.);
 }
